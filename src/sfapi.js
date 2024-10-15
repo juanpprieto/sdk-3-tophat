@@ -8,6 +8,7 @@ const client = createStorefrontApiClient({
   customFetchApi: fetch,
 });
 
+
 const CART_LINE_FRAGMENT = `#graphql
 fragment CartLineFragment on CartLine {
   id
@@ -70,7 +71,9 @@ fragment CartLineFragment on CartLine {
     discountedAmount {
       amount
       currencyCode
+      __typename
     }
+    targetType
   }
   sellingPlanAllocation {
     checkoutChargeAmount {
@@ -145,6 +148,14 @@ fragment CartFragment on Cart {
   discountCodes {
     applicable
     code
+  }
+  discountAllocations {
+    discountedAmount {
+      amount
+      currencyCode
+      __typename
+    }
+    targetType
   }
   buyerIdentity {
     countryCode
@@ -284,31 +295,38 @@ mutation ($input: CartInput!, $country: CountryCode, $language: LanguageCode)
   }
 `
 
-export const sfapi = {
-  shop: async () => {
-    return await fetch('https://juanprieto.myshopify.com/api/unstable/graphql.json', {
-      method: 'POST',
-      body: JSON.stringify({
-        query: `
-          {
-            shop {
-              name
-              description
-              primaryDomain {
-                host
-              }
-            }
-          }
-        `
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'X-Shopify-Storefront-Access-Token': 'c23ad8269962738dd66dfd85d9b45a2d'
-        }
-    })
-  },
+const CART_UPDATE_DISCOUNT_CODE_MUTATION = `
+${CART_FRAGMENT}
+mutation cartDiscountCodesUpdate($cartId: ID!, $discountCodes: [String!]!) {
+  cartDiscountCodesUpdate(cartId: $cartId, discountCodes: $discountCodes) {
+    cart {
+      ...CartFragment
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}
+`
 
+const CART_ADD_LINE_ITEMS_MUTATION = `#graphql
+${CART_FRAGMENT}
+mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+  cartLinesAdd(cartId: $cartId, lines: $lines) {
+    cart {
+      ...CartFragment
+    }
+    userErrors {
+      field
+      message
+      code
+    }
+  }
+}
+`
+
+export const sfapi = {
   create: async (input) => {
     return await client.request(CART_CREATE_MUTATION, {
       variables: {
@@ -318,5 +336,23 @@ export const sfapi = {
       }
     })
   },
+
+  updateDiscountCodes: async (cartId, discountCodes) => {
+    return await client.request(CART_UPDATE_DISCOUNT_CODE_MUTATION, {
+      variables: {
+        cartId,
+        discountCodes
+      }
+    })
+  },
+
+  addLineItems: async (cartId, lines) => {
+    return await client.request(CART_ADD_LINE_ITEMS_MUTATION, {
+      variables: {
+        cartId,
+        lines
+      }
+    })
+  }
 }
 
