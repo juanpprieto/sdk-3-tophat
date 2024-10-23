@@ -4,23 +4,89 @@ import {CheckoutCreate} from './CheckoutCreate'
 import {useState} from 'react'
 import {client} from './sdk'
 import {sfapi} from './sfapi'
+import {CheckoutDiscounts} from './CheckoutDiscounts'
+import {CartDiscounts} from './CartDiscounts'
+
 
 function App() {
   const [checkout, setCheckout] = useState(null)
- const [cart, setCart] = useState(null)
+  const [cart, setCart] = useState(null)
+  const showCreateTests = true
   return (
     <div style={{textAlign:'left'}}>
-    <h1>Checkout vs Cart creation</h1>
-    <CheckoutUpdate checkout={checkout} setCheckout={setCheckout}/>
-    <CheckoutCreate checkout={checkout} setCheckout={setCheckout}/>
-    <CheckoutDiscounts checkout={checkout} setCheckout={setCheckout}/>
-    <CartUpdate cart={cart} setCart={setCart}/>
-    <CartCreate cart={cart} setCart={setCart}/>
-    <CartDiscounts cart={cart} setCart={setCart}/>
+      <h1>Checkout vs Cart</h1>
+      <CheckoutUpdate checkout={checkout} setCheckout={setCheckout}/>
+      <CheckoutCreate checkout={checkout} setCheckout={setCheckout} verbose={showCreateTests} />
+      <CheckoutDiscounts checkout={checkout} setCheckout={setCheckout}/>
+      <CheckoutShippingAddress checkout={checkout} setCheckout={setCheckout}/>
+
+
+      <CartUpdate cart={cart} setCart={setCart}/>
+      <CartCreate cart={cart} setCart={setCart} verbose={showCreateTests} />
+      <CartDiscounts cart={cart} setCart={setCart}/>
+      <CartShippingAddress cart={cart} setCart={setCart}/>
     </div>
   )
 }
 
+function CheckoutShippingAddress({checkout, setCheckout}) {
+  return (
+    <div>
+      <br />
+      <br />
+      <h1>Checkout Shipping Address</h1>
+      <button onClick={async () => {
+        client.checkout.updateShippingAddress(checkout?.id, {
+          address1: '24 Westwind Street',
+          address2: 'Apt C',
+          city: 'Marina Del Rey',
+          company: 'Fake Company',
+          country: 'United States',
+          firstName: 'Juan',
+          lastName: 'Prieto',
+          phone: '4240-537-8776',
+          province: 'California',
+          zip: '90292'
+        }).then((checkout) => {
+          console.log('Shipping address updated:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+        Update Shipping Address
+      </button>
+    </div>
+  )
+}
+
+function CartShippingAddress({cart, setCart}) {
+  return (
+    <div>
+      <br />
+      <br />
+      <h1>Cart Shipping Address</h1>
+      <button onClick={async () => {
+        sfapi.updateShippingAddress(cart?.id, {
+          address1: '24 Westwind Street',
+          address2: 'Apt C',
+          city: 'Marina Del Rey',
+          company: 'Fake Company',
+          country: 'United States',
+          firstName: 'Juan',
+          lastName: 'Prieto',
+          phone: '424-537-8776',
+          province: 'CA',
+          zip: '90292'
+        }).then((res) => {
+          console.log('Shipping address updated:', res)
+          const {data: {cartBuyerIdentityUpdate: { cart } }} = res
+          setCart(cart)
+        })
+      }}>
+        Update Shipping Address
+      </button>
+    </div>
+  )
+}
 
 function CheckoutUpdate({checkout, setCheckout}) {
  return (
@@ -72,133 +138,4 @@ function CartUpdate({cart, setCart}) {
   )
 }
 
-function CheckoutDiscounts({checkout, setCheckout}) {
- return (
-   <div>
-     <br />
-     <br />
-     <h1>Checkout Discounts</h1>
-     <button onClick={async () => {
-       client.checkout.addDiscount(checkout?.id, '10PERCENTOFF').then((checkout) => {
-         console.log('Discount added:', checkout.discountApplications)
-         setCheckout(checkout)
-       })
-     }}>
-      Add 10% off discount
-    </button>
-    <button onClick={async () => {
-       client.checkout.addDiscount(checkout?.id, '10OFF').then((checkout) => {
-         console.log('Discount added:', checkout.discountApplications)
-         setCheckout(checkout)
-       })
-     }}>
-      Add $10 off discount
-    </button>
-    <button onClick={async () => {
-       client.checkout.addDiscount(checkout?.id, 'AUTO10PERCENT').then((checkout) => {
-         console.log('Discount added:', checkout.discountApplications)
-         setCheckout(checkout)
-       })
-     }}>
-     Auto Add 10% off discount
-    </button>
-    <button onClick={async () => {
-       client.checkout.addDiscount(checkout?.id, 'XGETY50PERCENT').then((checkout) => {
-         console.log('Discount added:', checkout.discountApplications)
-         setCheckout(checkout)
-       })
-     }}>
-      Add X Get Y 50% off discount next product
-    </button>
-    <button onClick={async () => {
-       client.checkout.addDiscount(checkout?.id, 'ORDERFIXED50OFF').then((checkout) => {
-         console.log('Discount added:', checkout.discountApplications)
-         setCheckout(checkout)
-       })
-     }}>
-      Add $50 off on order discount
-    </button>
-    <button onClick={async () => {
-       client.checkout.addDiscount(checkout?.id, 'ORDER50PERCENTOFF').then((checkout) => {
-         console.log('Discount added:', checkout.discountApplications)
-         setCheckout(checkout)
-       })
-     }}>
-      Add %50 off on order discount
-    </button>
-   </div>
- )
-}
-
-
-function CartDiscounts({cart, setCart}) {
- return (
-   <div>
-     <br />
-     <br />
-     <h1>Cart Discounts</h1>
-     <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['10PERCENTOFF']).then((res) => {
-         console.log('Response:', res)
-         const {data: {cartDiscountCodesUpdate: { cart } }} = res
-         console.log('Discount added:', cart.discountCodes)
-         setCart(cart)
-       })
-     }}>
-      Add 10% off discount
-    </button>
-    <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['10OFF']).then((res) => {
-         console.log('Response:', res)
-         const {data: {cartDiscountCodesUpdate: { cart } }} = res
-         console.log('Discount added:', cart.discountCodes)
-         setCart(cart)
-       })
-     }}>
-      Add $10 off discount
-    </button>
-     <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['AUTO10PERCENT']).then((res) => {
-         console.log('Response:', res)
-         const {data: {cartDiscountCodesUpdate: { cart } }} = res
-         console.log('Discount added:', cart.discountCodes)
-         setCart(cart)
-       })
-     }}>
-      Auto Add 10% off discount
-    </button>
-     <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['XGETY50PERCENT']).then((res) => {
-         console.log('Response:', res)
-         const {data: {cartDiscountCodesUpdate: { cart } }} = res
-         console.log('Discount added:', cart.discountCodes)
-         setCart(cart)
-       })
-     }}>
-       Add X Get Y 50% off discount next product
-    </button>
-    <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['ORDERFIXED50OFF']).then((res) => {
-         console.log('Response:', res)
-         const {data: {cartDiscountCodesUpdate: { cart } }} = res
-         console.log('Discount added:', cart.discountCodes)
-         setCart(cart)
-       })
-     }}>
-       Add $50 off on order discount
-    </button>
-    <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['ORDER50PERCENTOFF']).then((res) => {
-         console.log('Response:', res)
-         const {data: {cartDiscountCodesUpdate: { cart } }} = res
-         console.log('Discount added:', cart.discountCodes)
-         setCart(cart)
-       })
-     }}>
-       Add 50% off on order discount
-    </button>
-   </div>
-   // 
- )
-}
 export default App

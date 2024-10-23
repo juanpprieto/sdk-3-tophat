@@ -68,12 +68,24 @@ fragment CartLineFragment on CartLine {
     }
   }
   discountAllocations {
-    discountedAmount {
-      amount
-      currencyCode
+    ... on CartCodeDiscountAllocation {
+      targetType
+      code
+      discountedAmount {
+        amount
+        currencyCode
+      }
       __typename
     }
-    targetType
+    ... on CartAutomaticDiscountAllocation {
+      targetType
+      title
+      discountedAmount {
+        amount
+        currencyCode
+      }
+      __typename
+    }
   }
   sellingPlanAllocation {
     checkoutChargeAmount {
@@ -150,12 +162,24 @@ fragment CartFragment on Cart {
     code
   }
   discountAllocations {
-    discountedAmount {
-      amount
-      currencyCode
+    ... on CartCodeDiscountAllocation {
+      targetType
+      code
+      discountedAmount {
+        amount
+        currencyCode
+      }
       __typename
     }
-    targetType
+    ... on CartAutomaticDiscountAllocation {
+      targetType
+      title
+      discountedAmount {
+        amount
+        currencyCode
+      }
+      __typename
+    }
   }
   buyerIdentity {
     countryCode
@@ -278,7 +302,23 @@ fragment CartFragment on Cart {
 }
 `
 
-const CART_CREATE_MUTATION = `
+const CART_UPDATE_SHIPPING_ADDRESS_MUTATION = `#graphql
+${CART_FRAGMENT}
+  mutation cartDeliveryAddressUpdate($cartId: ID!, $address: MailingAddressInput!) {
+    cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: {deliveryAddressPreferences: [ { deliveryAddress: $address } ]}) {
+      cart {
+        ...CartFragment
+      }
+      userErrors {
+        field
+        message
+        code
+      }
+    }
+  }
+`
+
+const CART_CREATE_MUTATION = `#graphql
 ${CART_FRAGMENT}
 mutation ($input: CartInput!, $country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
@@ -295,7 +335,7 @@ mutation ($input: CartInput!, $country: CountryCode, $language: LanguageCode)
   }
 `
 
-const CART_UPDATE_DISCOUNT_CODE_MUTATION = `
+const CART_UPDATE_DISCOUNT_CODE_MUTATION = `#graphql
 ${CART_FRAGMENT}
 mutation cartDiscountCodesUpdate($cartId: ID!, $discountCodes: [String!]!) {
   cartDiscountCodesUpdate(cartId: $cartId, discountCodes: $discountCodes) {
@@ -351,6 +391,15 @@ export const sfapi = {
       variables: {
         cartId,
         lines
+      }
+    })
+  },
+
+  updateShippingAddress: async (cartId, address) => {
+    return await client.request(CART_UPDATE_SHIPPING_ADDRESS_MUTATION, {
+      variables: {
+        cartId,
+        address
       }
     })
   }
