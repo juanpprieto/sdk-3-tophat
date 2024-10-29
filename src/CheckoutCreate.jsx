@@ -10,6 +10,14 @@ export function CheckoutCreate({checkout, setCheckout, verbose = false}) {
 
     <h2>Create a basic checkout</h2>
      <button onClick={async () => {
+       client.checkout.create().then((checkout) => {
+         console.log('Checkout created:', checkout.webUrl)
+         setCheckout(checkout)
+       })
+     }}>
+      Create Empty Checkout
+    </button>
+     <button onClick={async () => {
        client.checkout.create({
          lineItems: [
            {
@@ -22,7 +30,26 @@ export function CheckoutCreate({checkout, setCheckout, verbose = false}) {
          setCheckout(checkout)
        })
      }}>
-      Create Checkout
+      Create Checkout (1 item)
+    </button>
+     <button onClick={async () => {
+       client.checkout.create({
+         lineItems: [
+           {
+             variantId: 'gid://shopify/ProductVariant/48535896522774', 
+             quantity: 1
+           },
+          { 
+            variantId:'gid://shopify/ProductVariant/48535896555542',
+            quantity: 1
+          }
+         ]
+       }).then((checkout) => {
+         console.log('Checkout created:', checkout.webUrl)
+         setCheckout(checkout)
+       })
+     }}>
+      Create Checkout (2 items)
     </button>
     <br />
     {verbose && (

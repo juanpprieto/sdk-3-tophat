@@ -1,0 +1,193 @@
+{
+  "id": "gid://shopify/Cart/Z2NwLXVzLXdlc3QxOjAxSkJDSFZDUjVTUlY2Vzg0UEU4Q1lWN0I2?key=dd7eb96810aa8ce76cd41c4f25599414",
+  "createdAt": "2024-10-29T16:30:55Z",
+  "updatedAt": "2024-10-29T16:30:55Z",
+  "lines": {
+    "pageInfo": {
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    },
+    "edges": [
+      {
+        "node": {
+          "id": "gid://shopify/CartLine/24c9c9bf-97dc-4e0a-8921-00c05b745be9?cart=Z2NwLXVzLXdlc3QxOjAxSkJDSFZDUjVTUlY2Vzg0UEU4Q1lWN0I2",
+          "merchandise": {
+            "id": "gid://shopify/ProductVariant/48535896522774",
+            "title": "Default Title",
+            "image": {
+              "id": "gid://shopify/ProductImage/45559092281366",
+              "src": "https://cdn.shopify.com/s/files/1/0601/8783/6438/files/NTMtOTAxNy5qcGVn.jpg?v=1724459712",
+              "altText": "pf006_0_Alex Kassian - Strings Of Eden ",
+              "width": 500,
+              "height": 500
+            },
+            "product": {
+              "id": "gid://shopify/Product/9899493556246",
+              "handle": "alex-kassian-strings-of-eden",
+              "title": "Alex Kassian - Strings Of Eden"
+            },
+            "weight": 0,
+            "available": true,
+            "sku": "",
+            "selectedOptions": [
+              {
+                "name": "Title",
+                "value": "Default Title"
+              }
+            ],
+            "unitPriceMeasurement": {
+              "measuredType": null,
+              "quantityUnit": null,
+              "quantityValue": 0,
+              "referenceUnit": null,
+              "referenceValue": 0
+            }
+          },
+          "quantity": 1,
+          "attributes": [],
+          "cost": {
+            "totalAmount": {
+              "amount": "200.0",
+              "currencyCode": "USD"
+            },
+            "subtotalAmount": {
+              "amount": "200.0",
+              "currencyCode": "USD"
+            },
+            "amountPerQuantity": {
+              "amount": "200.0",
+              "currencyCode": "USD"
+            },
+            "compareAtAmountPerQuantity": null
+          },
+          "discountAllocations": [],
+          "sellingPlanAllocation": null
+        }
+      }
+    ]
+  },
+  "attributes": [],
+  "cost": {
+    "totalAmount": {
+      "amount": "200.0",
+      "currencyCode": "USD"
+    },
+    "subtotalAmount": {
+      "amount": "200.0",
+      "currencyCode": "USD"
+    },
+    "totalTaxAmount": null,
+    "totalDutyAmount": null
+  },
+  "checkoutUrl": "https://mycrate.2ndgentrecords.com/cart/c/Z2NwLXVzLXdlc3QxOjAxSkJDSFZDUjVTUlY2Vzg0UEU4Q1lWN0I2?key=dd7eb96810aa8ce76cd41c4f25599414",
+  "discountCodes": [],
+  "discountAllocations": [],
+  "buyerIdentity": {
+    "countryCode": "US",
+    "preferences": null,
+    "email": null,
+    "phone": null,
+    "customer": null,
+    "deliveryAddressPreferences": [
+      {
+        "address1": "24 Westwind Street",
+        "address2": "Apt C",
+        "city": "Marina Del Rey",
+        "company": "Fake Company",
+        "country": "United States",
+        "countryCodeV2": "US",
+        "firstName": "Juan",
+        "formatted": [
+          "Fake Company",
+          "24 Westwind Street",
+          "Apt C",
+          "Marina Del Rey CA 90292",
+          "United States"
+        ],
+        "formattedArea": "Marina Del Rey CA, United States",
+        "lastName": "Prieto",
+        "latitude": null,
+        "longitude": null,
+        "name": "Juan Prieto",
+        "phone": "+1-424-537-8776",
+        "province": "CA",
+        "provinceCode": "CA"
+      }
+    ]
+  },
+  "deliveryGroups": {
+    "pageInfo": {
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    },
+    "edges": [
+      {
+        "node": {
+          "id": "gid://shopify/CartDeliveryGroup/269ea2856c41d63937d1ba5212c29713?cart=",
+          "deliveryAddress": {
+            "address2": "Apt C",
+            "address1": "24 Westwind Street",
+            "city": "Marina Del Rey",
+            "company": "Fake Company",
+            "country": "US",
+            "countryCodeV2": "ZZ",
+            "firstName": "Juan",
+            "formatted": [
+              "Fake Company",
+              "24 Westwind Street",
+              "Apt C",
+              "Marina Del Rey 90292"
+            ],
+            "formattedArea": "Marina Del Rey CA",
+            "lastName": "Prieto",
+            "latitude": null,
+            "longitude": null,
+            "name": "Juan Prieto",
+            "phone": "+1-424-537-8776",
+            "province": "CA",
+            "provinceCode": null
+          },
+          "deliveryOptions": [
+            {
+              "code": "Express",
+              "deliveryMethodType": "SHIPPING",
+              "description": "",
+              "estimatedCost": {
+                "amount": "0.0",
+                "currencyCode": "USD"
+              },
+              "handle": "a94e8850afeab0c933d9764e633a7ad8",
+              "title": "Express"
+            }
+          ],
+          "selectedDeliveryOption": {
+            "code": "Express",
+            "deliveryMethodType": "SHIPPING",
+            "description": "",
+            "estimatedCost": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "handle": "a94e8850afeab0c933d9764e633a7ad8",
+            "title": "Express"
+          },
+          "cartLines": {
+            "pageInfo": {
+              "hasNextPage": false,
+              "hasPreviousPage": false
+            },
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/CartLine/24c9c9bf-97dc-4e0a-8921-00c05b745be9?cart=Z2NwLXVzLXdlc3QxOjAxSkJDSFZDUjVTUlY2Vzg0UEU4Q1lWN0I2"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "appliedGiftCards": [],
+  "note": ""
+}

@@ -9,6 +9,16 @@ export function CartCreate({cart, setCart, verbose = false}) {
       <br />
       <h2>Create a basic cart</h2>
       <button onClick={async () => {
+         sfapi.create({}).then((res) => {
+           console.log('Response:', res)
+           const {data: {cartCreate: { cart } }} = res
+           console.log('Cart created', cart)
+            setCart(cart)
+         })
+       }}>
+        Create Empty Cart
+      </button>
+      <button onClick={async () => {
          sfapi.create({
            lines: [
              {
@@ -23,7 +33,28 @@ export function CartCreate({cart, setCart, verbose = false}) {
             setCart(cart)
          })
        }}>
-        Create Cart
+        Create Cart (1 item)
+      </button>
+      <button onClick={async () => {
+         sfapi.create({
+           lines: [
+             {
+               merchandiseId: 'gid://shopify/ProductVariant/48535896522774', 
+               quantity: 1
+             },
+            { 
+              merchandiseId:'gid://shopify/ProductVariant/48535896555542',
+              quantity: 1
+            }
+           ]
+         }).then((res) => {
+           console.log('Response:', res)
+           const {data: {cartCreate: { cart } }} = res
+           console.log('Cart created', cart)
+            setCart(cart)
+         })
+       }}>
+        Create Cart (2 items)
       </button>
       <button onClick={async () => {
          sfapi.create({
