@@ -1,4 +1,3 @@
-import { useState} from 'react'
 import {sfapi} from './sfapi'
 
 export function CartCreate({cart, setCart, verbose = false}) {
@@ -22,7 +21,7 @@ export function CartCreate({cart, setCart, verbose = false}) {
          sfapi.create({
            lines: [
              {
-               merchandiseId: 'gid://shopify/ProductVariant/48535896522774', 
+               merchanidseId: 'gid://shopify/ProductVariant/48535896522774', 
                quantity: 1
              }
            ]

@@ -92,8 +92,8 @@ export function CheckoutCreate({checkout, setCheckout, verbose = false}) {
        }}>
         Create ES Checkout and Redirect To Checkout Page
       </button>
+      <button onClick={async () => {
       <br />
-           <button onClick={async () => {
          client.checkout.create({
            buyerIdentity: {
              countryCode: 'ES'
@@ -134,7 +134,8 @@ export function CheckoutCreate({checkout, setCheckout, verbose = false}) {
       <br />
        <button style={{ backgroundColor: 'orange'}} onClick={async () => {
          client.checkout.create({
-           presentmentCurrencyCode: 'EUR',         lineItems: [
+           presentmentCurrencyCode: 'EUR',
+           lineItems: [
              {
                variantId: 'gid://shopify/ProductVariant/48535896522774', 
                quantity: 1

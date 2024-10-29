@@ -1,0 +1,24 @@
+{
+   "buyerIdentity": {
+     "deliveryAddressPreferences": {
+       "deliveryAddress": {
+        "address1": "Calle de la Princesa, 1",
+        "address2": "2A",
+        "city": "Madrid",
+        "company": "Shopify",
+        "country": "Spain",
+        "firstName": "Juan Pablo",
+        "lastName": "Prieto",
+        "phone": "+34600000000",
+        "province": "Madrid",
+        "zip": "28008"
+       }
+     }
+   },
+   "lines": [
+     {
+       "merchandiseId": "gid://shopify/ProductVariant/48535896522774", 
+       "quantity": 1
+     }
+   ]
+ }

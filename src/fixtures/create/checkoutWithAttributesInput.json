@@ -1,0 +1,14 @@
+{
+   "customAttributes": [
+      {
+        "key": "my-key",
+        "value": "my-value"
+      }
+    ],
+   "lineItems": [
+     {
+       "variantId": "gid://shopify/ProductVariant/48535896522774", 
+       "quantity": 1
+     }
+   ]
+ }
