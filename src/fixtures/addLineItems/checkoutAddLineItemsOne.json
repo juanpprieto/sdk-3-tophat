@@ -1,0 +1,339 @@
+{
+  "id": "gid://shopify/Checkout/b81363c1c57f6690ded5c0f17c44e721?key=a2bb2382185bf1173ed54107ec7a1cf3",
+  "ready": false,
+  "requiresShipping": true,
+  "note": null,
+  "paymentDue": {
+    "amount": "200.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "paymentDueV2": {
+    "amount": "200.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "webUrl": "https://juanprieto.myshopify.com/60187836438/checkouts/b81363c1c57f6690ded5c0f17c44e721?key=a2bb2382185bf1173ed54107ec7a1cf3",
+  "orderStatusUrl": null,
+  "taxExempt": false,
+  "taxesIncluded": false,
+  "currencyCode": "USD",
+  "totalTax": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "totalTaxV2": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "lineItemsSubtotalPrice": {
+    "amount": "200.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "subtotalPrice": {
+    "amount": "200.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "subtotalPriceV2": {
+    "amount": "200.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "totalPrice": {
+    "amount": "200.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "totalPriceV2": {
+    "amount": "200.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "completedAt": null,
+  "createdAt": "2024-10-30T18:57:28Z",
+  "updatedAt": "2024-10-30T18:57:28Z",
+  "email": null,
+  "discountApplications": [],
+  "appliedGiftCards": [],
+  "shippingAddress": null,
+  "shippingLine": null,
+  "customAttributes": [],
+  "order": null,
+  "lineItems": [
+    {
+      "id": "gid://shopify/CheckoutLineItem/485358965227740?checkout=b81363c1c57f6690ded5c0f17c44e721",
+      "title": "Alex Kassian - Strings Of Eden",
+      "variant": {
+        "id": "gid://shopify/ProductVariant/48535896522774",
+        "title": "Default Title",
+        "price": {
+          "amount": "200.0",
+          "currencyCode": "USD",
+          "type": {
+            "name": "MoneyV2",
+            "kind": "OBJECT",
+            "fieldBaseTypes": {
+              "amount": "Decimal",
+              "currencyCode": "CurrencyCode"
+            },
+            "implementsNode": false
+          }
+        },
+        "priceV2": {
+          "amount": "200.0",
+          "currencyCode": "USD",
+          "type": {
+            "name": "MoneyV2",
+            "kind": "OBJECT",
+            "fieldBaseTypes": {
+              "amount": "Decimal",
+              "currencyCode": "CurrencyCode"
+            },
+            "implementsNode": false
+          }
+        },
+        "weight": 0,
+        "available": true,
+        "sku": "",
+        "compareAtPrice": null,
+        "compareAtPriceV2": null,
+        "image": {
+          "id": "gid://shopify/ProductImage/45559092281366",
+          "src": "https://cdn.shopify.com/s/files/1/0601/8783/6438/files/NTMtOTAxNy5qcGVn.jpg?v=1724459712",
+          "altText": "pf006_0_Alex Kassian - Strings Of Eden ",
+          "width": 500,
+          "height": 500,
+          "type": {
+            "name": "Image",
+            "kind": "OBJECT",
+            "fieldBaseTypes": {
+              "altText": "String",
+              "height": "Int",
+              "id": "ID",
+              "url": "URL",
+              "width": "Int"
+            },
+            "implementsNode": false
+          }
+        },
+        "selectedOptions": [
+          {
+            "name": "Title",
+            "value": "Default Title",
+            "type": {
+              "name": "SelectedOption",
+              "kind": "OBJECT",
+              "fieldBaseTypes": {
+                "name": "String",
+                "value": "String"
+              },
+              "implementsNode": false
+            }
+          }
+        ],
+        "unitPrice": null,
+        "unitPriceMeasurement": {
+          "measuredType": null,
+          "quantityUnit": null,
+          "quantityValue": 0,
+          "referenceUnit": null,
+          "referenceValue": 0,
+          "type": {
+            "name": "UnitPriceMeasurement",
+            "kind": "OBJECT",
+            "fieldBaseTypes": {
+              "measuredType": "UnitPriceMeasurementMeasuredType",
+              "quantityUnit": "UnitPriceMeasurementMeasuredUnit",
+              "quantityValue": "Float",
+              "referenceUnit": "UnitPriceMeasurementMeasuredUnit",
+              "referenceValue": "Int"
+            },
+            "implementsNode": false
+          }
+        },
+        "product": {
+          "id": "gid://shopify/Product/9899493556246",
+          "handle": "alex-kassian-strings-of-eden",
+          "type": {
+            "name": "Product",
+            "kind": "OBJECT",
+            "fieldBaseTypes": {
+              "availableForSale": "Boolean",
+              "createdAt": "DateTime",
+              "description": "String",
+              "descriptionHtml": "HTML",
+              "handle": "String",
+              "id": "ID",
+              "images": "ImageConnection",
+              "onlineStoreUrl": "URL",
+              "options": "ProductOption",
+              "productType": "String",
+              "publishedAt": "DateTime",
+              "title": "String",
+              "updatedAt": "DateTime",
+              "variants": "ProductVariantConnection",
+              "vendor": "String"
+            },
+            "implementsNode": true
+          }
+        },
+        "type": {
+          "name": "ProductVariant",
+          "kind": "OBJECT",
+          "fieldBaseTypes": {
+            "availableForSale": "Boolean",
+            "compareAtPrice": "MoneyV2",
+            "id": "ID",
+            "image": "Image",
+            "price": "MoneyV2",
+            "product": "Product",
+            "selectedOptions": "SelectedOption",
+            "sku": "String",
+            "title": "String",
+            "unitPrice": "MoneyV2",
+            "unitPriceMeasurement": "UnitPriceMeasurement",
+            "weight": "Float"
+          },
+          "implementsNode": true
+        }
+      },
+      "quantity": 1,
+      "customAttributes": [],
+      "discountAllocations": [],
+      "type": {
+        "name": "CheckoutLineItem",
+        "kind": "OBJECT",
+        "fieldBaseTypes": {
+          "customAttributes": "Attribute",
+          "discountAllocations": "DiscountAllocation",
+          "id": "ID",
+          "quantity": "Int",
+          "title": "String",
+          "variant": "ProductVariant"
+        },
+        "implementsNode": true
+      },
+      "hasNextPage": false,
+      "hasPreviousPage": false,
+      "variableValues": {
+        "input": {
+          "lineItems": [
+            {
+              "variantId": "gid://shopify/ProductVariant/48535896522774",
+              "quantity": 1
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "type": {
+    "name": "Checkout",
+    "kind": "OBJECT",
+    "fieldBaseTypes": {
+      "appliedGiftCards": "AppliedGiftCard",
+      "completedAt": "DateTime",
+      "createdAt": "DateTime",
+      "currencyCode": "CurrencyCode",
+      "customAttributes": "Attribute",
+      "discountApplications": "DiscountApplicationConnection",
+      "email": "String",
+      "id": "ID",
+      "lineItems": "CheckoutLineItemConnection",
+      "lineItemsSubtotalPrice": "MoneyV2",
+      "note": "String",
+      "order": "Order",
+      "orderStatusUrl": "URL",
+      "paymentDue": "MoneyV2",
+      "ready": "Boolean",
+      "requiresShipping": "Boolean",
+      "shippingAddress": "MailingAddress",
+      "shippingLine": "ShippingRate",
+      "subtotalPrice": "MoneyV2",
+      "taxExempt": "Boolean",
+      "taxesIncluded": "Boolean",
+      "totalPrice": "MoneyV2",
+      "totalTax": "MoneyV2",
+      "updatedAt": "DateTime",
+      "webUrl": "URL"
+    },
+    "implementsNode": true
+  },
+  "userErrors": []
+}

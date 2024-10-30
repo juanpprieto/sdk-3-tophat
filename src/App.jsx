@@ -1,11 +1,11 @@
 import './App.css'
-import {CartCreate} from './CartCreate'
-import {CheckoutCreate} from './CheckoutCreate'
-import {useState} from 'react'
-import {client} from './sdk'
-import {sfapi} from './sfapi'
-import {CheckoutDiscounts} from './CheckoutDiscounts'
-import {CartDiscounts} from './CartDiscounts'
+import { CartCreate } from './CartCreate'
+import { CheckoutCreate } from './CheckoutCreate'
+import { useState } from 'react'
+import { client } from './sdk'
+import { sfapi } from './sfapi'
+import { CheckoutDiscounts } from './CheckoutDiscounts'
+import { CartDiscounts } from './CartDiscounts'
 
 
 function App() {
@@ -13,23 +13,23 @@ function App() {
   const [cart, setCart] = useState(null)
   const showCreateTests = true
   return (
-    <div style={{textAlign:'left'}}>
+    <div style={{ textAlign: 'left' }}>
       <h1>Checkout vs Cart</h1>
-      <CheckoutUpdate checkout={checkout} setCheckout={setCheckout}/>
+      <CheckoutUpdate checkout={checkout} setCheckout={setCheckout} />
       <CheckoutCreate checkout={checkout} setCheckout={setCheckout} verbose={showCreateTests} />
-      <CheckoutDiscounts checkout={checkout} setCheckout={setCheckout}/>
-      <CheckoutShippingAddress checkout={checkout} setCheckout={setCheckout}/>
+      <CheckoutDiscounts checkout={checkout} setCheckout={setCheckout} />
+      <CheckoutShippingAddress checkout={checkout} setCheckout={setCheckout} />
 
 
-      <CartUpdate cart={cart} setCart={setCart}/>
+      <CartUpdate cart={cart} setCart={setCart} />
       <CartCreate cart={cart} setCart={setCart} verbose={showCreateTests} />
-      <CartDiscounts cart={cart} setCart={setCart}/>
-      <CartShippingAddress cart={cart} setCart={setCart}/>
+      <CartDiscounts cart={cart} setCart={setCart} />
+      <CartShippingAddress cart={cart} setCart={setCart} />
     </div>
   )
 }
 
-function CheckoutShippingAddress({checkout, setCheckout}) {
+function CheckoutShippingAddress({ checkout, setCheckout }) {
   return (
     <div>
       <br />
@@ -58,7 +58,7 @@ function CheckoutShippingAddress({checkout, setCheckout}) {
   )
 }
 
-function CartShippingAddress({cart, setCart}) {
+function CartShippingAddress({ cart, setCart }) {
   return (
     <div>
       <br />
@@ -78,7 +78,7 @@ function CartShippingAddress({cart, setCart}) {
           zip: '90292'
         }).then((res) => {
           console.log('Shipping address updated:', res)
-          const {data: {cartBuyerIdentityUpdate: { cart } }} = res
+          const { data: { cartBuyerIdentityUpdate: { cart } } } = res
           setCart(cart)
         })
       }}>
@@ -88,8 +88,8 @@ function CartShippingAddress({cart, setCart}) {
   )
 }
 
-function CheckoutUpdate({checkout, setCheckout}) {
- return (
+function CheckoutUpdate({ checkout, setCheckout }) {
+  return (
     <div>
       <br />
       <br />
@@ -97,8 +97,8 @@ function CheckoutUpdate({checkout, setCheckout}) {
       <a href={checkout?.webUrl} target="_blank">Open Checkout</a>
       <button onClick={async () => {
         client.checkout.addLineItems(checkout?.id, [
-          { 
-            variantId:'gid://shopify/ProductVariant/48535896555542',
+          {
+            variantId: 'gid://shopify/ProductVariant/48535896555542',
             quantity: 1
           }
         ]).then((checkout) => {
@@ -109,10 +109,12 @@ function CheckoutUpdate({checkout, setCheckout}) {
         Add another item to checkout
       </button>
       <button onClick={async () => {
-        client.checkout.updateAttributes(checkout?.id, { customAttributes: [
-          { key: 'key1', value: 'value1' },
-          { key: 'key2', value: 'value2' }
-        ]}).then((checkout) => {
+        client.checkout.updateAttributes(checkout?.id, {
+          customAttributes: [
+            { key: 'key1', value: 'value1' },
+            { key: 'key2', value: 'value2' }
+          ]
+        }).then((checkout) => {
           console.log('Item added:', checkout)
           setCheckout(checkout)
         })
@@ -120,17 +122,22 @@ function CheckoutUpdate({checkout, setCheckout}) {
         Update attributes
       </button>
       <button onClick={async () => {
-        client.checkout.updateAttributes(checkout?.id, { customAttributes: [
-          { key: 'test2', value: 'test2' }
-        ]}).then((checkout) => {
+        client.checkout.updateAttributes(checkout?.id, {
+          customAttributes: [
+            { key: 'key1', value: 'value1' },
+            { key: 'key2', value: 'value2' }
+
+          ],
+          note: 'This is a note'
+        }).then((checkout) => {
           console.log('Item added:', checkout)
           setCheckout(checkout)
         })
       }}>
-        Update attributes (2)
+        Update attributes + note
       </button>
       <button onClick={async () => {
-        client.checkout.updateAttributes(checkout?.id, {note: 'test'}).then((checkout) => {
+        client.checkout.updateAttributes(checkout?.id, { note: 'test' }).then((checkout) => {
           console.log('Item added:', checkout)
           setCheckout(checkout)
         })
@@ -142,14 +149,15 @@ function CheckoutUpdate({checkout, setCheckout}) {
         client.checkout.updateEmail(checkout?.id, 'john.doe@shopify.com').then((checkout) => {
           console.log('Item added:', checkout)
           setCheckout(checkout)
-        })}}>
+        })
+      }}>
         Update Email
       </button>
-   </div>
- )
+    </div>
+  )
 }
 
-function CartUpdate({cart, setCart}) {
+function CartUpdate({ cart, setCart }) {
   if (!cart) return null
   return (
     <div>
@@ -164,7 +172,7 @@ function CartUpdate({cart, setCart}) {
         }
         ]).then((res) => {
           console.log('Response:', res)
-          const {data: {cartLinesAdd: { cart } }} = res
+          const { data: { cartLinesAdd: { cart } } } = res
           console.log('Item added:', cart)
           setCart(cart)
         })
@@ -172,16 +180,18 @@ function CartUpdate({cart, setCart}) {
         Add another item to cart
       </button>
       <button onClick={async () => {
-        sfapi.updateAttributes(cart?.id, {attributes: [{
-          key: 'key1',
-          value: 'value1'
-        },
-        {
-          key: 'key2',
-          value: 'value2'
-        }]}).then((res) => {
+        sfapi.updateAttributes(cart?.id, {
+          attributes: [{
+            key: 'key1',
+            value: 'value1'
+          },
+          {
+            key: 'key2',
+            value: 'value2'
+          }]
+        }).then((res) => {
           console.log('Response:', res)
-          const {data: {cartAttributesUpdate: { cart } }} = res
+          const { data: { cartAttributesUpdate: { cart } } } = res
           console.log('Item added:', cart)
           setCart(cart)
         })
@@ -193,7 +203,7 @@ function CartUpdate({cart, setCart}) {
           note: 'This is a note'
         }).then((res) => {
           console.log('Response:', res)
-          const {data: {cartNoteUpdate: { cart } }} = res
+          const { data: { cartNoteUpdate: { cart } } } = res
           console.log('Item added:', cart)
           setCart(cart)
         })
@@ -201,9 +211,30 @@ function CartUpdate({cart, setCart}) {
         Update attributes (note)
       </button>
       <button onClick={async () => {
+        sfapi.updateAttributes(cart?.id, {
+          attributes: [{
+            key: 'key1',
+            value: 'value1'
+          },
+          {
+            key: 'key2',
+            value: 'value2'
+          }],
+          note: 'This is a note'
+        }).then((res) => {
+          console.log('Response:', res)
+          const { data } = res
+          const cart = data?.cartAttributesUpdate?.cart || data?.cartNoteUpdate?.cart
+          console.log('Item added:', cart)
+          setCart(cart)
+        })
+      }}>
+        Update attributes & note
+      </button>
+      <button onClick={async () => {
         sfapi.updateEmail(cart?.id, 'john.doe@shopify.com').then((res) => {
           console.log('Response:', res)
-          const {data: {cartBuyerIdentityUpdate: { cart } }} = res
+          const { data: { cartBuyerIdentityUpdate: { cart } } } = res
           console.log('Item added:', cart)
           setCart(cart)
         })

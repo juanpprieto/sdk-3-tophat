@@ -412,6 +412,7 @@ mutation cartEmailUpdate($cartId: ID!, $email: String!) {
   }
 }
 `
+
 export const sfapi = {
   create: async (input) => {
     return await client.request(CART_CREATE_MUTATION, {
@@ -426,24 +427,38 @@ export const sfapi = {
   updateAttributes: async (cartId, input) => {
     const {attributes = null, note = null} = input
     if (!attributes && !note) {
-      return
+      return // TODO: same error as the Checkout API
     }
 
-    if (attributes) {
-      return await client.request(CART_UPDATE_ATTRIBUTES_MUTATION, {
+    // TODO: account for updating both attributes and note
+    if (attributes & !note) {
+       return await client.request(CART_UPDATE_ATTRIBUTES_MUTATION, {
         variables: {
           cartId,
           attributes: input.attributes
         }
       })
+    } else if (!attributes && note) {
+      return await client.request(CART_UPDATE_NOTE_MUTATION, {
+        variables: {
+          cartId,
+          note: input.note
+        }
+      })
+    } else {
+      await client.request(CART_UPDATE_ATTRIBUTES_MUTATION, {
+        variables: {
+          cartId,
+          attributes: input.attributes
+        }
+      })
+      return await client.request(CART_UPDATE_NOTE_MUTATION, {
+        variables: {
+          cartId,
+          note: input.note
+        }
+      })
     }
-
-    return await client.request(CART_UPDATE_NOTE_MUTATION, {
-      variables: {
-        cartId,
-        note: input.note
-      }
-    })
   },
 
   updateEmail: async (cartId, email) => {

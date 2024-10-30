@@ -1,0 +1,10 @@
+{
+  "id": "gid://shopify/Checkout/bc73a048c56d6a1658bbde7a8047178a?key=ec29a7d080ac0974f2c68a7ddf844f50",
+  "input": {
+    "customAttributes": [
+      { "key": "key1", "value": "value1" },
+      { "key": "key2", "value": "value2" }
+    ],
+    "note": "This is a note"
+  }
+}

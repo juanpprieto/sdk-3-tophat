@@ -1,0 +1,11 @@
+{
+  "id": "gid://shopify/Checkout/b81363c1c57f6690ded5c0f17c44e721?key=a2bb2382185bf1173ed54107ec7a1cf3",
+  "input": {
+    "lineItems": [
+      {
+        "variantId": "gid://shopify/ProductVariant/48535896522774",
+        "quantity": 1
+      }
+    ]
+  }
+}
