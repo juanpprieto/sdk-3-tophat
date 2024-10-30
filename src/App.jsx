@@ -108,6 +108,35 @@ function CheckoutUpdate({checkout, setCheckout}) {
       }}>
         Add another item to checkout
       </button>
+      <button onClick={async () => {
+        client.checkout.updateAttributes(checkout?.id, { customAttributes: [
+          { key: 'key1', value: 'value1' },
+          { key: 'key2', value: 'value2' }
+        ]}).then((checkout) => {
+          console.log('Item added:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+        Update attributes
+      </button>
+      <button onClick={async () => {
+        client.checkout.updateAttributes(checkout?.id, { customAttributes: [
+          { key: 'test2', value: 'test2' }
+        ]}).then((checkout) => {
+          console.log('Item added:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+        Update attributes (2)
+      </button>
+      <button onClick={async () => {
+        client.checkout.updateAttributes(checkout?.id, {note: 'test'}).then((checkout) => {
+          console.log('Item added:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+        Update attributes (note)
+      </button>
    </div>
  )
 }
