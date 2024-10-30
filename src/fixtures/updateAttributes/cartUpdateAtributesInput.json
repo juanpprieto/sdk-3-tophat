@@ -1,0 +1,9 @@
+{ 
+  "id": "gid://shopify/Cart/Z2NwLXVzLXdlc3QxOjAxSkJGOUZHNkVIQ0dTTVQ2MTlFR1ZDQVdI?key=bfed874aa57fda173e75ef69e38858e9",
+  "input": {
+    "attributes": [
+      { "key": "key1", "value": "value1" },
+      { "key": "key2", "value": "value2" }
+    ]
+  }
+}

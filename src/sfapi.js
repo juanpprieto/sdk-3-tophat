@@ -366,6 +366,52 @@ mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
 }
 `
 
+const CART_UPDATE_ATTRIBUTES_MUTATION = `#graphql
+${CART_FRAGMENT}
+mutation cartAttributesUpdate($cartId: ID!, $attributes: [AttributeInput!]!) {
+  cartAttributesUpdate(cartId: $cartId, attributes: $attributes) {
+    cart {
+      ...CartFragment
+    }
+    userErrors {
+      field
+      message
+      code
+    }
+  }
+}
+`
+
+const CART_UPDATE_NOTE_MUTATION = `#graphql
+${CART_FRAGMENT}
+mutation cartNoteUpdate($cartId: ID!, $note: String!) {
+  cartNoteUpdate(cartId: $cartId, note: $note) {
+    cart {
+      ...CartFragment
+    }
+    userErrors {
+      field
+      message
+      code
+    }
+  }
+}
+`
+const CART_UPDATE_EMAIL_MUTATION = `#graphql
+${CART_FRAGMENT}
+mutation cartEmailUpdate($cartId: ID!, $email: String!) {
+  cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: { email: $email }) {
+    cart {
+      ...CartFragment
+    }
+    userErrors {
+      field
+      message
+      code
+    }
+  }
+}
+`
 export const sfapi = {
   create: async (input) => {
     return await client.request(CART_CREATE_MUTATION, {
@@ -373,6 +419,38 @@ export const sfapi = {
         input,
         country: 'US',
         language: 'EN'
+      }
+    })
+  },
+
+  updateAttributes: async (cartId, input) => {
+    const {attributes = null, note = null} = input
+    if (!attributes && !note) {
+      return
+    }
+
+    if (attributes) {
+      return await client.request(CART_UPDATE_ATTRIBUTES_MUTATION, {
+        variables: {
+          cartId,
+          attributes: input.attributes
+        }
+      })
+    }
+
+    return await client.request(CART_UPDATE_NOTE_MUTATION, {
+      variables: {
+        cartId,
+        note: input.note
+      }
+    })
+  },
+
+  updateEmail: async (cartId, email) => {
+    return await client.request(CART_UPDATE_EMAIL_MUTATION, {
+      variables: {
+        cartId,
+        email
       }
     })
   },

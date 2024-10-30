@@ -137,6 +137,14 @@ function CheckoutUpdate({checkout, setCheckout}) {
       }}>
         Update attributes (note)
       </button>
+
+      <button onClick={async () => {
+        client.checkout.updateEmail(checkout?.id, 'john.doe@shopify.com').then((checkout) => {
+          console.log('Item added:', checkout)
+          setCheckout(checkout)
+        })}}>
+        Update Email
+      </button>
    </div>
  )
 }
@@ -162,6 +170,45 @@ function CartUpdate({cart, setCart}) {
         })
       }}>
         Add another item to cart
+      </button>
+      <button onClick={async () => {
+        sfapi.updateAttributes(cart?.id, {attributes: [{
+          key: 'key1',
+          value: 'value1'
+        },
+        {
+          key: 'key2',
+          value: 'value2'
+        }]}).then((res) => {
+          console.log('Response:', res)
+          const {data: {cartAttributesUpdate: { cart } }} = res
+          console.log('Item added:', cart)
+          setCart(cart)
+        })
+      }}>
+        Update attributes
+      </button>
+      <button onClick={async () => {
+        sfapi.updateAttributes(cart?.id, {
+          note: 'This is a note'
+        }).then((res) => {
+          console.log('Response:', res)
+          const {data: {cartNoteUpdate: { cart } }} = res
+          console.log('Item added:', cart)
+          setCart(cart)
+        })
+      }}>
+        Update attributes (note)
+      </button>
+      <button onClick={async () => {
+        sfapi.updateEmail(cart?.id, 'john.doe@shopify.com').then((res) => {
+          console.log('Response:', res)
+          const {data: {cartBuyerIdentityUpdate: { cart } }} = res
+          console.log('Item added:', cart)
+          setCart(cart)
+        })
+      }}>
+        Update Email
       </button>
     </div>
   )

@@ -1,0 +1,52 @@
+{
+  "id": "gid://shopify/Cart/Z2NwLXVzLXdlc3QxOjAxSkJGQU5IODFYRVFQNVE1NDBRWVpUUDJR?key=7cdf965589b5e3be37aebf9e446de187",
+  "createdAt": "2024-10-30T18:23:06Z",
+  "updatedAt": "2024-10-30T18:25:03Z",
+  "lines": {
+    "pageInfo": {
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    },
+    "edges": []
+  },
+  "attributes": [],
+  "cost": {
+    "totalAmount": {
+      "amount": "0.0",
+      "currencyCode": "XXX"
+    },
+    "subtotalAmount": {
+      "amount": "0.0",
+      "currencyCode": "XXX"
+    },
+    "totalTaxAmount": null,
+    "totalDutyAmount": null
+  },
+  "checkoutUrl": "https://mycrate.2ndgentrecords.com/cart/c/Z2NwLXVzLXdlc3QxOjAxSkJGQU5IODFYRVFQNVE1NDBRWVpUUDJR?key=7cdf965589b5e3be37aebf9e446de187",
+  "discountCodes": [],
+  "discountAllocations": [],
+  "buyerIdentity": {
+    "countryCode": "US",
+    "preferences": {
+      "delivery": {
+        "coordinates": null,
+        "deliveryMethod": [],
+        "pickupHandle": []
+      },
+      "wallet": []
+    },
+    "email": "john.doe@shopify.com",
+    "phone": null,
+    "customer": null,
+    "deliveryAddressPreferences": []
+  },
+  "deliveryGroups": {
+    "pageInfo": {
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    },
+    "edges": []
+  },
+  "appliedGiftCards": [],
+  "note": ""
+}
