@@ -21,7 +21,7 @@ export function CartCreate({cart, setCart, verbose = false}) {
          sfapi.create({
            lines: [
              {
-               merchanidseId: 'gid://shopify/ProductVariant/48535896522774', 
+               merchandiseId: 'gid://shopify/ProductVariant/48535896522774',
                quantity: 1
              }
            ]

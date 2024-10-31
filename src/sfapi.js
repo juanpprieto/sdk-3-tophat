@@ -412,11 +412,10 @@ mutation cartEmailUpdate($cartId: ID!, $email: String!) {
   }
 }
 `
-
 export const sfapi = {
   create: async (input) => {
     return await client.request(CART_CREATE_MUTATION, {
-      variables: {
+      variables: { 
         input,
         country: 'US',
         language: 'EN'
@@ -424,6 +423,8 @@ export const sfapi = {
     })
   },
 
+  // TODO: ignore input.allowPartialAddresses
+  // Allows setting partial addresses on a Checkout, skipping the full validation of attributes. The required attributes are city, province, and country. Full validation of addresses is still done at completion time. Defaults to null.
   updateAttributes: async (cartId, input) => {
     const {attributes = null, note = null} = input
     if (!attributes && !note) {
@@ -461,6 +462,7 @@ export const sfapi = {
     }
   },
 
+  // TODO: need conversion from checkoutId to cartId
   updateEmail: async (cartId, email) => {
     return await client.request(CART_UPDATE_EMAIL_MUTATION, {
       variables: {
@@ -479,6 +481,23 @@ export const sfapi = {
     })
   },
 
+  addDiscount: async (cartId, discountCode) => {
+    await client.request(CART_UPDATE_DISCOUNT_CODE_MUTATION, {
+      variables: {
+        cartId,
+        discountCodes: []
+      }
+    })
+
+    return await client.request(CART_UPDATE_DISCOUNT_CODE_MUTATION, {
+      variables: {
+        cartId,
+        discountCodes: [discountCode]
+      }
+    })
+  },
+
+  // TODO: need conversion [CheckoutLineItemInput!]! to [CartLineInput!]!
   addLineItems: async (cartId, lines) => {
     return await client.request(CART_ADD_LINE_ITEMS_MUTATION, {
       variables: {

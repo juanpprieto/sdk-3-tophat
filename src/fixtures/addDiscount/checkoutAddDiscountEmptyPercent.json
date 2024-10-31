@@ -1,0 +1,172 @@
+{
+  "id": "gid://shopify/Checkout/c133d445a03c7203a744bbd63b62a8fd?key=b4d44e8d807c4b036d3d2364e79a4eba",
+  "ready": false,
+  "requiresShipping": false,
+  "note": null,
+  "paymentDue": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "paymentDueV2": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "webUrl": "https://juanprieto.myshopify.com/60187836438/checkouts/c133d445a03c7203a744bbd63b62a8fd?key=b4d44e8d807c4b036d3d2364e79a4eba",
+  "orderStatusUrl": null,
+  "taxExempt": false,
+  "taxesIncluded": false,
+  "currencyCode": "USD",
+  "totalTax": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "totalTaxV2": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "lineItemsSubtotalPrice": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "subtotalPrice": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "subtotalPriceV2": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "totalPrice": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "totalPriceV2": {
+    "amount": "0.0",
+    "currencyCode": "USD",
+    "type": {
+      "name": "MoneyV2",
+      "kind": "OBJECT",
+      "fieldBaseTypes": {
+        "amount": "Decimal",
+        "currencyCode": "CurrencyCode"
+      },
+      "implementsNode": false
+    }
+  },
+  "completedAt": null,
+  "createdAt": "2024-10-31T20:59:02Z",
+  "updatedAt": "2024-10-31T20:59:06Z",
+  "email": null,
+  "discountApplications": [],
+  "appliedGiftCards": [],
+  "shippingAddress": null,
+  "shippingLine": null,
+  "customAttributes": [],
+  "order": null,
+  "lineItems": [],
+  "type": {
+    "name": "Checkout",
+    "kind": "OBJECT",
+    "fieldBaseTypes": {
+      "appliedGiftCards": "AppliedGiftCard",
+      "completedAt": "DateTime",
+      "createdAt": "DateTime",
+      "currencyCode": "CurrencyCode",
+      "customAttributes": "Attribute",
+      "discountApplications": "DiscountApplicationConnection",
+      "email": "String",
+      "id": "ID",
+      "lineItems": "CheckoutLineItemConnection",
+      "lineItemsSubtotalPrice": "MoneyV2",
+      "note": "String",
+      "order": "Order",
+      "orderStatusUrl": "URL",
+      "paymentDue": "MoneyV2",
+      "ready": "Boolean",
+      "requiresShipping": "Boolean",
+      "shippingAddress": "MailingAddress",
+      "shippingLine": "ShippingRate",
+      "subtotalPrice": "MoneyV2",
+      "taxExempt": "Boolean",
+      "taxesIncluded": "Boolean",
+      "totalPrice": "MoneyV2",
+      "totalTax": "MoneyV2",
+      "updatedAt": "DateTime",
+      "webUrl": "URL"
+    },
+    "implementsNode": true
+  },
+  "userErrors": []
+}

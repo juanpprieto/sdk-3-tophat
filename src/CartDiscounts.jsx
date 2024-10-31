@@ -7,7 +7,7 @@ export function CartDiscounts({cart, setCart}) {
      <br />
      <h1>Cart Discounts</h1>
      <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['10PERCENTOFF']).then((res) => {
+       sfapi.addDiscount(cart?.id, '10PERCENTOFF').then((res) => {
          console.log('Response:', res)
          const {data: {cartDiscountCodesUpdate: { cart } }} = res
          console.log('Discount added:', cart.discountCodes)
@@ -17,7 +17,7 @@ export function CartDiscounts({cart, setCart}) {
       Add 10% off discount
     </button>
     <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['10OFF']).then((res) => {
+       sfapi.addDiscount(cart?.id, '10OFF').then((res) => {
          console.log('Response:', res)
          const {data: {cartDiscountCodesUpdate: { cart } }} = res
          console.log('Discount added:', cart.discountCodes)
@@ -27,7 +27,7 @@ export function CartDiscounts({cart, setCart}) {
       Add $10 off discount
     </button>
      <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['AUTO10PERCENT']).then((res) => {
+       sfapi.addDiscount(cart?.id, 'AUTO10PERCENT').then((res) => {
          console.log('Response:', res)
          const {data: {cartDiscountCodesUpdate: { cart } }} = res
          console.log('Discount added:', cart.discountCodes)
@@ -37,7 +37,7 @@ export function CartDiscounts({cart, setCart}) {
       Auto Add 10% off discount
     </button>
      <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['XGETY50PERCENT']).then((res) => {
+       sfapi.addDiscount(cart?.id, 'XGETY50PERCENT').then((res) => {
          console.log('Response:', res)
          const {data: {cartDiscountCodesUpdate: { cart } }} = res
          console.log('Discount added:', cart.discountCodes)
@@ -47,7 +47,7 @@ export function CartDiscounts({cart, setCart}) {
        Add X Get Y 50% off discount next product
     </button>
     <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['ORDERFIXED50OFF']).then((res) => {
+       sfapi.addDiscount(cart?.id, 'ORDERFIXED50OFF').then((res) => {
          console.log('Response:', res)
          const {data: {cartDiscountCodesUpdate: { cart } }} = res
          console.log('Discount added:', cart.discountCodes)
@@ -57,7 +57,7 @@ export function CartDiscounts({cart, setCart}) {
        Add $50 off on order discount
     </button>
     <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['ORDER50PERCENTOFF']).then((res) => {
+       sfapi.addDiscount(cart?.id, 'ORDER50PERCENTOFF').then((res) => {
          console.log('Response:', res)
          const {data: {cartDiscountCodesUpdate: { cart } }} = res
          console.log('Discount added:', cart.discountCodes)
@@ -67,7 +67,7 @@ export function CartDiscounts({cart, setCart}) {
        Add 50% off on order discount
     </button>
     <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['FREESHIPPINGALLCOUNTRIES']).then((res) => {
+       sfapi.addDiscount(cart?.id, 'FREESHIPPINGALLCOUNTRIES').then((res) => {
          console.log('Response:', res)
          const {data: {cartDiscountCodesUpdate: { cart } }} = res
          console.log('Discount added:', cart.discountCodes)
@@ -77,7 +77,7 @@ export function CartDiscounts({cart, setCart}) {
        Add Free Shipping discount (all countries)
     </button>
     <button onClick={async () => {
-       sfapi.updateDiscountCodes(cart?.id, ['FREESHIPPINGEXCLUDERATES']).then((res) => {
+       sfapi.addDiscount(cart?.id, 'FREESHIPPINGEXCLUDERATES').then((res) => {
          console.log('Response:', res)
          const {data: {cartDiscountCodesUpdate: { cart } }} = res
          console.log('Discount added:', cart.discountCodes)
