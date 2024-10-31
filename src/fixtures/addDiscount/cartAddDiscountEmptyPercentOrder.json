@@ -1,0 +1,50 @@
+{
+  "id": "gid://shopify/Cart/Z2NwLXVzLXdlc3QxOjAxSkJKOTVBQ1dRWEpKNFE4OUdWQTk4MEU0?key=723ec7c4c57647a9b2656c37c18d97e8",
+  "createdAt": "2024-10-31T21:54:30Z",
+  "updatedAt": "2024-10-31T21:54:33Z",
+  "lines": {
+    "pageInfo": {
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    },
+    "edges": []
+  },
+  "attributes": [],
+  "cost": {
+    "totalAmount": {
+      "amount": "0.0",
+      "currencyCode": "XXX"
+    },
+    "subtotalAmount": {
+      "amount": "0.0",
+      "currencyCode": "XXX"
+    },
+    "totalTaxAmount": null,
+    "totalDutyAmount": null
+  },
+  "checkoutUrl": "https://mycrate.2ndgentrecords.com/cart/c/Z2NwLXVzLXdlc3QxOjAxSkJKOTVBQ1dRWEpKNFE4OUdWQTk4MEU0?key=723ec7c4c57647a9b2656c37c18d97e8",
+  "discountCodes": [
+    {
+      "applicable": false,
+      "code": "ORDER50PERCENTOFF"
+    }
+  ],
+  "discountAllocations": [],
+  "buyerIdentity": {
+    "countryCode": "US",
+    "preferences": null,
+    "email": null,
+    "phone": null,
+    "customer": null,
+    "deliveryAddressPreferences": []
+  },
+  "deliveryGroups": {
+    "pageInfo": {
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    },
+    "edges": []
+  },
+  "appliedGiftCards": [],
+  "note": ""
+}

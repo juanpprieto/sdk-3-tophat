@@ -1,0 +1,182 @@
+{
+  "id": "gid://shopify/Cart/Z2NwLXVzLXdlc3QxOjAxSkJKOUFNM0ZGN1ozR0Q3MkFUTTVCRzNH?key=db8ca0ac888a7600a038f345ff37e0a7",
+  "createdAt": "2024-10-31T21:57:23Z",
+  "updatedAt": "2024-10-31T21:57:36Z",
+  "lines": {
+    "pageInfo": {
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    },
+    "edges": [
+      {
+        "node": {
+          "id": "gid://shopify/CartLine/ea11da1f-1d3e-43e8-8aad-9fd1ab96c6d7?cart=Z2NwLXVzLXdlc3QxOjAxSkJKOUFNM0ZGN1ozR0Q3MkFUTTVCRzNH",
+          "merchandise": {
+            "id": "gid://shopify/ProductVariant/48535896555542",
+            "title": "Default Title",
+            "image": {
+              "id": "gid://shopify/ProductImage/45559092609046",
+              "src": "https://cdn.shopify.com/s/files/1/0601/8783/6438/files/LTYyNDAuanBlZw.jpg?v=1724460042",
+              "altText": "bay40v_0_Efterklang - Tripper",
+              "width": 300,
+              "height": 300
+            },
+            "product": {
+              "id": "gid://shopify/Product/9899493589014",
+              "handle": "efterklang-tripper",
+              "title": "Efterklang - Tripper"
+            },
+            "weight": 460,
+            "available": true,
+            "sku": "",
+            "selectedOptions": [
+              {
+                "name": "Title",
+                "value": "Default Title"
+              }
+            ],
+            "unitPriceMeasurement": {
+              "measuredType": null,
+              "quantityUnit": null,
+              "quantityValue": 0,
+              "referenceUnit": null,
+              "referenceValue": 0
+            }
+          },
+          "quantity": 1,
+          "attributes": [],
+          "cost": {
+            "totalAmount": {
+              "amount": "70.0",
+              "currencyCode": "USD"
+            },
+            "subtotalAmount": {
+              "amount": "70.0",
+              "currencyCode": "USD"
+            },
+            "amountPerQuantity": {
+              "amount": "70.0",
+              "currencyCode": "USD"
+            },
+            "compareAtAmountPerQuantity": null
+          },
+          "discountAllocations": [],
+          "sellingPlanAllocation": null
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/CartLine/ceff486f-2f19-4f38-b7ca-dd6660a27925?cart=Z2NwLXVzLXdlc3QxOjAxSkJKOUFNM0ZGN1ozR0Q3MkFUTTVCRzNH",
+          "merchandise": {
+            "id": "gid://shopify/ProductVariant/48535896522774",
+            "title": "Default Title",
+            "image": {
+              "id": "gid://shopify/ProductImage/45559092281366",
+              "src": "https://cdn.shopify.com/s/files/1/0601/8783/6438/files/NTMtOTAxNy5qcGVn.jpg?v=1724459712",
+              "altText": "pf006_0_Alex Kassian - Strings Of Eden ",
+              "width": 500,
+              "height": 500
+            },
+            "product": {
+              "id": "gid://shopify/Product/9899493556246",
+              "handle": "alex-kassian-strings-of-eden",
+              "title": "Alex Kassian - Strings Of Eden"
+            },
+            "weight": 0,
+            "available": true,
+            "sku": "",
+            "selectedOptions": [
+              {
+                "name": "Title",
+                "value": "Default Title"
+              }
+            ],
+            "unitPriceMeasurement": {
+              "measuredType": null,
+              "quantityUnit": null,
+              "quantityValue": 0,
+              "referenceUnit": null,
+              "referenceValue": 0
+            }
+          },
+          "quantity": 1,
+          "attributes": [],
+          "cost": {
+            "totalAmount": {
+              "amount": "200.0",
+              "currencyCode": "USD"
+            },
+            "subtotalAmount": {
+              "amount": "200.0",
+              "currencyCode": "USD"
+            },
+            "amountPerQuantity": {
+              "amount": "200.0",
+              "currencyCode": "USD"
+            },
+            "compareAtAmountPerQuantity": null
+          },
+          "discountAllocations": [],
+          "sellingPlanAllocation": null
+        }
+      }
+    ]
+  },
+  "attributes": [],
+  "cost": {
+    "totalAmount": {
+      "amount": "135.0",
+      "currencyCode": "USD"
+    },
+    "subtotalAmount": {
+      "amount": "270.0",
+      "currencyCode": "USD"
+    },
+    "totalTaxAmount": null,
+    "totalDutyAmount": null
+  },
+  "checkoutUrl": "https://mycrate.2ndgentrecords.com/cart/c/Z2NwLXVzLXdlc3QxOjAxSkJKOUFNM0ZGN1ozR0Q3MkFUTTVCRzNH?key=db8ca0ac888a7600a038f345ff37e0a7",
+  "discountCodes": [
+    {
+      "applicable": true,
+      "code": "ORDER50PERCENTOFF"
+    }
+  ],
+  "discountAllocations": [
+    {
+      "targetType": "LINE_ITEM",
+      "code": "ORDER50PERCENTOFF",
+      "discountedAmount": {
+        "amount": "35.0",
+        "currencyCode": "USD"
+      },
+      "__typename": "CartCodeDiscountAllocation"
+    },
+    {
+      "targetType": "LINE_ITEM",
+      "code": "ORDER50PERCENTOFF",
+      "discountedAmount": {
+        "amount": "100.0",
+        "currencyCode": "USD"
+      },
+      "__typename": "CartCodeDiscountAllocation"
+    }
+  ],
+  "buyerIdentity": {
+    "countryCode": "US",
+    "preferences": null,
+    "email": null,
+    "phone": null,
+    "customer": null,
+    "deliveryAddressPreferences": []
+  },
+  "deliveryGroups": {
+    "pageInfo": {
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    },
+    "edges": []
+  },
+  "appliedGiftCards": [],
+  "note": ""
+}
