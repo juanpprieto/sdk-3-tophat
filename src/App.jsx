@@ -153,6 +153,23 @@ function CheckoutUpdate({ checkout, setCheckout }) {
       }}>
         Update Email
       </button>
+      <button onClick={async () => {
+        client.checkout.addGiftCards(checkout?.id, ['100offgiftcard']).then((checkout) => {
+          console.log('Item added:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+        Add Gift Card
+      </button>
+      <button onClick={async () => {
+        client.checkout.addGiftCards(checkout?.id, ['100offgiftcard', '50offgiftcard']).then((checkout) => {
+          console.log('Item added:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+        Add Gift Cards (2)
+      </button>
+
     </div>
   )
 }
