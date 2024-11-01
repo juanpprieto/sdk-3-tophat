@@ -169,6 +169,35 @@ function CheckoutUpdate({ checkout, setCheckout }) {
       }}>
         Add Gift Cards (2)
       </button>
+     
+      <button onClick={async () => {
+        client.checkout.replaceLineItems(checkout?.id, [
+          {
+            variantId: "gid://shopify/ProductVariant/48535896490006",
+            quantity: 1
+          }
+        ]).then((checkout) => {
+          console.log('Item added:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+        Replace Line Items
+      </button>
+
+      <button onClick={async () => {
+        client.checkout.updateLineItems(checkout?.id, [
+          {
+            // lineItem id (not variantId)
+            id: checkout.lineItems[0].id,
+            quantity: 2
+          }
+        ]).then((checkout) => {
+          console.log('Item added:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+        Update Line Item Quantity
+      </button>
     </div>
   )
 }
