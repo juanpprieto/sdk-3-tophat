@@ -169,7 +169,6 @@ function CheckoutUpdate({ checkout, setCheckout }) {
       }}>
         Add Gift Cards (2)
       </button>
-
     </div>
   )
 }
@@ -258,6 +257,28 @@ function CartUpdate({ cart, setCart }) {
       }}>
         Update Email
       </button>
+      
+      <button onClick={async () => {
+        sfapi.addGiftCards(cart?.id, ['100offgiftcard']).then((res) => {
+          console.log('Response:', res)
+          const { data: { cartGiftCardCodesUpdate: { cart } } } = res
+          console.log('Item added:', cart)
+          setCart(cart)
+        })
+      }}>
+        Add Gift Card
+    </button>
+
+      <button onClick={async () => {
+        sfapi.addGiftCards(cart?.id, ['100offgiftcard', '50offgiftcard']).then((res) => {
+          console.log('Response:', res)
+          const { data: { cartGiftCardCodesUpdate: { cart } } } = res
+          console.log('Item added:', cart)
+          setCart(cart)
+        })
+      }}>
+        Add Gift Cards (2)
+    </button>
     </div>
   )
 }

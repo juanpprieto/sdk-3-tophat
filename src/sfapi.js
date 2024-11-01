@@ -412,6 +412,23 @@ mutation cartEmailUpdate($cartId: ID!, $email: String!) {
   }
 }
 `
+
+const CART_ADD_GIFT_CARDS_MUTATION = `#graphql
+${CART_FRAGMENT}
+mutation cartGiftCardsAdd($cartId: ID!, $giftCards: [String!]!) {
+  cartGiftCardCodesUpdate(cartId: $cartId, giftCardCodes: $giftCards) {
+    cart {
+      ...CartFragment
+    }
+    userErrors {
+      field
+      message
+      code
+    }
+  }
+}
+`;
+
 export const sfapi = {
   create: async (input) => {
     return await client.request(CART_CREATE_MUTATION, {
@@ -514,6 +531,15 @@ export const sfapi = {
         address
       }
     })
-  }
+  },
+
+  addGiftCards: async (cartId, giftCards) => {
+    return await client.request(CART_ADD_GIFT_CARDS_MUTATION, {
+      variables: {
+        cartId,
+        giftCards
+      }
+    })
+  },
 }
 

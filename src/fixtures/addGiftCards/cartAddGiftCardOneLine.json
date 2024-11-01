@@ -1,0 +1,118 @@
+{
+  "id": "gid://shopify/Cart/Z2NwLXVzLXdlc3QxOjAxSkJNQjNEMFhTWk00Q1NEMzNDMVJTN1ZS?key=77e42705bd7ec954985dc3a9ae29ccfa",
+  "createdAt": "2024-11-01T17:06:53Z",
+  "updatedAt": "2024-11-01T17:06:55Z",
+  "lines": {
+    "pageInfo": {
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    },
+    "edges": [
+      {
+        "node": {
+          "id": "gid://shopify/CartLine/2c069712-767b-45e9-bc39-8d5f146c5c06?cart=Z2NwLXVzLXdlc3QxOjAxSkJNQjNEMFhTWk00Q1NEMzNDMVJTN1ZS",
+          "merchandise": {
+            "id": "gid://shopify/ProductVariant/48535896522774",
+            "title": "Default Title",
+            "image": {
+              "id": "gid://shopify/ProductImage/45559092281366",
+              "src": "https://cdn.shopify.com/s/files/1/0601/8783/6438/files/NTMtOTAxNy5qcGVn.jpg?v=1724459712",
+              "altText": "pf006_0_Alex Kassian - Strings Of Eden ",
+              "width": 500,
+              "height": 500
+            },
+            "product": {
+              "id": "gid://shopify/Product/9899493556246",
+              "handle": "alex-kassian-strings-of-eden",
+              "title": "Alex Kassian - Strings Of Eden"
+            },
+            "weight": 0,
+            "available": true,
+            "sku": "",
+            "selectedOptions": [
+              {
+                "name": "Title",
+                "value": "Default Title"
+              }
+            ],
+            "unitPriceMeasurement": {
+              "measuredType": null,
+              "quantityUnit": null,
+              "quantityValue": 0,
+              "referenceUnit": null,
+              "referenceValue": 0
+            }
+          },
+          "quantity": 1,
+          "attributes": [],
+          "cost": {
+            "totalAmount": {
+              "amount": "200.0",
+              "currencyCode": "USD"
+            },
+            "subtotalAmount": {
+              "amount": "200.0",
+              "currencyCode": "USD"
+            },
+            "amountPerQuantity": {
+              "amount": "200.0",
+              "currencyCode": "USD"
+            },
+            "compareAtAmountPerQuantity": null
+          },
+          "discountAllocations": [],
+          "sellingPlanAllocation": null
+        }
+      }
+    ]
+  },
+  "attributes": [],
+  "cost": {
+    "totalAmount": {
+      "amount": "100.0",
+      "currencyCode": "USD"
+    },
+    "subtotalAmount": {
+      "amount": "200.0",
+      "currencyCode": "USD"
+    },
+    "totalTaxAmount": null,
+    "totalDutyAmount": null
+  },
+  "checkoutUrl": "https://mycrate.2ndgentrecords.com/cart/c/Z2NwLXVzLXdlc3QxOjAxSkJNQjNEMFhTWk00Q1NEMzNDMVJTN1ZS?key=77e42705bd7ec954985dc3a9ae29ccfa",
+  "discountCodes": [],
+  "discountAllocations": [],
+  "buyerIdentity": {
+    "countryCode": "US",
+    "preferences": null,
+    "email": null,
+    "phone": null,
+    "customer": null,
+    "deliveryAddressPreferences": []
+  },
+  "deliveryGroups": {
+    "pageInfo": {
+      "hasNextPage": false,
+      "hasPreviousPage": false
+    },
+    "edges": []
+  },
+  "appliedGiftCards": [
+    {
+      "id": "gid://shopify/AppliedGiftCard/fe5f5e56-c91c-4aeb-aa3a-1d25dfdc9300",
+      "amountUsed": {
+        "amount": "100.0",
+        "currencyCode": "USD"
+      },
+      "balance": {
+        "amount": "0.0"
+      },
+      "lastCharacters": "card",
+      "presentmentAmountUsed": {
+        "amount": "100.0",
+        "currencyCode": "USD"
+      }
+    }
+  ],
+  "note": ""
+}
