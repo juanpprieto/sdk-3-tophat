@@ -415,8 +415,8 @@ mutation cartEmailUpdate($cartId: ID!, $email: String!) {
 
 const CART_ADD_GIFT_CARDS_MUTATION = `#graphql
 ${CART_FRAGMENT}
-mutation cartGiftCardsAdd($cartId: ID!, $giftCards: [String!]!) {
-  cartGiftCardCodesUpdate(cartId: $cartId, giftCardCodes: $giftCards) {
+mutation cartGiftCardsAdd($cartId: ID!, $giftCardCodes: [String!]!) {
+  cartGiftCardCodesUpdate(cartId: $cartId, giftCardCodes: $giftCardCodes) {
     cart {
       ...CartFragment
     }
@@ -542,13 +542,25 @@ export const sfapi = {
     })
   },
 
-  addGiftCards: async (cartId, giftCards) => {
+  addGiftCards: async (cartId, giftCardCodes) => {
     return await client.request(CART_ADD_GIFT_CARDS_MUTATION, {
       variables: {
         cartId,
-        giftCards
+       giftCardCodes 
       }
     })
   },
+
+  // TODO: need conversion from giftCardId to giftCardCode. Not currently working.
+  removeGiftCard: async (cartId, giftCardId, appliedGiftCards) => {
+    return await client.request(CART_ADD_GIFT_CARDS_MUTATION, {
+      variables: {
+        cartId,
+        giftCardCodes: appliedGiftCards
+          .filter(giftCard => giftCard.id !== giftCardId)
+          .map(giftCard => giftCard.code) // this is not available
+      }
+    })
+  }
 }
 

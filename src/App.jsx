@@ -5,7 +5,9 @@ import { useState } from 'react'
 import { client } from './sdk'
 import { sfapi } from './sfapi'
 import { CheckoutDiscounts } from './CheckoutDiscounts'
+import { CheckoutGiftCards } from './CheckoutGiftCards'
 import { CartDiscounts } from './CartDiscounts'
+import { CartGiftCards } from './CartGiftCards'
 
 
 function App() {
@@ -18,12 +20,13 @@ function App() {
       <CheckoutUpdate checkout={checkout} setCheckout={setCheckout} />
       <CheckoutCreate checkout={checkout} setCheckout={setCheckout} verbose={showCreateTests} />
       <CheckoutDiscounts checkout={checkout} setCheckout={setCheckout} />
+      <CheckoutGiftCards checkout={checkout} setCheckout={setCheckout} />
       <CheckoutShippingAddress checkout={checkout} setCheckout={setCheckout} />
-
 
       <CartUpdate cart={cart} setCart={setCart} />
       <CartCreate cart={cart} setCart={setCart} verbose={showCreateTests} />
       <CartDiscounts cart={cart} setCart={setCart} />
+      <CartGiftCards cart={cart} setCart={setCart} />
       <CartShippingAddress cart={cart} setCart={setCart} />
     </div>
   )
