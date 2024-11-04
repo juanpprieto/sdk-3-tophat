@@ -1,7 +1,7 @@
 import assert from "assert";
 import { addLineItemsInputMapper } from "./addLineItems";
 
-describe.only("addLineItemsInputMapper", () => {
+describe("addLineItemsInputMapper", () => {
   describe("checkoutId", () => {
     it("maps checkoutId to cartId", () => {
       assert.deepStrictEqual(addLineItemsInputMapper("gid://shopify/Checkout/3af96c90098b2bfe22ccbd882daef45f?key=63066c9d54f3bc638445c276fab0401d", []), {
