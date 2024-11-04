@@ -50,5 +50,6 @@ export const updateAttributesInputMapper = (checkoutId: string, input: CheckoutA
     cartNoteUpdateInput.note = input.note
   }
 
+  // With cart, we will need to execute two separate mutations (one for attributes and one for note)
   return {cartAttributesUpdateInput, cartNoteUpdateInput}
 }
