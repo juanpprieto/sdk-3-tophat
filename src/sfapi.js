@@ -514,6 +514,15 @@ export const sfapi = {
     })
   },
 
+  removeDiscount: async (cartId) => {
+    return await client.request(CART_UPDATE_DISCOUNT_CODE_MUTATION, {
+      variables: {
+        cartId,
+        discountCodes: []
+      }
+    })
+  },
+
   // TODO: need conversion [CheckoutLineItemInput!]! to [CartLineInput!]!
   addLineItems: async (cartId, lines) => {
     return await client.request(CART_ADD_LINE_ITEMS_MUTATION, {

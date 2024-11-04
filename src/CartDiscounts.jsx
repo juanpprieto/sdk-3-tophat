@@ -86,6 +86,16 @@ export function CartDiscounts({cart, setCart}) {
      }}>
        Add Free Shipping discount (exclude rates)
     </button>
+   <button onClick={async () => {
+     sfapi.removeDiscount(cart?.id).then((res) => {
+        console.log('Response:', res)
+        const {data: {cartDiscountCodesUpdate: { cart } }} = res
+        console.log('Discount removed:', cart.discountCodes)
+        setCart(cart)
+      })
+   }}>
+      Remove discounts
+    </button>
    </div>
  )
 }
