@@ -12,6 +12,6 @@ export const removeLineItemsInputMapper = (
 ): RemoveLineItemsInputMapper => {
    return { 
     cartId: checkoutId,
-    lineIds: lineItemIds
+    lineIds: lineItemIds ?? []
   }
 }
