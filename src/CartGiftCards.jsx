@@ -27,9 +27,9 @@ export function CartGiftCards({cart, setCart}) {
       Add multiple giftcards
     </button>
     <button onClick={async () => {
-        sfapi.removeGiftCard(cart.id, cart.appliedGiftCards[0].id, cart.appliedGiftCards).then(res => {
+        sfapi.removeGiftCard(cart.id, cart.appliedGiftCards[0].id).then(res => {
           console.log('Response:', res)
-          const {data: {cartGiftCardCodesUpdate: { cart } }} = res
+          const {data: {cartGiftCardCodesRemove: { cart } }} = res
           console.log('Giftcard removed:', cart.appliedGiftCards)
           setCart(cart)
         })

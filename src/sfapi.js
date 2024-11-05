@@ -3,7 +3,7 @@ import { fetch } from 'fetch-undici';
 
 const client = createStorefrontApiClient({
   storeDomain: 'https://juanprieto.myshopify.com',
-  apiVersion: '2024-10',
+  apiVersion: 'unstable',
   publicAccessToken: 'c23ad8269962738dd66dfd85d9b45a2d',
   customFetchApi: fetch,
 });
@@ -429,6 +429,24 @@ mutation cartGiftCardsAdd($cartId: ID!, $giftCardCodes: [String!]!) {
 }
 `;
 
+const CART_REMOVE_GIFT_CARD_MUTATION = `#graphql
+${CART_FRAGMENT}
+mutation cartGiftCardCodesRemove($appliedGiftCardIds: [ID!]!, $cartId: ID!) {
+  cartGiftCardCodesRemove(appliedGiftCardIds: $appliedGiftCardIds, cartId: $cartId) {
+    cart {
+      ...CartFragment
+    }
+    userErrors {
+      field
+      message
+    }
+#    warnings {
+      # CartWarning fields
+#    }
+  }
+}
+`;
+
 export const sfapi = {
   create: async (input) => {
     return await client.request(CART_CREATE_MUTATION, {
@@ -546,21 +564,17 @@ export const sfapi = {
     return await client.request(CART_ADD_GIFT_CARDS_MUTATION, {
       variables: {
         cartId,
-       giftCardCodes 
+        giftCardCodes 
       }
     })
   },
 
-  // TODO: need conversion from giftCardId to giftCardCode. Not currently working.
-  removeGiftCard: async (cartId, giftCardId, appliedGiftCards) => {
-    return await client.request(CART_ADD_GIFT_CARDS_MUTATION, {
+  removeGiftCard: async (cartId, appliedGiftCardId) => {
+    return await client.request(CART_REMOVE_GIFT_CARD_MUTATION, {
       variables: {
         cartId,
-        giftCardCodes: appliedGiftCards
-          .filter(giftCard => giftCard.id !== giftCardId)
-          .map(giftCard => giftCard.code) // this is not available
+        appliedGiftCardIds: [appliedGiftCardId]
       }
     })
   }
 }
-

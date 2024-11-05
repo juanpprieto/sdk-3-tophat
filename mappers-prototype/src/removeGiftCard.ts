@@ -3,19 +3,16 @@ import { MutationcartGiftCardCodesUpdateArgs, AppliedGiftCard  } from './types/2
 
 type AddDiscountInputMapper = {
   cartId: MutationcartGiftCardCodesUpdateArgs['cartId'],
-  giftCardCodes: MutationcartGiftCardCodesUpdateArgs['giftCardCodes']
+  // TODO: Get MutatationcartGiftCardRemoveV2Args['appliedGiftCardId'] type
+  appliedGiftCardIds: Array<AppliedGiftCard['id']>
 }
 
 export const removeGiftCardInputMapper = (
   checkoutId: MutationcheckoutGiftCardRemoveV2Args['checkoutId'],
   appliedGiftCardId: MutationcheckoutGiftCardRemoveV2Args['appliedGiftCardId'],
-  appliedGiftCards: Array<AppliedGiftCard>
 ): AddDiscountInputMapper => {
    return { 
     cartId: checkoutId,
-    giftCardCodes: appliedGiftCards
-     .filter((appliedGiftCard) => appliedGiftCard.id !== appliedGiftCardId)
-     // TODO: Figure out how to map appliedGiftCardIds to giftCardCodes
-     .map((appliedGiftCard) => appliedGiftCard.lastCharacters)
+    appliedGiftCardIds: appliedGiftCardId ? [appliedGiftCardId] : [],
   }
 }
