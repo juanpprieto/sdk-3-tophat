@@ -214,6 +214,22 @@ function CheckoutUpdate({ checkout, setCheckout }) {
       }}>
         Replace Line Items
       </button>
+      <button onClick={async () => {
+        client.checkout.removeLineItems(checkout?.id, [checkout.lineItems[0].id]).then((checkout) => {
+          console.log('Item removed:', checkout)
+          setCheckout(checkout)
+        })}}>
+          Remove Line Item
+      </button>
+      <button onClick={async () => {
+        client.checkout.removeLineItems(checkout?.id, checkout.lineItems.map((item) => item.id)).then((checkout) => {
+          console.log('All items removed:', checkout)
+          setCheckout(checkout)
+        }
+      )}
+      }>
+        Remove All Line Items
+      </button>
     </div>
   )
 }
@@ -338,7 +354,27 @@ function CartUpdate({ cart, setCart }) {
     }}>
       Replace Line Items
     </button>
-    </div>
+    <button onClick={async () => {
+      sfapi.removeLineItems(cart?.id, [cart.lines.edges[0].node.id]).then((res) => {
+        console.log('Response:', res)
+        const { data: { cartLinesRemove: { cart } } } = res
+        console.log('Item removed:', cart)
+        setCart(cart)
+      })
+    }}>
+      Remove Line Item
+    </button>
+    <button onClick={async () => {
+      sfapi.removeLineItems(cart?.id, cart.lines.edges.map(({node: line}) => line.id)).then((res) => {
+        console.log('Response:', res)
+        const { data: { cartLinesRemove: { cart } } } = res
+        console.log('All items removed:', cart)
+        setCart(cart)
+      })
+    }}>
+      Remove All Line Items
+    </button>
+  </div>
   )
 }
 

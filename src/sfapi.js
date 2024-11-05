@@ -602,23 +602,20 @@ export const sfapi = {
   },
 
   replaceLineItems: async (cartId, lines) => {
+    // get existing cart
     const {data: {cart}} = await client.request(CART_FETCH_QUERY, {
       variables: {
         id: cartId
       }
     })
 
-    console.log(cart)
-
-    // remove all line items
-    const {data} = await client.request(CART_REMOVE_LINE_ITEMS_MUTATION, {
+    // remove all existing lines
+    await client.request(CART_REMOVE_LINE_ITEMS_MUTATION, {
       variables: {
         cartId,
         lineIds: cart.lines.edges.map(({node}) => node.id)
       }
     })
-
-    console.log({data})
 
     // add new line items
     return await client.request(CART_ADD_LINE_ITEMS_MUTATION, {
