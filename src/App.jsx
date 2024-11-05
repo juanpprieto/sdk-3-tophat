@@ -201,6 +201,19 @@ function CheckoutUpdate({ checkout, setCheckout }) {
       }}>
         Update Line Item Quantity
       </button>
+      <button onClick={async () => {
+        client.checkout.replaceLineItems(checkout?.id, [
+          {
+            variantId: "gid://shopify/ProductVariant/48535896457238",
+            quantity: 1
+          }
+        ]).then((checkout) => {
+          console.log('Item added:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+        Replace Line Items
+      </button>
     </div>
   )
 }
@@ -310,6 +323,20 @@ function CartUpdate({ cart, setCart }) {
         })
       }}>
         Add Gift Cards (2)
+    </button>
+    <button onClick={async () => {
+      sfapi.replaceLineItems(cart?.id, [{
+        merchandiseId: 'gid://shopify/ProductVariant/48535896490006',
+        quantity: 1
+      }
+      ]).then((res) => {
+        console.log('Response:', res)
+        const { data: { cartLinesAdd: { cart } } } = res
+        console.log('Item added:', cart)
+        setCart(cart)
+      })
+    }}>
+      Replace Line Items
     </button>
     </div>
   )

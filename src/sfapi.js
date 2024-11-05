@@ -447,6 +447,47 @@ mutation cartGiftCardCodesRemove($appliedGiftCardIds: [ID!]!, $cartId: ID!) {
 }
 `;
 
+const CART_UPDATE_LINE_ITEMS_MUTATION = `#graphql
+${CART_FRAGMENT}
+mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineInput!]!) {
+  cartLinesUpdate(cartId: $cartId, lines: $lines) {
+    cart {
+      ...CartFragment
+    }
+    userErrors {
+      field
+      message
+      code
+    }
+  }
+}
+`;
+
+const CART_REMOVE_LINE_ITEMS_MUTATION = `#graphql
+${CART_FRAGMENT}
+mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+  cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+    cart {
+      ...CartFragment
+    }
+    userErrors {
+      field
+      message
+      code
+    }
+  }
+}
+`;
+
+const CART_FETCH_QUERY = `#graphql
+${CART_FRAGMENT}
+query cartFetch($id: ID!) {
+  cart(id: $id) {
+    ...CartFragment
+  }
+}
+`;
+
 export const sfapi = {
   create: async (input) => {
     return await client.request(CART_CREATE_MUTATION, {
@@ -543,6 +584,43 @@ export const sfapi = {
 
   // TODO: need conversion [CheckoutLineItemInput!]! to [CartLineInput!]!
   addLineItems: async (cartId, lines) => {
+    return await client.request(CART_ADD_LINE_ITEMS_MUTATION, {
+      variables: {
+        cartId,
+        lines
+      }
+    })
+  },
+
+  removeLineItems: async (cartId, lineIds) => {
+    return await client.request(CART_REMOVE_LINE_ITEMS_MUTATION, {
+      variables: {
+        cartId,
+        lineIds
+      }
+    })
+  },
+
+  replaceLineItems: async (cartId, lines) => {
+    const {data: {cart}} = await client.request(CART_FETCH_QUERY, {
+      variables: {
+        id: cartId
+      }
+    })
+
+    console.log(cart)
+
+    // remove all line items
+    const {data} = await client.request(CART_REMOVE_LINE_ITEMS_MUTATION, {
+      variables: {
+        cartId,
+        lineIds: cart.lines.edges.map(({node}) => node.id)
+      }
+    })
+
+    console.log({data})
+
+    // add new line items
     return await client.request(CART_ADD_LINE_ITEMS_MUTATION, {
       variables: {
         cartId,
