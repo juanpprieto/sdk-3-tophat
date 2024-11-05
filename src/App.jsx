@@ -9,7 +9,6 @@ import { CheckoutGiftCards } from './CheckoutGiftCards'
 import { CartDiscounts } from './CartDiscounts'
 import { CartGiftCards } from './CartGiftCards'
 
-
 function App() {
   const [checkout, setCheckout] = useState(null)
   const [cart, setCart] = useState(null)
@@ -230,6 +229,36 @@ function CheckoutUpdate({ checkout, setCheckout }) {
       }>
         Remove All Line Items
       </button>
+      <button onClick={async () => {
+        client.checkout.updateLineItems(checkout?.id, [
+          {
+            id: checkout.lineItems[0].id,
+            quantity: 2
+          }
+        ]).then((checkout) => {
+          console.log('Item updated:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+          Update Line Item Quantity
+       </button>
+      <button onClick={async () => {
+        client.checkout.updateLineItems(checkout?.id, [
+          {
+            id: checkout.lineItems[0].id,
+            quantity: 2,
+            customAttributes: [
+              { key: 'key1', value: 'value1' }
+            ],
+            variantId: 'gid://shopify/ProductVariant/48535896457238'
+          }
+        ]).then((checkout) => {
+          console.log('Item updated:', checkout)
+          setCheckout(checkout)
+        })
+      }}>
+        Update Line Item Quantity + attributes
+      </button>
     </div>
   )
 }
@@ -373,6 +402,38 @@ function CartUpdate({ cart, setCart }) {
       })
     }}>
       Remove All Line Items
+    </button>
+    <button onClick={async () => {
+      sfapi.updateLineItems(cart?.id, [{
+        id: cart.lines.edges[0].node.id,
+        quantity: 2,
+      }]).then((res) => {
+        console.log('Response:', res)
+        const { data: { cartLinesUpdate: { cart } } } = res
+        console.log('Item updated:', cart)
+        setCart(cart)
+      })
+    }}>
+      Update Line Item Quantity
+    </button>
+    <button onClick={async () => {
+      sfapi.updateLineItems(cart?.id, [{
+        id: cart.lines.edges[0].node.id,
+        quantity: 2,
+        attributes: [{
+          key: 'key1',
+          value: 'value1'
+        }],
+        merchandiseId: 'gid://shopify/ProductVariant/48535896457238'
+      }
+      ]).then((res) => {
+        console.log('Response:', res)
+        const { data: { cartLinesUpdate: { cart } } } = res
+        console.log('Item updated:', cart)
+        setCart(cart)
+      })
+    }}>
+      Update Line Item Quantity + attributes
     </button>
   </div>
   )

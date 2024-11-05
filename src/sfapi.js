@@ -449,7 +449,7 @@ mutation cartGiftCardCodesRemove($appliedGiftCardIds: [ID!]!, $cartId: ID!) {
 
 const CART_UPDATE_LINE_ITEMS_MUTATION = `#graphql
 ${CART_FRAGMENT}
-mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineInput!]!) {
+mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
   cartLinesUpdate(cartId: $cartId, lines: $lines) {
     cart {
       ...CartFragment
@@ -619,6 +619,15 @@ export const sfapi = {
 
     // add new line items
     return await client.request(CART_ADD_LINE_ITEMS_MUTATION, {
+      variables: {
+        cartId,
+        lines
+      }
+    })
+  },
+
+  updateLineItems: async (cartId, lines) => {
+    return await client.request(CART_UPDATE_LINE_ITEMS_MUTATION, {
       variables: {
         cartId,
         lines
