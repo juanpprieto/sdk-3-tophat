@@ -1,5 +1,5 @@
 import { MutationcheckoutEmailUpdateV2Args } from './types/2024-04'
-import { MutationcartBuyerIdentityUpdateArgs, CartBuyerIdentityInput } from './types/2024-10'
+import { MutationcartBuyerIdentityUpdateArgs, CartBuyerIdentityInput } from './types/2025-01'
 
 type UpdateEmailInputMapper = {
   cartId: string,

@@ -1,5 +1,5 @@
 import { MutationcheckoutLineItemsReplaceArgs } from './types/2024-04'
-import { CartLineUpdateInput } from './types/2024-10'
+import { CartLineUpdateInput } from './types/2025-01'
 
 type ReplaceLineItemsInputMapper = {
   cartId: string,

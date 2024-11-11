@@ -1,5 +1,5 @@
 import {CheckoutAttributesUpdateV2Input} from './types/2024-04'
-import {AttributeInput} from './types/2024-10'
+import {AttributeInput} from './types/2025-01'
 
 type CartAttributesUpdateInput = {
   attributes: Array<AttributeInput>;

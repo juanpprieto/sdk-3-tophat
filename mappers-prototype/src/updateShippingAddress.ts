@@ -1,5 +1,5 @@
 import { MutationcheckoutLineItemsUpdateArgs, MailingAddressInput as CheckoutMailingAddressInput } from './types/2024-04'
-import { MailingAddressInput } from './types/2024-10'
+import { MailingAddressInput } from './types/2025-01'
 
 type UpdateShippingAddressInputMapper = {
   cartId: string,

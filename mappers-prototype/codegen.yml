@@ -24,8 +24,8 @@ generates:
       maybeValue: T | null | undefined
       inputMaybeValue: undefined | null | T
       nonOptionalTypename: true
-  src/types/2024-10.d.ts:
-    schema: graphql/2024-10.graphql
+  src/types/2025-01.d.ts:
+    schema: graphql/2025-01.graphql
     plugins:
       - typescript
     config:

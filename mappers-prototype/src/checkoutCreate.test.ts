@@ -1,7 +1,7 @@
 import assert from "assert";
 import { checkoutCreateInputMapper } from "./checkoutCreate";
 
-// After a bunch of 'Exception during run: Error: Cannot find module './types/2024-10', I'm doing this for now
+// After a bunch of 'Exception during run: Error: Cannot find module './types/2025-01', I'm doing this for now
 enum CountryCode {
   CA = 'CA',
   US = 'US'

@@ -1,5 +1,5 @@
 import { MutationcheckoutGiftCardRemoveV2Args } from './types/2024-04'
-import { MutationcartGiftCardCodesUpdateArgs, AppliedGiftCard  } from './types/2024-10'
+import { MutationcartGiftCardCodesUpdateArgs, AppliedGiftCard  } from './types/2025-01'
 
 type AddDiscountInputMapper = {
   cartId: MutationcartGiftCardCodesUpdateArgs['cartId'],

@@ -1,5 +1,5 @@
 import {CheckoutCreateInput} from './types/2024-04'
-import {CartInput} from './types/2024-10'
+import {CartInput} from './types/2025-01'
 
 export const checkoutCreateInputMapper = (input: CheckoutCreateInput): CartInput => {
   const cartInput: CartInput = {}
