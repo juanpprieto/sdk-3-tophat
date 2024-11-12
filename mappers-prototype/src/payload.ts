@@ -5,7 +5,8 @@ import {
   BaseCartLineConnection,
   CartCost,
   MoneyV2,
-  CartAppliedGiftCard
+  AppliedGiftCard,
+  CartBuyerIdentity,
 } from "./types/2025-01";
 import {
   Checkout,
@@ -42,33 +43,17 @@ const cartToCheckoutMapper = (cart: Cart): Checkout => {
     createdAt,
     currencyCode: cost.totalAmount.currencyCode,
     customAttributes: attributes,
-    // TODO
-    // Maximum of 10
     // @ts-expect-error discountApplication nodes aren't queried in SDK
     discountApplications: discountApplicationsMapper(discountAllocations),
-    email: buyerIdentity.email,
-    id: id.replace("Cart", "Checkout"),
+    email: emailMapper(buyerIdentity),
+    id: idMapper(id),
     // @ts-expect-error lineItem nodes aren't queried in SDK
     lineItems: linesToLineItemsMapper(lines),
     lineItemsSubtotalPrice: cost.checkoutChargeAmount,
     note,
-    paymentDue: {
-      amount:
-        cost.totalAmount.amount -
-        appliedGiftCards.reduce(
-          (acc, giftCard) => acc + giftCard.presentmentAmountUsed.amount,
-          0
-        ),
-      currencyCode: cost.totalAmount.currencyCode,
-    },
+    paymentDue: paymentDueMapper(cost.totalAmount, appliedGiftCards),
     shippingAddress: buyerIdentity.deliveryAddressPreferences?.[0] ?? null, // TODO: should we use the delivery groups now?
-    subtotalPrice: {
-      amount:
-        cost.totalAmount.amount -
-        (cost.totalDutyAmount?.amount ?? 0) -
-        (cost.totalTaxAmount?.amount ?? 0),
-      currencyCode: cost.totalAmount.currencyCode,
-    },
+    subtotalPrice: subtotalPriceMapper(cost),
     totalDuties: cost.totalDutyAmount,
     totalPrice: cost.totalAmount,
     totalTax: cost.totalTaxAmount ?? {
@@ -94,6 +79,39 @@ const cartToCheckoutMapper = (cart: Cart): Checkout => {
     taxExempt: null,
     // @ts-expect-error field removed from API
     taxesIncluded: null,
+  };
+};
+
+export const emailMapper = (buyerIdentity: CartBuyerIdentity): string | null => {
+  return buyerIdentity.email || null;
+};
+
+export const idMapper = (id: string): string => {
+  return id.replace("Cart", "Checkout");
+};
+
+export const paymentDueMapper = (
+  cartTotalAmount: MoneyV2,
+  appliedGiftCards: AppliedGiftCard[]
+): MoneyV2 => {
+  return {
+    amount:
+      cartTotalAmount.amount -
+      appliedGiftCards.reduce(
+        (acc, giftCard) => acc + giftCard.presentmentAmountUsed.amount,
+        0
+      ),
+    currencyCode: cartTotalAmount.currencyCode,
+  };
+};
+
+export const subtotalPriceMapper = (cost: CartCost): MoneyV2 => {
+  return {
+    amount:
+      cost.totalAmount.amount -
+      (cost.totalDutyAmount?.amount ?? 0) -
+      (cost.totalTaxAmount?.amount ?? 0),
+    currencyCode: cost.totalAmount.currencyCode,
   };
 };
 
