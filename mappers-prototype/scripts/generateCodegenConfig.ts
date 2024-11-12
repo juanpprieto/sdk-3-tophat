@@ -7,7 +7,6 @@ const TYPES_DIR = 'src/types';
 
 interface CodegenConfig {
   overwrite: boolean;
-  schema: string;
   generates: Record<string, {
     schema: string;
     plugins: string[];
@@ -35,15 +34,15 @@ const graphqlFiles: string[] = fs.readdirSync(GRAPHQL_DIR)
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "graphql/**/*.graphql",
   generates: {}
 };
 
+// Generate separate configs for each file
 graphqlFiles.forEach((file: string) => {
   const baseName = path.basename(file, '.graphql');
   config.generates[`${TYPES_DIR}/${baseName}.d.ts`] = {
     schema: `${GRAPHQL_DIR}/${file}`,
-    plugins: ['typescript'],
+    plugins: ['typescript', 'typescript-operations'],
     config: {
       enumsAsTypes: false,
       namingConvention: {

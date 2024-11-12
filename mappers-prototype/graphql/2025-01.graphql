@@ -1093,9 +1093,19 @@ The discounts automatically applied to the cart line based on prerequisites that
 """
 type CartAutomaticDiscountAllocation implements CartDiscountAllocation {
   """
+  The method by which the discount's value is allocated to its entitled items.
+  """
+  allocationMethod: DiscountApplicationAllocationMethod!
+
+  """
   The discounted amount that has been applied to the cart line.
   """
   discountedAmount: MoneyV2!
+
+  """
+  Which lines of targetType that the discount is allocated over.
+  """
+  targetSelection: DiscountApplicationTargetSelection!
 
   """
   The type of line that the discount is applicable towards.
@@ -1106,6 +1116,11 @@ type CartAutomaticDiscountAllocation implements CartDiscountAllocation {
   The title of the allocated discount.
   """
   title: String!
+
+  """
+  The value of the discount application.
+  """
+  value: PricingValue!
 }
 
 """
@@ -1248,6 +1263,11 @@ The discount that has been applied to the cart line using a discount code.
 """
 type CartCodeDiscountAllocation implements CartDiscountAllocation {
   """
+  The method by which the discount's value is allocated to its entitled items.
+  """
+  allocationMethod: DiscountApplicationAllocationMethod!
+
+  """
   The code used to apply the discount.
   """
   code: String!
@@ -1258,9 +1278,19 @@ type CartCodeDiscountAllocation implements CartDiscountAllocation {
   discountedAmount: MoneyV2!
 
   """
+  Which lines of targetType that the discount is allocated over.
+  """
+  targetSelection: DiscountApplicationTargetSelection!
+
+  """
   The type of line that the discount is applicable towards.
   """
   targetType: DiscountApplicationTargetType!
+
+  """
+  The value of the discount application.
+  """
+  value: PricingValue!
 }
 
 """
@@ -1423,9 +1453,19 @@ The discounts automatically applied to the cart line based on prerequisites that
 """
 type CartCustomDiscountAllocation implements CartDiscountAllocation {
   """
+  The method by which the discount's value is allocated to its entitled items.
+  """
+  allocationMethod: DiscountApplicationAllocationMethod!
+
+  """
   The discounted amount that has been applied to the cart line.
   """
   discountedAmount: MoneyV2!
+
+  """
+  Which lines of targetType that the discount is allocated over.
+  """
+  targetSelection: DiscountApplicationTargetSelection!
 
   """
   The type of line that the discount is applicable towards.
@@ -1436,6 +1476,11 @@ type CartCustomDiscountAllocation implements CartDiscountAllocation {
   The title of the allocated discount.
   """
   title: String!
+
+  """
+  The value of the discount application.
+  """
+  value: PricingValue!
 }
 
 """
@@ -1701,14 +1746,29 @@ The discounts that have been applied to the cart line.
 """
 interface CartDiscountAllocation {
   """
+  The method by which the discount's value is allocated to its entitled items.
+  """
+  allocationMethod: DiscountApplicationAllocationMethod!
+
+  """
   The discounted amount that has been applied to the cart line.
   """
   discountedAmount: MoneyV2!
 
   """
+  Which lines of targetType that the discount is allocated over.
+  """
+  targetSelection: DiscountApplicationTargetSelection!
+
+  """
   The type of line that the discount is applicable towards.
   """
   targetType: DiscountApplicationTargetType!
+
+  """
+  The value of the discount application.
+  """
+  value: PricingValue!
 }
 
 """

@@ -1,10 +1,10 @@
 overwrite: true
-schema: graphql/**/*.graphql
 generates:
   src/types/2024-04.d.ts:
     schema: graphql/2024-04.graphql
     plugins:
       - typescript
+      - typescript-operations
     config:
       enumsAsTypes: false
       namingConvention:
@@ -28,6 +28,7 @@ generates:
     schema: graphql/2025-01.graphql
     plugins:
       - typescript
+      - typescript-operations
     config:
       enumsAsTypes: false
       namingConvention:

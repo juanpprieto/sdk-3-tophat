@@ -37,8 +37,6 @@ export type Scalars = {
    * Example value: `"<p>Grey cotton knit sweater.</p>"`
    */
   HTML: { input: any; output: any; }
-  /** An ISO 8601-encoded datetime */
-  ISO8601DateTime: { input: any; output: any; }
   /**
    * A [JSON](https://www.json.org/json-en.html) object.
    *
@@ -555,8 +553,6 @@ export enum CardBrand {
  * during a customer's session.
  */
 export type Cart = HasMetafields & Node & {
-  /** The gift cards that have been applied to the cart. */
-  appliedGiftCards: Array<AppliedGiftCard>;
   /** An attribute associated with the cart. */
   attribute?: Maybe<Attribute>;
   /** The attributes associated with the cart. Attributes are represented as key-value pairs. */
@@ -676,28 +672,14 @@ export type CartAttributesUpdatePayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /** The discounts automatically applied to the cart line based on prerequisites that have been met. */
 export type CartAutomaticDiscountAllocation = CartDiscountAllocation & {
   /** The discounted amount that has been applied to the cart line. */
   discountedAmount: MoneyV2;
-  /** The type of line that the discount is applicable towards. */
-  targetType: DiscountApplicationTargetType;
   /** The title of the allocated discount. */
   title: Scalars['String']['output'];
-};
-
-/** Return type for `cartBillingAddressUpdate` mutation. */
-export type CartBillingAddressUpdatePayload = {
-  /** The updated cart. */
-  cart?: Maybe<Cart>;
-  /** The list of errors that occurred from executing the mutation. */
-  userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /** Represents information about the buyer that is interacting with the cart. */
@@ -772,8 +754,6 @@ export type CartBuyerIdentityUpdatePayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /** Represents how credit card details are provided for a direct payment. */
@@ -791,8 +771,6 @@ export type CartCodeDiscountAllocation = CartDiscountAllocation & {
   code: Scalars['String']['output'];
   /** The discounted amount that has been applied to the cart line. */
   discountedAmount: MoneyV2;
-  /** The type of line that the discount is applicable towards. */
-  targetType: DiscountApplicationTargetType;
 };
 
 /** The completion action to checkout a cart. */
@@ -874,16 +852,12 @@ export type CartCreatePayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /** The discounts automatically applied to the cart line based on prerequisites that have been met. */
 export type CartCustomDiscountAllocation = CartDiscountAllocation & {
   /** The discounted amount that has been applied to the cart line. */
   discountedAmount: MoneyV2;
-  /** The type of line that the discount is applicable towards. */
-  targetType: DiscountApplicationTargetType;
   /** The title of the allocated discount. */
   title: Scalars['String']['output'];
 };
@@ -1041,8 +1015,6 @@ export type CartDirectPaymentMethodInput = {
 export type CartDiscountAllocation = {
   /** The discounted amount that has been applied to the cart line. */
   discountedAmount: MoneyV2;
-  /** The type of line that the discount is applicable towards. */
-  targetType: DiscountApplicationTargetType;
 };
 
 /** The discount codes applied to the cart. */
@@ -1059,8 +1031,6 @@ export type CartDiscountCodesUpdatePayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /** Possible error codes that can be returned by `CartUserError`. */
@@ -1111,8 +1081,6 @@ export enum CartErrorCode {
   MISSING_DISCOUNT_CODE = 'MISSING_DISCOUNT_CODE',
   /** Missing note. */
   MISSING_NOTE = 'MISSING_NOTE',
-  /** The note length must be below the specified maximum. */
-  NOTE_TOO_LONG = 'NOTE_TOO_LONG',
   /** The payment method is not supported. */
   PAYMENT_METHOD_NOT_SUPPORTED = 'PAYMENT_METHOD_NOT_SUPPORTED',
   /** The given province cannot be found. */
@@ -1156,16 +1124,6 @@ export type CartFreePaymentMethodInput = {
   billingAddress: MailingAddressInput;
 };
 
-/** Return type for `cartGiftCardCodesUpdate` mutation. */
-export type CartGiftCardCodesUpdatePayload = {
-  /** The updated cart. */
-  cart?: Maybe<Cart>;
-  /** The list of errors that occurred from executing the mutation. */
-  userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
-};
-
 /** The input fields to create a cart. */
 export type CartInput = {
   /** An array of key-value pairs that contains additional information about the cart. */
@@ -1178,8 +1136,6 @@ export type CartInput = {
   buyerIdentity?: InputMaybe<CartBuyerIdentityInput>;
   /** The case-insensitive discount codes that the customer added at checkout. */
   discountCodes?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** The case-insensitive gift card codes. */
-  giftCardCodes?: InputMaybe<Array<Scalars['String']['input']>>;
   /** A list of merchandise lines to add to the cart. */
   lines?: InputMaybe<Array<CartLineInput>>;
   /** The metafields to associate with this cart. */
@@ -1295,8 +1251,6 @@ export type CartLinesAddPayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /** Return type for `cartLinesRemove` mutation. */
@@ -1305,8 +1259,6 @@ export type CartLinesRemovePayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /** Return type for `cartLinesUpdate` mutation. */
@@ -1315,8 +1267,6 @@ export type CartLinesUpdatePayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /** The input fields to delete a cart metafield. */
@@ -1367,8 +1317,6 @@ export type CartNoteUpdatePayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /** The input fields for updating the payment method that will be used to checkout. */
@@ -1397,8 +1345,6 @@ export type CartPaymentUpdatePayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /**
@@ -1442,8 +1388,6 @@ export type CartSelectedDeliveryOptionsUpdatePayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
-  /** A list of warnings that occurred during the mutation. */
-  warnings: Array<CartWarning>;
 };
 
 /** Return type for `cartSubmitForCompletion` mutation. */
@@ -1474,26 +1418,6 @@ export type CartWalletPaymentMethodInput = {
   /** The payment method information for the Shop Pay wallet. */
   shopPayWalletContent?: InputMaybe<ShopPayWalletContentInput>;
 };
-
-/** A warning that occurred during a cart mutation. */
-export type CartWarning = {
-  /** The code of the warning. */
-  code: CartWarningCode;
-  /** The message text of the warning. */
-  message: Scalars['String']['output'];
-  /** The target of the warning. */
-  target: Scalars['ID']['output'];
-};
-
-/** The code for the cart warning. */
-export enum CartWarningCode {
-  /** The merchandise does not have enough stock. */
-  MERCHANDISE_NOT_ENOUGH_STOCK = 'MERCHANDISE_NOT_ENOUGH_STOCK',
-  /** The merchandise is out of stock. */
-  MERCHANDISE_OUT_OF_STOCK = 'MERCHANDISE_OUT_OF_STOCK',
-  /** Gift cards are not available as a payment method. */
-  PAYMENTS_GIFT_CARDS_UNAVAILABLE = 'PAYMENTS_GIFT_CARDS_UNAVAILABLE'
-}
 
 /** A container for all the information required to checkout items and pay. */
 export type Checkout = Node & {
@@ -3663,11 +3587,6 @@ export type DeliveryAddressInput = {
   deliveryAddress?: InputMaybe<MailingAddressInput>;
   /** Defines what kind of address validation is requested. */
   deliveryAddressValidationStrategy?: InputMaybe<DeliveryAddressValidationStrategy>;
-  /**
-   * Whether the given delivery address is considered to be a one-time use address.
-   * One-time use addresses do not get persisted to the buyer's personal addresses when checking out.
-   */
-  oneTimeUse?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Defines the types of available validation strategies for delivery addresses. */
@@ -5196,8 +5115,6 @@ export type MoneyV2 = {
 export type Mutation = {
   /** Updates the attributes on a cart. */
   cartAttributesUpdate?: Maybe<CartAttributesUpdatePayload>;
-  /** Updates the billing address on the cart. */
-  cartBillingAddressUpdate?: Maybe<CartBillingAddressUpdatePayload>;
   /**
    * Updates customer information associated with a cart.
    * Buyer identity is used to determine
@@ -5209,8 +5126,6 @@ export type Mutation = {
   cartCreate?: Maybe<CartCreatePayload>;
   /** Updates the discount codes applied to the cart. */
   cartDiscountCodesUpdate?: Maybe<CartDiscountCodesUpdatePayload>;
-  /** Updates the gift card codes applied to the cart. */
-  cartGiftCardCodesUpdate?: Maybe<CartGiftCardCodesUpdatePayload>;
   /** Adds a merchandise line to the cart. */
   cartLinesAdd?: Maybe<CartLinesAddPayload>;
   /** Removes one or more merchandise lines from the cart. */
@@ -5389,23 +5304,12 @@ export type Mutation = {
   customerResetByUrl?: Maybe<CustomerResetByUrlPayload>;
   /** Updates an existing customer. */
   customerUpdate?: Maybe<CustomerUpdatePayload>;
-  /** Creates a new Shop Pay payment request session. */
-  shopPayPaymentRequestSessionCreate?: Maybe<ShopPayPaymentRequestSessionCreatePayload>;
-  /** Submits a Shop Pay payment request session. */
-  shopPayPaymentRequestSessionSubmit?: Maybe<ShopPayPaymentRequestSessionSubmitPayload>;
 };
 
 
 /** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
 export type MutationcartAttributesUpdateArgs = {
   attributes: Array<AttributeInput>;
-  cartId: Scalars['ID']['input'];
-};
-
-
-/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
-export type MutationcartBillingAddressUpdateArgs = {
-  billingAddress?: InputMaybe<MailingAddressInput>;
   cartId: Scalars['ID']['input'];
 };
 
@@ -5427,13 +5331,6 @@ export type MutationcartCreateArgs = {
 export type MutationcartDiscountCodesUpdateArgs = {
   cartId: Scalars['ID']['input'];
   discountCodes?: InputMaybe<Array<Scalars['String']['input']>>;
-};
-
-
-/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
-export type MutationcartGiftCardCodesUpdateArgs = {
-  cartId: Scalars['ID']['input'];
-  giftCardCodes: Array<Scalars['String']['input']>;
 };
 
 
@@ -5718,22 +5615,6 @@ export type MutationcustomerResetByUrlArgs = {
 export type MutationcustomerUpdateArgs = {
   customer: CustomerUpdateInput;
   customerAccessToken: Scalars['String']['input'];
-};
-
-
-/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
-export type MutationshopPayPaymentRequestSessionCreateArgs = {
-  paymentRequest: ShopPayPaymentRequestInput;
-  sourceIdentifier: Scalars['String']['input'];
-};
-
-
-/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
-export type MutationshopPayPaymentRequestSessionSubmitArgs = {
-  idempotencyKey: Scalars['String']['input'];
-  orderName?: InputMaybe<Scalars['String']['input']>;
-  paymentRequest: ShopPayPaymentRequestInput;
-  token: Scalars['String']['input'];
 };
 
 /**
@@ -7725,298 +7606,6 @@ export type ShopmetafieldsArgs = {
   identifiers: Array<HasMetafieldsIdentifier>;
 };
 
-/** Represents a Shop Pay payment request. */
-export type ShopPayPaymentRequest = {
-  /** The delivery methods for the payment request. */
-  deliveryMethods: Array<ShopPayPaymentRequestDeliveryMethod>;
-  /** The discount codes for the payment request. */
-  discountCodes: Array<Scalars['String']['output']>;
-  /** The discounts for the payment request order. */
-  discounts?: Maybe<Array<ShopPayPaymentRequestDiscount>>;
-  /** The line items for the payment request. */
-  lineItems: Array<ShopPayPaymentRequestLineItem>;
-  /** The locale for the payment request. */
-  locale: Scalars['String']['output'];
-  /** The presentment currency for the payment request. */
-  presentmentCurrency: CurrencyCode;
-  /** The delivery method type for the payment request. */
-  selectedDeliveryMethodType: ShopPayPaymentRequestDeliveryMethodType;
-  /** The shipping address for the payment request. */
-  shippingAddress?: Maybe<ShopPayPaymentRequestContactField>;
-  /** The shipping lines for the payment request. */
-  shippingLines: Array<ShopPayPaymentRequestShippingLine>;
-  /** The subtotal amount for the payment request. */
-  subtotal: MoneyV2;
-  /** The total amount for the payment request. */
-  total: MoneyV2;
-  /** The total shipping price for the payment request. */
-  totalShippingPrice?: Maybe<ShopPayPaymentRequestTotalShippingPrice>;
-  /** The total tax for the payment request. */
-  totalTax?: Maybe<MoneyV2>;
-};
-
-/** Represents a contact field for a Shop Pay payment request. */
-export type ShopPayPaymentRequestContactField = {
-  /** The first address line of the contact field. */
-  address1: Scalars['String']['output'];
-  /** The second address line of the contact field. */
-  address2?: Maybe<Scalars['String']['output']>;
-  /** The city of the contact field. */
-  city: Scalars['String']['output'];
-  /** The company name of the contact field. */
-  companyName?: Maybe<Scalars['String']['output']>;
-  /** The country of the contact field. */
-  countryCode: Scalars['String']['output'];
-  /** The email of the contact field. */
-  email?: Maybe<Scalars['String']['output']>;
-  /** The first name of the contact field. */
-  firstName: Scalars['String']['output'];
-  /** The last name of the contact field. */
-  lastName: Scalars['String']['output'];
-  /** The phone number of the contact field. */
-  phone?: Maybe<Scalars['String']['output']>;
-  /** The postal code of the contact field. */
-  postalCode?: Maybe<Scalars['String']['output']>;
-  /** The province of the contact field. */
-  provinceCode?: Maybe<Scalars['String']['output']>;
-};
-
-/** Represents a delivery method for a Shop Pay payment request. */
-export type ShopPayPaymentRequestDeliveryMethod = {
-  /** The amount for the delivery method. */
-  amount: MoneyV2;
-  /** The code of the delivery method. */
-  code: Scalars['String']['output'];
-  /** The detail about when the delivery may be expected. */
-  deliveryExpectationLabel?: Maybe<Scalars['String']['output']>;
-  /** The detail of the delivery method. */
-  detail?: Maybe<Scalars['String']['output']>;
-  /** The label of the delivery method. */
-  label: Scalars['String']['output'];
-  /** The maximum delivery date for the delivery method. */
-  maxDeliveryDate?: Maybe<Scalars['ISO8601DateTime']['output']>;
-  /** The minimum delivery date for the delivery method. */
-  minDeliveryDate?: Maybe<Scalars['ISO8601DateTime']['output']>;
-};
-
-/** The input fields to create a delivery method for a Shop Pay payment request. */
-export type ShopPayPaymentRequestDeliveryMethodInput = {
-  /** The amount for the delivery method. */
-  amount?: InputMaybe<MoneyInput>;
-  /** The code of the delivery method. */
-  code?: InputMaybe<Scalars['String']['input']>;
-  /** The detail about when the delivery may be expected. */
-  deliveryExpectationLabel?: InputMaybe<Scalars['String']['input']>;
-  /** The detail of the delivery method. */
-  detail?: InputMaybe<Scalars['String']['input']>;
-  /** The label of the delivery method. */
-  label?: InputMaybe<Scalars['String']['input']>;
-  /** The maximum delivery date for the delivery method. */
-  maxDeliveryDate?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
-  /** The minimum delivery date for the delivery method. */
-  minDeliveryDate?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
-};
-
-/** Represents the delivery method type for a Shop Pay payment request. */
-export enum ShopPayPaymentRequestDeliveryMethodType {
-  /** The delivery method type is pickup. */
-  PICKUP = 'PICKUP',
-  /** The delivery method type is shipping. */
-  SHIPPING = 'SHIPPING'
-}
-
-/** Represents a discount for a Shop Pay payment request. */
-export type ShopPayPaymentRequestDiscount = {
-  /** The amount of the discount. */
-  amount: MoneyV2;
-  /** The label of the discount. */
-  label: Scalars['String']['output'];
-};
-
-/** The input fields to create a discount for a Shop Pay payment request. */
-export type ShopPayPaymentRequestDiscountInput = {
-  /** The amount of the discount. */
-  amount?: InputMaybe<MoneyInput>;
-  /** The label of the discount. */
-  label?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Represents an image for a Shop Pay payment request line item. */
-export type ShopPayPaymentRequestImage = {
-  /** The alt text of the image. */
-  alt?: Maybe<Scalars['String']['output']>;
-  /** The source URL of the image. */
-  url: Scalars['String']['output'];
-};
-
-/** The input fields to create an image for a Shop Pay payment request. */
-export type ShopPayPaymentRequestImageInput = {
-  /** The alt text of the image. */
-  alt?: InputMaybe<Scalars['String']['input']>;
-  /** The source URL of the image. */
-  url: Scalars['String']['input'];
-};
-
-/** The input fields represent a Shop Pay payment request. */
-export type ShopPayPaymentRequestInput = {
-  /** The delivery methods for the payment request. */
-  deliveryMethods?: InputMaybe<Array<ShopPayPaymentRequestDeliveryMethodInput>>;
-  /** The discount codes for the payment request. */
-  discountCodes?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** The discounts for the payment request order. */
-  discounts?: InputMaybe<Array<ShopPayPaymentRequestDiscountInput>>;
-  /** The line items for the payment request. */
-  lineItems?: InputMaybe<Array<ShopPayPaymentRequestLineItemInput>>;
-  /** The locale for the payment request. */
-  locale: Scalars['String']['input'];
-  /** The encrypted payment method for the payment request. */
-  paymentMethod?: InputMaybe<Scalars['String']['input']>;
-  /** The presentment currency for the payment request. */
-  presentmentCurrency: CurrencyCode;
-  /** The delivery method type for the payment request. */
-  selectedDeliveryMethodType?: InputMaybe<ShopPayPaymentRequestDeliveryMethodType>;
-  /** The shipping lines for the payment request. */
-  shippingLines?: InputMaybe<Array<ShopPayPaymentRequestShippingLineInput>>;
-  /** The subtotal amount for the payment request. */
-  subtotal: MoneyInput;
-  /** The total amount for the payment request. */
-  total: MoneyInput;
-  /** The total shipping price for the payment request. */
-  totalShippingPrice?: InputMaybe<ShopPayPaymentRequestTotalShippingPriceInput>;
-  /** The total tax for the payment request. */
-  totalTax?: InputMaybe<MoneyInput>;
-};
-
-/** Represents a line item for a Shop Pay payment request. */
-export type ShopPayPaymentRequestLineItem = {
-  /** The final item price for the line item. */
-  finalItemPrice: MoneyV2;
-  /** The final line price for the line item. */
-  finalLinePrice: MoneyV2;
-  /** The image of the line item. */
-  image?: Maybe<ShopPayPaymentRequestImage>;
-  /** The item discounts for the line item. */
-  itemDiscounts?: Maybe<Array<ShopPayPaymentRequestDiscount>>;
-  /** The label of the line item. */
-  label: Scalars['String']['output'];
-  /** The line discounts for the line item. */
-  lineDiscounts?: Maybe<Array<ShopPayPaymentRequestDiscount>>;
-  /** The original item price for the line item. */
-  originalItemPrice?: Maybe<MoneyV2>;
-  /** The original line price for the line item. */
-  originalLinePrice?: Maybe<MoneyV2>;
-  /** The quantity of the line item. */
-  quantity: Scalars['Int']['output'];
-  /** Whether the line item requires shipping. */
-  requiresShipping?: Maybe<Scalars['Boolean']['output']>;
-  /** The SKU of the line item. */
-  sku?: Maybe<Scalars['String']['output']>;
-};
-
-/** The input fields to create a line item for a Shop Pay payment request. */
-export type ShopPayPaymentRequestLineItemInput = {
-  /** The final item price for the line item. */
-  finalItemPrice?: InputMaybe<MoneyInput>;
-  /** The final line price for the line item. */
-  finalLinePrice?: InputMaybe<MoneyInput>;
-  /** The image of the line item. */
-  image?: InputMaybe<ShopPayPaymentRequestImageInput>;
-  /** The item discounts for the line item. */
-  itemDiscounts?: InputMaybe<Array<ShopPayPaymentRequestDiscountInput>>;
-  /** The label of the line item. */
-  label?: InputMaybe<Scalars['String']['input']>;
-  /** The line discounts for the line item. */
-  lineDiscounts?: InputMaybe<Array<ShopPayPaymentRequestDiscountInput>>;
-  /** The original item price for the line item. */
-  originalItemPrice?: InputMaybe<MoneyInput>;
-  /** The original line price for the line item. */
-  originalLinePrice?: InputMaybe<MoneyInput>;
-  /** The quantity of the line item. */
-  quantity: Scalars['Int']['input'];
-  /** Whether the line item requires shipping. */
-  requiresShipping?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The SKU of the line item. */
-  sku?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Represents a receipt for a Shop Pay payment request. */
-export type ShopPayPaymentRequestReceipt = {
-  /** The payment request object. */
-  paymentRequest: ShopPayPaymentRequest;
-  /** The processing status. */
-  processingStatusType: Scalars['String']['output'];
-  /** The token of of the receipt. */
-  token: Scalars['String']['output'];
-};
-
-/** Represents a Shop Pay payment request session. */
-export type ShopPayPaymentRequestSession = {
-  /** The checkout URL of the Shop Pay payment request session. */
-  checkoutUrl: Scalars['URL']['output'];
-  /** The payment request associated with the Shop Pay payment request session. */
-  paymentRequest: ShopPayPaymentRequest;
-  /** The source identifier of the Shop Pay payment request session. */
-  sourceIdentifier: Scalars['String']['output'];
-  /** The token of the Shop Pay payment request session. */
-  token: Scalars['String']['output'];
-};
-
-/** Return type for `shopPayPaymentRequestSessionCreate` mutation. */
-export type ShopPayPaymentRequestSessionCreatePayload = {
-  /** The new Shop Pay payment request session object. */
-  shopPayPaymentRequestSession?: Maybe<ShopPayPaymentRequestSession>;
-  /** The list of errors that occurred from executing the mutation. */
-  userErrors: Array<UserErrorsShopPayPaymentRequestSessionUserErrors>;
-};
-
-/** Return type for `shopPayPaymentRequestSessionSubmit` mutation. */
-export type ShopPayPaymentRequestSessionSubmitPayload = {
-  /** The payment request receipt object. */
-  paymentRequestReceipt?: Maybe<ShopPayPaymentRequestReceipt>;
-  /** The list of errors that occurred from executing the mutation. */
-  userErrors: Array<UserErrorsShopPayPaymentRequestSessionUserErrors>;
-};
-
-/** Represents a shipping line for a Shop Pay payment request. */
-export type ShopPayPaymentRequestShippingLine = {
-  /** The amount for the shipping line. */
-  amount: MoneyV2;
-  /** The code of the shipping line. */
-  code: Scalars['String']['output'];
-  /** The label of the shipping line. */
-  label: Scalars['String']['output'];
-};
-
-/** The input fields to create a shipping line for a Shop Pay payment request. */
-export type ShopPayPaymentRequestShippingLineInput = {
-  /** The amount for the shipping line. */
-  amount?: InputMaybe<MoneyInput>;
-  /** The code of the shipping line. */
-  code?: InputMaybe<Scalars['String']['input']>;
-  /** The label of the shipping line. */
-  label?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Represents a shipping total for a Shop Pay payment request. */
-export type ShopPayPaymentRequestTotalShippingPrice = {
-  /** The discounts for the shipping total. */
-  discounts: Array<ShopPayPaymentRequestDiscount>;
-  /** The final total for the shipping line. */
-  finalTotal: MoneyV2;
-  /** The original total for the shipping line. */
-  originalTotal?: Maybe<MoneyV2>;
-};
-
-/** The input fields to create a shipping total for a Shop Pay payment request. */
-export type ShopPayPaymentRequestTotalShippingPriceInput = {
-  /** The discounts for the shipping total. */
-  discounts?: InputMaybe<Array<ShopPayPaymentRequestDiscountInput>>;
-  /** The final total for the shipping total. */
-  finalTotal?: InputMaybe<MoneyInput>;
-  /** The original total for the shipping total. */
-  originalTotal?: InputMaybe<MoneyInput>;
-};
-
 /** The input fields for submitting Shop Pay payment method information for checkout. */
 export type ShopPayWalletContentInput = {
   /** The customer's billing address. */
@@ -8103,12 +7692,6 @@ export type StringConnection = {
   /** The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node. */
   edges: Array<StringEdge>;
   /**
-   * A list of nodes that are contained in StringEdge. You can fetch data about an
-   * individual node, or you can follow the edges to fetch data about a collection
-   * of related nodes. At each node, you specify the fields that you want to retrieve.
-   */
-  nodes: Array<Scalars['String']['output']>;
-  /**
    * An object that’s used to retrieve [cursor
    * information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
    */
@@ -8136,8 +7719,6 @@ export enum SubmissionErrorCode {
   BUYER_IDENTITY_EMAIL_IS_INVALID = 'BUYER_IDENTITY_EMAIL_IS_INVALID',
   BUYER_IDENTITY_EMAIL_REQUIRED = 'BUYER_IDENTITY_EMAIL_REQUIRED',
   BUYER_IDENTITY_PHONE_IS_INVALID = 'BUYER_IDENTITY_PHONE_IS_INVALID',
-  CAPTCHA_COMPLETION_REQUIRED = 'CAPTCHA_COMPLETION_REQUIRED',
-  CUSTOMER_ACCOUNT_REQUIRED = 'CUSTOMER_ACCOUNT_REQUIRED',
   DELIVERY_ADDRESS1_INVALID = 'DELIVERY_ADDRESS1_INVALID',
   DELIVERY_ADDRESS1_REQUIRED = 'DELIVERY_ADDRESS1_REQUIRED',
   DELIVERY_ADDRESS1_TOO_LONG = 'DELIVERY_ADDRESS1_TOO_LONG',
@@ -8152,7 +7733,6 @@ export enum SubmissionErrorCode {
   DELIVERY_COMPANY_REQUIRED = 'DELIVERY_COMPANY_REQUIRED',
   DELIVERY_COMPANY_TOO_LONG = 'DELIVERY_COMPANY_TOO_LONG',
   DELIVERY_COUNTRY_REQUIRED = 'DELIVERY_COUNTRY_REQUIRED',
-  DELIVERY_DETAIL_CHANGED = 'DELIVERY_DETAIL_CHANGED',
   DELIVERY_FIRST_NAME_INVALID = 'DELIVERY_FIRST_NAME_INVALID',
   DELIVERY_FIRST_NAME_REQUIRED = 'DELIVERY_FIRST_NAME_REQUIRED',
   DELIVERY_FIRST_NAME_TOO_LONG = 'DELIVERY_FIRST_NAME_TOO_LONG',
@@ -8171,7 +7751,6 @@ export enum SubmissionErrorCode {
   DELIVERY_POSTAL_CODE_REQUIRED = 'DELIVERY_POSTAL_CODE_REQUIRED',
   DELIVERY_ZONE_NOT_FOUND = 'DELIVERY_ZONE_NOT_FOUND',
   DELIVERY_ZONE_REQUIRED_FOR_COUNTRY = 'DELIVERY_ZONE_REQUIRED_FOR_COUNTRY',
-  DISCOUNT_NOT_APPLICABLE = 'DISCOUNT_NOT_APPLICABLE',
   ERROR = 'ERROR',
   MERCHANDISE_LINE_LIMIT_REACHED = 'MERCHANDISE_LINE_LIMIT_REACHED',
   MERCHANDISE_NOT_APPLICABLE = 'MERCHANDISE_NOT_APPLICABLE',
@@ -8227,7 +7806,6 @@ export enum SubmissionErrorCode {
   PAYMENTS_SHOPIFY_PAYMENTS_REQUIRED = 'PAYMENTS_SHOPIFY_PAYMENTS_REQUIRED',
   PAYMENTS_UNACCEPTABLE_PAYMENT_AMOUNT = 'PAYMENTS_UNACCEPTABLE_PAYMENT_AMOUNT',
   PAYMENTS_WALLET_CONTENT_MISSING = 'PAYMENTS_WALLET_CONTENT_MISSING',
-  PENDING_PROCESS = 'PENDING_PROCESS',
   TAXES_DELIVERY_GROUP_ID_NOT_FOUND = 'TAXES_DELIVERY_GROUP_ID_NOT_FOUND',
   TAXES_LINE_ID_NOT_FOUND = 'TAXES_LINE_ID_NOT_FOUND',
   TAXES_MUST_BE_DEFINED = 'TAXES_MUST_BE_DEFINED'
@@ -8455,26 +8033,6 @@ export type UserError = DisplayableError & {
   /** The error message. */
   message: Scalars['String']['output'];
 };
-
-/** Error codes for failed Shop Pay payment request session mutations. */
-export type UserErrorsShopPayPaymentRequestSessionUserErrors = DisplayableError & {
-  /** The error code. */
-  code?: Maybe<UserErrorsShopPayPaymentRequestSessionUserErrorsCode>;
-  /** The path to the input field that caused the error. */
-  field?: Maybe<Array<Scalars['String']['output']>>;
-  /** The error message. */
-  message: Scalars['String']['output'];
-};
-
-/** Possible error codes that can be returned by `UserErrorsShopPayPaymentRequestSessionUserErrors`. */
-export enum UserErrorsShopPayPaymentRequestSessionUserErrorsCode {
-  /** Idempotency key has already been used. */
-  IDEMPOTENCY_KEY_ALREADY_USED = 'IDEMPOTENCY_KEY_ALREADY_USED',
-  /** Payment request input is invalid. */
-  PAYMENT_REQUEST_INVALID_INPUT = 'PAYMENT_REQUEST_INVALID_INPUT',
-  /** Payment request not found. */
-  PAYMENT_REQUEST_NOT_FOUND = 'PAYMENT_REQUEST_NOT_FOUND'
-}
 
 /** The input fields for a filter used to view a subset of products in a collection matching a specific variant option. */
 export type VariantOptionFilter = {
