@@ -16,21 +16,21 @@ export const updateLineItemsInputMapper = (
       if (!lineItem.id) {
         return null
       }
-
+ 
      let line = {id: lineItem.id} as CartLineUpdateInput
-
+ 
      if (lineItem.quantity) {
        line.quantity = lineItem.quantity
      }
-
+ 
      if (lineItem.variantId) {
        line.merchandiseId = lineItem.variantId
      }
-
+ 
      if (lineItem.customAttributes) {
        line.attributes = lineItem.customAttributes
      }
-
+ 
      return line
     }).filter(Boolean) as Array<CartLineUpdateInput>
   }

@@ -1,5 +1,5 @@
 {
-  "id": "gid://shopify/Checkout/223b6e22c3c86aecdabda2c001f92a84?key=6ff38b1424273d78d9229b6a79484b2d",
+  "id": "gid://shopify/Checkout/e780a1b5bffd6a9ef530f1718b854e4f?key=f06572e061a9cc7e3b73e9a235239f42",
   "ready": false,
   "requiresShipping": true,
   "note": null,
@@ -29,7 +29,7 @@
       "implementsNode": false
     }
   },
-  "webUrl": "https://juanprieto.myshopify.com/60187836438/checkouts/223b6e22c3c86aecdabda2c001f92a84?key=6ff38b1424273d78d9229b6a79484b2d",
+  "webUrl": "https://juanprieto.myshopify.com/60187836438/checkouts/e780a1b5bffd6a9ef530f1718b854e4f?key=f06572e061a9cc7e3b73e9a235239f42",
   "orderStatusUrl": null,
   "taxExempt": false,
   "taxesIncluded": false,
@@ -126,8 +126,8 @@
     }
   },
   "completedAt": null,
-  "createdAt": "2024-10-31T20:34:07Z",
-  "updatedAt": "2024-10-31T20:34:15Z",
+  "createdAt": "2024-11-08T19:27:28Z",
+  "updatedAt": "2024-11-08T19:27:36Z",
   "email": null,
   "discountApplications": [
     {
@@ -157,7 +157,7 @@
       "hasNextPage": false,
       "hasPreviousPage": false,
       "variableValues": {
-        "checkoutId": "gid://shopify/Checkout/223b6e22c3c86aecdabda2c001f92a84?key=6ff38b1424273d78d9229b6a79484b2d",
+        "checkoutId": "gid://shopify/Checkout/e780a1b5bffd6a9ef530f1718b854e4f?key=f06572e061a9cc7e3b73e9a235239f42",
         "discountCode": "10OFF"
       }
     }
@@ -169,7 +169,7 @@
   "order": null,
   "lineItems": [
     {
-      "id": "gid://shopify/CheckoutLineItem/485358965227740?checkout=223b6e22c3c86aecdabda2c001f92a84",
+      "id": "gid://shopify/CheckoutLineItem/485358965227740?checkout=e780a1b5bffd6a9ef530f1718b854e4f",
       "title": "Alex Kassian - Strings Of Eden",
       "variant": {
         "id": "gid://shopify/ProductVariant/48535896522774",
@@ -374,7 +374,7 @@
       "hasNextPage": false,
       "hasPreviousPage": false,
       "variableValues": {
-        "checkoutId": "gid://shopify/Checkout/223b6e22c3c86aecdabda2c001f92a84?key=6ff38b1424273d78d9229b6a79484b2d",
+        "checkoutId": "gid://shopify/Checkout/e780a1b5bffd6a9ef530f1718b854e4f?key=f06572e061a9cc7e3b73e9a235239f42",
         "discountCode": "10OFF"
       }
     }

@@ -1,11 +1,11 @@
 {
-  "id": "gid://shopify/Checkout/0781db3a69dfb04f7b35ba3d5d284ec3?key=a48ed68f7ed154809d2aedc8ae579647",
+  "id": "gid://shopify/Checkout/6ac00a9d2c818b1bc98682c404a98153?key=01df201e1bde539af58c0e62753b09e4",
   "ready": false,
   "requiresShipping": true,
   "note": null,
   "paymentDue": {
-    "amount": "150.0",
-    "currencyCode": "USD",
+    "amount": "189.95",
+    "currencyCode": "EUR",
     "type": {
       "name": "MoneyV2",
       "kind": "OBJECT",
@@ -17,8 +17,8 @@
     }
   },
   "paymentDueV2": {
-    "amount": "150.0",
-    "currencyCode": "USD",
+    "amount": "189.95",
+    "currencyCode": "EUR",
     "type": {
       "name": "MoneyV2",
       "kind": "OBJECT",
@@ -29,14 +29,14 @@
       "implementsNode": false
     }
   },
-  "webUrl": "https://juanprieto.myshopify.com/60187836438/checkouts/0781db3a69dfb04f7b35ba3d5d284ec3?key=a48ed68f7ed154809d2aedc8ae579647",
+  "webUrl": "https://juanprieto.myshopify.com/60187836438/checkouts/6ac00a9d2c818b1bc98682c404a98153?key=01df201e1bde539af58c0e62753b09e4",
   "orderStatusUrl": null,
   "taxExempt": false,
-  "taxesIncluded": false,
-  "currencyCode": "USD",
+  "taxesIncluded": true,
+  "currencyCode": "EUR",
   "totalTax": {
     "amount": "0.0",
-    "currencyCode": "USD",
+    "currencyCode": "EUR",
     "type": {
       "name": "MoneyV2",
       "kind": "OBJECT",
@@ -49,7 +49,7 @@
   },
   "totalTaxV2": {
     "amount": "0.0",
-    "currencyCode": "USD",
+    "currencyCode": "EUR",
     "type": {
       "name": "MoneyV2",
       "kind": "OBJECT",
@@ -61,8 +61,8 @@
     }
   },
   "lineItemsSubtotalPrice": {
-    "amount": "200.0",
-    "currencyCode": "USD",
+    "amount": "189.95",
+    "currencyCode": "EUR",
     "type": {
       "name": "MoneyV2",
       "kind": "OBJECT",
@@ -74,8 +74,8 @@
     }
   },
   "subtotalPrice": {
-    "amount": "150.0",
-    "currencyCode": "USD",
+    "amount": "189.95",
+    "currencyCode": "EUR",
     "type": {
       "name": "MoneyV2",
       "kind": "OBJECT",
@@ -87,8 +87,8 @@
     }
   },
   "subtotalPriceV2": {
-    "amount": "150.0",
-    "currencyCode": "USD",
+    "amount": "189.95",
+    "currencyCode": "EUR",
     "type": {
       "name": "MoneyV2",
       "kind": "OBJECT",
@@ -100,8 +100,8 @@
     }
   },
   "totalPrice": {
-    "amount": "150.0",
-    "currencyCode": "USD",
+    "amount": "189.95",
+    "currencyCode": "EUR",
     "type": {
       "name": "MoneyV2",
       "kind": "OBJECT",
@@ -113,8 +113,8 @@
     }
   },
   "totalPriceV2": {
-    "amount": "150.0",
-    "currencyCode": "USD",
+    "amount": "189.95",
+    "currencyCode": "EUR",
     "type": {
       "name": "MoneyV2",
       "kind": "OBJECT",
@@ -126,42 +126,10 @@
     }
   },
   "completedAt": null,
-  "createdAt": "2024-11-08T17:00:34Z",
-  "updatedAt": "2024-11-08T17:00:52Z",
+  "createdAt": "2024-11-07T00:30:32Z",
+  "updatedAt": "2024-11-07T00:30:32Z",
   "email": null,
-  "discountApplications": [
-    {
-      "__typename": "DiscountCodeApplication",
-      "targetSelection": "ALL",
-      "allocationMethod": "ACROSS",
-      "targetType": "LINE_ITEM",
-      "value": {
-        "amount": "50.0",
-        "currencyCode": "USD",
-        "type": {
-          "name": "PricingValue",
-          "kind": "UNION"
-        }
-      },
-      "code": "ORDERFIXED50OFF",
-      "applicable": true,
-      "type": {
-        "name": "DiscountCodeApplication",
-        "kind": "OBJECT",
-        "fieldBaseTypes": {
-          "applicable": "Boolean",
-          "code": "String"
-        },
-        "implementsNode": false
-      },
-      "hasNextPage": false,
-      "hasPreviousPage": false,
-      "variableValues": {
-        "checkoutId": "gid://shopify/Checkout/0781db3a69dfb04f7b35ba3d5d284ec3?key=a48ed68f7ed154809d2aedc8ae579647",
-        "discountCode": "ORDERFIXED50OFF"
-      }
-    }
-  ],
+  "discountApplications": [],
   "appliedGiftCards": [],
   "shippingAddress": null,
   "shippingLine": null,
@@ -169,7 +137,7 @@
   "order": null,
   "lineItems": [
     {
-      "id": "gid://shopify/CheckoutLineItem/485358965227740?checkout=0781db3a69dfb04f7b35ba3d5d284ec3",
+      "id": "gid://shopify/CheckoutLineItem/485358965227740?checkout=6ac00a9d2c818b1bc98682c404a98153",
       "title": "Alex Kassian - Strings Of Eden",
       "variant": {
         "id": "gid://shopify/ProductVariant/48535896522774",
@@ -307,57 +275,7 @@
       },
       "quantity": 1,
       "customAttributes": [],
-      "discountAllocations": [
-        {
-          "allocatedAmount": {
-            "amount": "50.0",
-            "currencyCode": "USD",
-            "type": {
-              "name": "MoneyV2",
-              "kind": "OBJECT",
-              "fieldBaseTypes": {
-                "amount": "Decimal",
-                "currencyCode": "CurrencyCode"
-              },
-              "implementsNode": false
-            }
-          },
-          "discountApplication": {
-            "__typename": "DiscountCodeApplication",
-            "targetSelection": "ALL",
-            "allocationMethod": "ACROSS",
-            "targetType": "LINE_ITEM",
-            "value": {
-              "amount": "50.0",
-              "currencyCode": "USD",
-              "type": {
-                "name": "PricingValue",
-                "kind": "UNION"
-              }
-            },
-            "code": "ORDERFIXED50OFF",
-            "applicable": true,
-            "type": {
-              "name": "DiscountCodeApplication",
-              "kind": "OBJECT",
-              "fieldBaseTypes": {
-                "applicable": "Boolean",
-                "code": "String"
-              },
-              "implementsNode": false
-            }
-          },
-          "type": {
-            "name": "DiscountAllocation",
-            "kind": "OBJECT",
-            "fieldBaseTypes": {
-              "allocatedAmount": "MoneyV2",
-              "discountApplication": "DiscountApplication"
-            },
-            "implementsNode": false
-          }
-        }
-      ],
+      "discountAllocations": [],
       "type": {
         "name": "CheckoutLineItem",
         "kind": "OBJECT",
@@ -374,8 +292,17 @@
       "hasNextPage": false,
       "hasPreviousPage": false,
       "variableValues": {
-        "checkoutId": "gid://shopify/Checkout/0781db3a69dfb04f7b35ba3d5d284ec3?key=a48ed68f7ed154809d2aedc8ae579647",
-        "discountCode": "ORDERFIXED50OFF"
+        "input": {
+          "buyerIdentity": {
+            "countryCode": "ES"
+          },
+          "lineItems": [
+            {
+              "variantId": "gid://shopify/ProductVariant/48535896522774",
+              "quantity": 1
+            }
+          ]
+        }
       }
     }
   ],

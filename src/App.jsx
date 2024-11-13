@@ -8,6 +8,7 @@ import { CheckoutDiscounts } from './CheckoutDiscounts'
 import { CheckoutGiftCards } from './CheckoutGiftCards'
 import { CartDiscounts } from './CartDiscounts'
 import { CartGiftCards } from './CartGiftCards'
+import Discounts from './Discounts'
 
 function App() {
   const [checkout, setCheckout] = useState(null)
@@ -16,6 +17,10 @@ function App() {
   return (
     <div style={{ textAlign: 'left' }}>
       <h1>Checkout vs Cart</h1>
+      <Discounts />
+
+      <hr />
+
       <CheckoutUpdate checkout={checkout} setCheckout={setCheckout} />
       <CheckoutCreate checkout={checkout} setCheckout={setCheckout} verbose={showCreateTests} />
       <CheckoutDiscounts checkout={checkout} setCheckout={setCheckout} />

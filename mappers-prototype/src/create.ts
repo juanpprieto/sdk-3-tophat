@@ -1,7 +1,7 @@
 import {CheckoutCreateInput} from './types/2024-04'
 import {CartInput} from './types/2025-01'
 
-export const checkoutCreateInputMapper = (input: CheckoutCreateInput): CartInput => {
+export const createInputMapper = (input: CheckoutCreateInput): CartInput => {
   const cartInput: CartInput = {}
 
   // SDK checkout input fields we can map:
@@ -26,3 +26,9 @@ export const checkoutCreateInputMapper = (input: CheckoutCreateInput): CartInput
 
   return cartInput
 }
+
+export async function create(input: CheckoutCreateInput) {
+
+
+} 
+

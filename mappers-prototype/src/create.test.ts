@@ -1,5 +1,5 @@
 import assert from "assert";
-import { checkoutCreateInputMapper } from "./checkoutCreate";
+import { createInputMapper } from "./create"
 
 // After a bunch of 'Exception during run: Error: Cannot find module './types/2025-01', I'm doing this for now
 enum CountryCode {
@@ -14,13 +14,13 @@ enum CurrencyCode {
 
 describe("checkoutCreateInputMapper", () => {
   it("returns empty object when the checkout input is empty", () => {
-    assert.deepStrictEqual(checkoutCreateInputMapper({}), {});
+    assert.deepStrictEqual(createInputMapper({}), {});
   });
 
   describe("lineItems", () => {
     it('maps lineItems to lines with merchandiseId - empty case', () => {
       const input = { lineItems: [] };
-      assert.deepStrictEqual(checkoutCreateInputMapper(input), { lines: [] });
+      assert.deepStrictEqual(createInputMapper(input), { lines: [] });
     });
   
     it('maps lineItems to lines with merchandiseId - single item', () => {
@@ -32,7 +32,7 @@ describe("checkoutCreateInputMapper", () => {
         }]
       };
   
-      assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+      assert.deepStrictEqual(createInputMapper(input), {
         lines: [{
           merchandiseId: 'gid://shopify/ProductVariant/123',
           quantity: 1,
@@ -57,7 +57,7 @@ describe("checkoutCreateInputMapper", () => {
         ]
       };
   
-      assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+      assert.deepStrictEqual(createInputMapper(input), {
         lines: [
           {
             merchandiseId: 'gid://shopify/ProductVariant/123',
@@ -79,7 +79,7 @@ describe("checkoutCreateInputMapper", () => {
       note: "Test order",
     };
     
-    assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+    assert.deepStrictEqual(createInputMapper(input), {
       note: "Test order",
     });
   });
@@ -89,7 +89,7 @@ describe("checkoutCreateInputMapper", () => {
       email: "test@example.com",
     };
 
-    assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+    assert.deepStrictEqual(createInputMapper(input), {
       buyerIdentity: {
         email: "test@example.com",
       },
@@ -114,7 +114,7 @@ describe("checkoutCreateInputMapper", () => {
       shippingAddress: address,
     };
 
-    assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+    assert.deepStrictEqual(createInputMapper(input), {
       buyerIdentity: {
         deliveryAddressPreferences: [
           {
@@ -128,7 +128,7 @@ describe("checkoutCreateInputMapper", () => {
   describe("custom attributes", () => {
     it('maps customAttributes correctly - empty case', () => {
       const input = { customAttributes: [] };
-      assert.deepStrictEqual(checkoutCreateInputMapper(input), { attributes: [] });
+      assert.deepStrictEqual(createInputMapper(input), { attributes: [] });
     });
   
     it('maps customAttributes correctly - single attribute', () => {
@@ -136,7 +136,7 @@ describe("checkoutCreateInputMapper", () => {
         customAttributes: [{ key: 'gift', value: 'true' }]
       };
   
-      assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+      assert.deepStrictEqual(createInputMapper(input), {
         attributes: [{ key: 'gift', value: 'true' }]
       });
     });
@@ -150,7 +150,7 @@ describe("checkoutCreateInputMapper", () => {
         ]
       };
   
-      assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+      assert.deepStrictEqual(createInputMapper(input), {
         attributes: [
           { key: 'gift', value: 'true' },
           { key: 'note', value: 'Happy Birthday' },
@@ -167,7 +167,7 @@ describe("checkoutCreateInputMapper", () => {
       },
     };
 
-    assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+    assert.deepStrictEqual(createInputMapper(input), {
       buyerIdentity: {
         countryCode: CountryCode.CA,
       },
@@ -181,7 +181,7 @@ describe("checkoutCreateInputMapper", () => {
         note: "Test",
       };
 
-      assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+      assert.deepStrictEqual(createInputMapper(input), {
         note: "Test",
       });
     });
@@ -192,7 +192,7 @@ describe("checkoutCreateInputMapper", () => {
         note: "Test",
       };
 
-      assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+      assert.deepStrictEqual(createInputMapper(input), {
         note: "Test",
       });
     });
@@ -223,7 +223,7 @@ describe("checkoutCreateInputMapper", () => {
       allowPartialAddresses: true,
     };
 
-    assert.deepStrictEqual(checkoutCreateInputMapper(input), {
+    assert.deepStrictEqual(createInputMapper(input), {
       buyerIdentity: {
         email: "test@example.com",
         countryCode: CountryCode.CA,
