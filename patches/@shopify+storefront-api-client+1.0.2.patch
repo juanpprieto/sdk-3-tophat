@@ -1,0 +1,13 @@
+diff --git a/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.mjs b/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.mjs
+index a6f5a69..d42dc45 100644
+--- a/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.mjs
++++ b/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.mjs
+@@ -76,7 +76,7 @@ function generateApiUrlFormatter(storeUrl, defaultApiVersion, baseApiVersionVali
+             });
+         }
+         const urlApiVersion = (apiVersion ?? defaultApiVersion).trim();
+-        return `${storeUrl}/api/${urlApiVersion}/graphql.json`;
++        return `https://shop1.myshopify.io/api/unstable/graphql.json`;
+     };
+ }
+ function generateGetApiUrl(config, apiUrlFormatter) {
