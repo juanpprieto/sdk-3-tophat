@@ -5,6 +5,7 @@ import { sfapi } from './sfapi'
 export default function Discounts() {
   const [checkout, setCheckout] = useState(null)
   const [cart, setCart] = useState(null)
+  const [comparison, setComparison] = useState(null)
 
   function createCheckout({ lineItems } = { lineItems: [] }) {
     return new Promise((resolve) => client.checkout.create({ lineItems }).then((checkout) => {
@@ -51,7 +52,8 @@ export default function Discounts() {
       <div>
         <div>
           <h3>Fixed amount discount</h3>
-            <button onClick={() => {
+          <button onClick={() => {
+            setComparison('Fixed amount discount / empty')
             createCheckout().then((checkout) => {
               checkoutAddDiscount(checkout.id, '10OFF').then((checkout) => {
                 setCheckout(checkout)
@@ -68,6 +70,7 @@ export default function Discounts() {
           </button>
 
           <button onClick={() => {
+            setComparison('Fixed amount discount / one line')
             createCheckout({
               lineItems: [
                 {
@@ -98,6 +101,7 @@ export default function Discounts() {
           </button>
 
           <button onClick={() => {
+            setComparison('Fixed amount discount / two lines')
             createCheckout({
               lineItems: [
                 {
@@ -139,6 +143,7 @@ export default function Discounts() {
         <div>
           <h3>Percentage discount</h3>
           <button onClick={() => {
+            setComparison('Percentage discount / empty')
             createCheckout().then((checkout) => {
               checkoutAddDiscount(checkout.id, '10PERCENTOFF').then((checkout) => {
                 setCheckout(checkout)
@@ -155,6 +160,7 @@ export default function Discounts() {
           </button>
 
           <button onClick={() => {
+            setComparison('Percentage discount / one line')
             createCheckout({
               lineItems: [
                 {
@@ -185,6 +191,7 @@ export default function Discounts() {
           </button>
 
           <button onClick={() => {
+            setComparison('Percentage discount / two lines')
             createCheckout({
               lineItems: [
                 {
@@ -227,6 +234,7 @@ export default function Discounts() {
         <div>
           <h3>order fixed discounts</h3>
           <button onClick={() => {
+            setComparison('Order fixed discount / empty')
             createCheckout().then((checkout) => {
               checkoutAddDiscount(checkout.id, 'ORDERFIXED50OFF').then((checkout) => {
                 setCheckout(checkout)
@@ -243,6 +251,7 @@ export default function Discounts() {
           </button>
 
           <button onClick={() => {
+            setComparison('Order fixed discount / one line')
             createCheckout({
               lineItems: [
                 {
@@ -273,6 +282,7 @@ export default function Discounts() {
           </button>
 
           <button onClick={() => {
+            setComparison('Order fixed discount / two lines')
             createCheckout({
               lineItems: [
                 {
@@ -315,6 +325,7 @@ export default function Discounts() {
         <div>
           <h3>order % discounts</h3>
           <button onClick={() => {
+            setComparison('Order % discount / empty')
             createCheckout().then((checkout) => {
               checkoutAddDiscount(checkout.id, 'ORDER50PERCENTOFF').then((checkout) => {
                 setCheckout(checkout)
@@ -327,10 +338,11 @@ export default function Discounts() {
               })
             });
           }}>
-            order-fixed discount / empty
+            order % discount / empty
           </button>
 
           <button onClick={() => {
+            setComparison('Order % discount / one line')
             createCheckout({
               lineItems: [
                 {
@@ -357,10 +369,11 @@ export default function Discounts() {
               })
             });
           }}>
-            order-fixed discount / one line
+            order % discount / one line
           </button>
 
           <button onClick={() => {
+            setComparison('Order % discount / two lines')
             createCheckout({
               lineItems: [
                 {
@@ -395,19 +408,28 @@ export default function Discounts() {
               })
             });
           }}>
-            order-fixed discount / two lines
+            order % discount / two lines
           </button>
         </div>
 
         {cart && checkout && (
           <>
+           <h1>Comparison</h1>
+            <p>{comparison}</p>
+            <div style={{ display: 'flex', flexDirection: 'row', flex: 1, gap: '1rem' }}>
+              <div style={{minWidth: '50%', maxWidth: '50%'}}>
+                <h2>Checkout</h2>
+              </div>
+              <div><h2>Cart</h2>
+              </div>
+            </div>
             <h3>root</h3>
             <div style={{ display: 'flex', flexDirection: 'row', flex: 1, gap: '1rem' }}>
-              <pre style={{ fontSize: '10px', width: '50%' }}>{JSON.stringify({ discountApplications: checkout.discountApplications }, null, 2)}</pre>
-              <pre style={{ fontSize: '10px', width: '50%' }}>{JSON.stringify({ discountAllocations: cart.discountAllocations, discountCodes: cart.discountCodes }, null, 2)}</pre>
+                <pre style={{ fontSize: '10px', minWidth: '50%', maxWidth: '50%', flex: 'wrap' }}>{JSON.stringify({ discountApplications: checkout.discountApplications }, null, 2)}</pre>
+                <pre style={{ fontSize: '10px', width: '50%' }}>{JSON.stringify({ discountAllocations: cart.discountAllocations, discountCodes: cart.discountCodes }, null, 2)}</pre>
             </div>
             <hr />
-            <h3>Lines</h3>
+            <h3>lineItems / lines</h3>
             <div style={{ display: 'flex', flexDirection: 'row', flex: 1, gap: '1rem' }}>
               <pre style={{ fontSize: '10px', width: '50%' }}>{JSON.stringify(checkout?.lineItems ?? null, null, 2)}</pre>
               <pre style={{ fontSize: '10px', width: '50%' }}>{JSON.stringify(cart?.lines ?? null, null, 2)}</pre>

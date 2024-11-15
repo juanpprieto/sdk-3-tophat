@@ -4,10 +4,9 @@ import { fetch } from 'fetch-undici';
 const client = createStorefrontApiClient({
   storeDomain: 'https://juanprieto.myshopify.com',
   apiVersion: 'unstable',
-  publicAccessToken: 'c23ad8269962738dd66dfd85d9b45a2d',
+  publicAccessToken:  'c23ad8269962738dd66dfd85d9b45a2d',
   customFetchApi: fetch,
 });
-
 
 const CART_LINE_FRAGMENT = `#graphql
 fragment CartLineFragment on CartLine {
@@ -70,7 +69,18 @@ fragment CartLineFragment on CartLine {
   discountAllocations {
     ... on CartCodeDiscountAllocation {
       targetType
+      allocationMethod
+      targetSelection
       code
+      value {
+          ... on PricingPercentageValue {
+            percentage
+          }
+          ... on MoneyV2 {
+            amount
+            currencyCode
+          }
+        }
       discountedAmount {
         amount
         currencyCode
@@ -79,7 +89,18 @@ fragment CartLineFragment on CartLine {
     }
     ... on CartAutomaticDiscountAllocation {
       targetType
+      allocationMethod
+        targetSelection
       title
+      value {
+          ... on PricingPercentageValue {
+            percentage
+          }
+          ... on MoneyV2 {
+            amount
+            currencyCode
+          }
+        }
       discountedAmount {
         amount
         currencyCode
@@ -164,7 +185,18 @@ fragment CartFragment on Cart {
   discountAllocations {
     ... on CartCodeDiscountAllocation {
       targetType
+      allocationMethod
+      targetSelection
       code
+      value {
+          ... on PricingPercentageValue {
+            percentage
+          }
+          ... on MoneyV2 {
+            amount
+            currencyCode
+          }
+        }
       discountedAmount {
         amount
         currencyCode
@@ -173,7 +205,18 @@ fragment CartFragment on Cart {
     }
     ... on CartAutomaticDiscountAllocation {
       targetType
+      allocationMethod
+        targetSelection
       title
+      value {
+          ... on PricingPercentageValue {
+            percentage
+          }
+          ... on MoneyV2 {
+            amount
+            currencyCode
+          }
+        }
       discountedAmount {
         amount
         currencyCode
