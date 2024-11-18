@@ -17,7 +17,6 @@ describe("emailMapper", () => {
       emailMapper({
         email: "buyer@test.com",
         deliveryAddressPreferences: [],
-        walletPreferences: [],
       }),
       "buyer@test.com"
     );
@@ -26,7 +25,6 @@ describe("emailMapper", () => {
     assert.strictEqual(
       emailMapper({
         deliveryAddressPreferences: [],
-        walletPreferences: [],
       }),
       null
     );

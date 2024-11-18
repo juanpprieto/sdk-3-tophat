@@ -11,12 +11,9 @@ import {
 import {
   Checkout,
   CheckoutLineItem,
-  DiscountApplicationEdge,
-  PageInfo,
+  DiscountApplicationConnection,
   CheckoutLineItemConnection,
-} from "./types/2024-04";
-
-// TODO implement user error mapping
+} from "./types/SDK-checkout-2024-04";
 
 const cartToCheckoutMapper = (cart: Cart): Checkout => {
   const {
@@ -43,12 +40,10 @@ const cartToCheckoutMapper = (cart: Cart): Checkout => {
     createdAt,
     currencyCode: cost.totalAmount.currencyCode,
     customAttributes: attributes,
-    // @ts-expect-error discountApplication nodes aren't queried in SDK
     discountApplications: discountApplicationsMapper(discountAllocations),
     email: emailMapper(buyerIdentity),
     id: idMapper(id),
-    // @ts-expect-error lineItem nodes aren't queried in SDK
-    lineItems: linesToLineItemsMapper(lines),
+    lineItems: linesToLineItemsMapper(cart),
     lineItemsSubtotalPrice: cost.checkoutChargeAmount,
     note,
     paymentDue: paymentDueMapper(cost.totalAmount, appliedGiftCards),
@@ -122,11 +117,8 @@ const lineNodeToLineItemNodeMapper = (line: CartLine): CheckoutLineItem => {
       allocatedAmount: discountAllocation.discountedAmount,
       discountApplication: {
         targetType: discountAllocation.targetType,
-        // @ts-expect-error field will be added to this type for 2025-01
         value: discountAllocation.value,
-        // @ts-expect-error field will be added to this type for 2025-01
         allocationMethod: discountAllocation.allocationMethod,
-        // @ts-expect-error field will be added to this type for 2025-01
         targetSelection: discountAllocation.targetSelection,
       },
     })),
@@ -134,32 +126,45 @@ const lineNodeToLineItemNodeMapper = (line: CartLine): CheckoutLineItem => {
     quantity: line.quantity,
     variant: line.merchandise,
     title: line.merchandise.title,
-    unitPrice: line.cost.amountPerQuantity,
   };
 };
 
 export const linesToLineItemsMapper = (
-  lines: BaseCartLineConnection
-): Omit<CheckoutLineItemConnection, "nodes"> => {
+  cart: Cart
+): CheckoutLineItemConnection => {
+  const { lines } = cart;
+
   return {
     edges: lines.edges.map((edge) => {
+      const line = edge.node;
+
       return {
         cursor: edge.cursor,
-        node: lineNodeToLineItemNodeMapper(edge.node),
+        node: {
+          customAttributes: line.attributes,
+          discountAllocations: line.discountAllocations.map((discountAllocation) => ({
+            allocatedAmount: discountAllocation.discountedAmount,
+            discountApplication: {
+              targetType: discountAllocation.targetType,
+              value: discountAllocation.value,
+              allocationMethod: discountAllocation.allocationMethod,
+              targetSelection: discountAllocation.targetSelection,
+            },
+          })),
+          id: line.id,
+          quantity: line.quantity,
+          variant: line.merchandise,
+          title: line.merchandise.title,
+        },
       };
     }),
     pageInfo: lines.pageInfo,
   };
 };
 
-interface SDKCheckoutDiscountApplicationConnection {
-  edges: Omit<DiscountApplicationEdge, "cursor">[];
-  pageInfo: PageInfo;
-}
-
 export const discountApplicationsMapper = (
   discountAllocations: CartDiscountAllocation[]
-): SDKCheckoutDiscountApplicationConnection => {
+): DiscountApplicationConnection => {
   return {
     pageInfo: {
       hasNextPage: false,
@@ -168,11 +173,8 @@ export const discountApplicationsMapper = (
     edges: discountAllocations.map((discountAllocation) => ({
       node: {
         targetType: discountAllocation.targetType,
-        // @ts-expect-error field will be added to this type for 2025-01
         value: discountAllocation.value,
-        // @ts-expect-error field will be added to this type for 2025-01
         allocationMethod: discountAllocation.allocationMethod,
-        // @ts-expect-error field will be added to this type for 2025-01
         targetSelection: discountAllocation.targetSelection,
       },
     })),
