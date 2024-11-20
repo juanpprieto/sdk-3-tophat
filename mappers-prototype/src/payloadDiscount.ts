@@ -1,4 +1,37 @@
-import { Cart } from './types/2025-01'
+import { Cart, CartLine, DiscountAllocation as CartDiscountAllocation, CartDiscountCode } from './types/2025-01'
+
+import {
+  DiscountApplication as CheckoutDiscountApplication,
+  DiscountAllocation as CheckoutDiscountAllocation,
+} from "./types/SDK-checkout-2024-04";
+
+interface CheckoutLineItemDiscountAllocations {
+  id: string; // ID of line item
+  discountAllocations: CheckoutDiscountAllocation[];
+}
+
+interface Return {
+  checkoutDiscountApplications: CheckoutDiscountApplication[];
+  checkoutLineItemDiscountAllocations: CheckoutLineItemDiscountAllocations[];
+}
+
+interface Params {
+  cartLineItems: CartLine[];
+  cartDiscountAllocations: CartDiscountAllocation[];
+  cartDiscountCodes: CartDiscountCode[];
+}
+
+
+// const discountMapper = (params: Params): Return => {
+  
+//   const discountCodeToDiscountApplicationMap = new Map<string, CheckoutDiscountApplication>()
+//   params.cartDiscountCodes.forEach(discountCode => {
+//     discountCodeToDiscountApplicationMap.set(discountCode.code, {} as CheckoutDiscountApplication)
+//   })
+
+// }
+
+
 
 /* 
  * Map cart discount logic to checkout discount logic
@@ -8,6 +41,7 @@ import { Cart } from './types/2025-01'
  * isOrderLevelDiscount (7,11,...
  * isPercentageDiscount (value.percentage)
  * isFixedDiscount (value.amount)
+ * isAutomaticDiscount (as opposed to isDiscountCodeDiscount)
  *
  * mapCartDiscountAllocationToCheckoutDiscountAllocation
  *   - createDiscountApplication
@@ -15,24 +49,50 @@ import { Cart } from './types/2025-01'
  *
  * Generic branching logic:
  *   if (discountCodeNoLines) return empty arrays
- *
- *   if (!isOrderLevelDiscount) {
- *     // product-level discount..
- *     if (isPercentageDiscount) 
- *       mapLineItemDiscountAllocationToDiscountApplication 
- *       mapDiscountedAmountToAllocatedAmount(discountAllocation.discountedAmount)
- *       copyLineItemDiscountApplicationToRoot
- *
- *     if (isFixedDiscount) 
- *       mapLineItemAllocationToDiscountApplicationSummed
- *       SAME - mapLineDiscountedAmountToAllocatedAmount
- *       SAME - copyLineItemDiscountApplicationToRoot
-*    }
-*
- *   isOrderLevelDiscount...
- *   mapRootDiscountAllocationsToLineItemDiscountAllocations
- *     - mapDiscountApplication
- *     - mapDiscountedAmountToAllocatedAmount(discountAllocation.discountedAmount) 
+ * 
+    *   if (discountCodeDiscount) {
+    *     if (!isOrderLevelDiscount) {
+    *     // product-level discount..
+    *     if (isPercentageDiscount) 
+    *       mapLineItemDiscountAllocationToDiscountApplication 
+    *       SAME - mapLineDiscountedAmountToAllocatedAmount
+    *       SAME - copyLineItemDiscountApplicationToRoot
+    *
+    *     if (isFixedDiscount) 
+    *       mapLineItemAllocationToDiscountApplicationSummed
+    *       SAME - mapLineDiscountedAmountToAllocatedAmount
+    *       SAME - copyLineItemDiscountApplicationToRoot
+    *    }
+    *
+    *   isOrderLevelDiscount...
+    * 
+    *     if (isFixedDiscount)
+    *       mapCartDiscountAllocationsToCheckoutLineItemDiscountAllocations
+    *         - for each cart discount allocation, figure out which cart line item it maps to
+    *         - for all cart line items, determine (using cart line item costs) what the discount allocation is for that specific line item 
+    *         - create a checkoutLineItemDiscountAllocation for each cart line item, using the information from ^
+    *            mapLineItemAllocationToDiscountApplicationSummed
+    *            SAME - mapLineDiscountedAmountToAllocatedAmount
+    *            SAME - copyLineItemDiscountApplicationToRoot
+    * 
+    *    if (isPercentageDiscount) 
+    *       mapCartDiscountAllocationsToCheckoutLineItemDiscountAllocations
+    *        - for each cart discount allocation, figure out which cart line item it maps to
+    *        - for all cart line items, determine (using cart line item costs) what the discount allocation is for that specific line item
+    *        - create a checkoutLineItemDiscountAllocation for each cart line item, using the information from ^
+    *            mapLineItemAllocationToDiscountApplication
+    *            SAME - mapLineDiscountedAmountToAllocatedAmount
+    *            SAME - copyLineItemDiscountApplicationToRoot 
+ * 
+ *   }
+ *   if (isAutomaticDiscount) {
+ *     - Cart.discountCodes is empty
+ * 
+ *   }
+ *   
+ *   
+ *     
+ *     
  *
  *
  * Scenario 1: Empty cart with fixed amount discount
