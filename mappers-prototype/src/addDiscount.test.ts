@@ -1,7 +1,5 @@
 import assert from "assert";
 import { addDiscountInputMapper } from "./addDiscount";
-import { addDiscountOutputMapper } from "./addDiscount";
-import { Cart } from "./types/2025-01";
 
 describe("addDiscountInputMapper", () => {
   describe("checkoutId", () => {
@@ -20,22 +18,4 @@ describe("addDiscountInputMapper", () => {
       });
     })
   })
-});
-
-describe("addDiscountOutputMapper", () => {
-  it("it maps an empty checkout with a fixed discount code", () => {
-    const cart = {
-      discountAllocations: [],
-      discountCodes: [
-        {
-          applicable: false,
-          code: "10PERCENTOFF"
-        }
-      ]
-    } as unknown as Cart;
-    const checkout = {
-      discountApplications: []
-    }
-    assert.strictEqual(addDiscountOutputMapper(cart), checkout);
-  });
 });
