@@ -15,13 +15,13 @@ describe.only("discountPayloadMapper", () => {
         ],
         lines: { edges: [] },
       } as unknown as Cart;
-      const mappedCart = discountsPayloadMapper(cart);
+      const checkout = discountsPayloadMapper(cart);
+      // @ts-ignore testing for a field known to be undefined after mapping
+      assert.ok(typeof checkout.discountAllocations === 'undefined');
       // @ts-ignore
-      assert.ok(typeof mappedCart.discountAllocations === 'undefined');
-      // @ts-ignore
-      assert.ok(typeof mappedCart.discountCodes === 'undefined');
-      assert.equal(mappedCart.discountApplications.length, 0);
-      assert.equal(mappedCart.lineItems.length, 0);
+      assert.ok(typeof checkout.discountCodes === 'undefined');
+      assert.equal(checkout.discountApplications.length, 0);
+      assert.equal(checkout.lineItems.length, 0);
     });
 
     it("maps an empty checkout with a percentage discount code", () => {
@@ -35,13 +35,13 @@ describe.only("discountPayloadMapper", () => {
         ],
         lines: { edges: [] },
       } as unknown as Cart;
-      const mappedCart = discountsPayloadMapper(cart);
+      const checkout = discountsPayloadMapper(cart);
       // @ts-ignore
-      assert.ok(typeof mappedCart.discountAllocations === 'undefined');
+      assert.ok(typeof checkout.discountAllocations === 'undefined');
       // @ts-ignore
-      assert.ok(typeof mappedCart.discountCodes === 'undefined');
-      assert.equal(mappedCart.discountApplications.length, 0);
-      assert.equal(mappedCart.lineItems.length, 0);
+      assert.ok(typeof checkout.discountCodes === 'undefined');
+      assert.equal(checkout.discountApplications.length, 0);
+      assert.equal(checkout.lineItems.length, 0);
     });
   });
 
@@ -175,7 +175,6 @@ describe.only("discountPayloadMapper", () => {
           }
         ]
       }
-
       assert.deepStrictEqual(mappedCart.discountApplications, checkout.discountApplications);
       assert.deepStrictEqual(mappedCart.lineItems, checkout.lineItems);
     })
@@ -841,6 +840,7 @@ describe.only('discountPayloadMapper / unsupported', () => {
         ]
       }
       assert.notEqual(mappedCart.discountApplications[0], checkout.discountApplications[0]);
+      // TODO: assert an empty array
       assert.ok(mappedCart.discountApplications.length === 0);
     })
 
@@ -894,6 +894,7 @@ describe.only('discountPayloadMapper / unsupported', () => {
       }
 
       assert.notEqual(mappedCart.discountApplications[0], checkout.discountApplications[0]);
+      // TODO: 
       assert.ok(mappedCart.discountApplications.length === 0);
     })
   })

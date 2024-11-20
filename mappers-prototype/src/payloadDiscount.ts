@@ -1,15 +1,102 @@
 import { Cart } from './types/2025-01'
 
+/* 
+ * Map cart discount logic to checkout discount logic
+ *
+ * variables:
+ * discountCodeNoLines (1-4)
+ * isOrderLevelDiscount (7,11,...
+ * isPercentageDiscount (value.percentage)
+ * isFixedDiscount (value.amount)
+ *
+ * mapCartDiscountAllocationToCheckoutDiscountAllocation
+ *   - createDiscountApplication
+ *   - mapDiscountedAmountToAllocatedAmount(discountAllocation.discountedAmount)
+ *
+ * Generic branching logic:
+ *   if (discountCodeNoLines) return empty arrays
+ *
+ *   if (!isOrderLevelDiscount) {
+ *     // product-level discount..
+ *     if (isPercentageDiscount) 
+ *       mapLineItemDiscountAllocationToDiscountApplication 
+ *       mapDiscountedAmountToAllocatedAmount(discountAllocation.discountedAmount)
+ *       copyLineItemDiscountApplicationToRoot
+ *
+ *     if (isFixedDiscount) 
+ *       mapLineItemAllocationToDiscountApplicationSummed
+ *       SAME - mapLineDiscountedAmountToAllocatedAmount
+ *       SAME - copyLineItemDiscountApplicationToRoot
+*    }
+*
+ *   isOrderLevelDiscount...
+ *   mapRootDiscountAllocationsToLineItemDiscountAllocations
+ *     - mapDiscountApplication
+ *     - mapDiscountedAmountToAllocatedAmount(discountAllocation.discountedAmount) 
+ *
+ *
+ * Scenario 1: Empty cart with fixed amount discount
+ * Scenario 2: Empty cart with percentage discount
+ *  discountApplications:
+ *    1. if discountCode && no lines return an empty array 
+ *  lineItems:
+ *    1. if discountCode && return the empty array
+ *
+ * Scenario 3: Empty cart with order-level fixed amount discount
+ * Scenario 4: Empty cart with order-level percentage discount
+ *  discountApplications:
+ *   1. if discountCode && no lines return an empty array (not supported case)
+ *  lineItems:
+ *   1. if discountCode && return the empty array (not supported case)
+ *
+ * Scenario 5: Single line item with fixed amount discount
+ * Scenario 9: Multi line item with fixed amount discount
+ *  discountApplications:
+ *    1. copy discountApplication of a line item
+ *    
+ *  lineItems:
+ *    1. map discountedAmount to allocatedAmount
+ *    2. identitfy that this is a fixed-line by checking value.amount exists
+ *    3. build lineItem discountApplication (One is shared for all items with the same code)
+ *      - Map targetSelection, allocationMethod, targetType, value, code, applicable = true
+ *      - if its a fixed-allocation (with value.amount) then we need to sum all line items value.amount with the same code
+ *
+ *  Scenario 6: Single line item with percentage discount
+ *  Scenario 10: Multi line item with percentage discount
+ *   discountApplications:
+ *    1. copy discountApplication of a line item
+ *
+ *   lineItems:
+ *     1. map discountedAmount to allocatedAmount (THIS IS THE SAME AS FIXED AMOUNT)
+ *     2. identitfy that this is a percentage-line by checking value.percentage exists
+ *     3. build lineItem discountApplication (One is shared for all items with the same code)
+ *      - Map targetSelection, allocationMethod, targetType, value, code, applicable = true
+ *
+ *   Scenario 7: Single line item with order-level fixed amount discount
+ *   Scenario 11: Multi line item with order-level fixed amount discount
+ *     discountApplications:
+ *
+ *     lineItems:
+ *       1. 
+ */
+
+
 export const discountsPayloadMapper = (cart: Cart) => {
   const { lines, discountCodes, discountAllocations, ...cartWithoutCartDiscountFields } = cart
 
-  if (!lines.edges.length) return {
-    ...cartWithoutCartDiscountFields,
+
+  // Scenarios 1-4
+  if (!lines.edges.length && discountCodes.length) return {
     discountApplications: [],
     lineItems: []
   }
 
+ // 
+
+
+
   const isOrderLevelDiscount = cart.discountAllocations.length > 0 && cart.discountAllocations[0].allocationMethod === 'ACROSS'
+  const isPercentageDiscount = cart.discountAllocations.length > 0 && typeof cart.discountAllocations[0].value !== 'undefined' && typeof cart.discountAllocations[0].value.percentage !== 'undefined'
   const isMultilineCart = lines.edges.length > 1
 
   const firstLine = lines.edges[0].node
