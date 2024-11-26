@@ -8,17 +8,17 @@ export default function Discounts() {
   const [comparison, setComparison] = useState(null)
 
 
-  const removeTypeFields = (obj)=> {
+  const removeUnhelpfulFields = (obj)=> {
     if (!obj || typeof obj !== 'object') return obj;
     
     if (Array.isArray(obj)) {
-      return obj.map(item => removeTypeFields(item));
+      return obj.map(item => removeUnhelpfulFields(item));
     }
     
     const newObj = {};
     for (const [key, value] of Object.entries(obj)) {
-      if (key !== 'type') {
-        newObj[key] = removeTypeFields(value);
+      if (key !== 'type' && key !== 'hasNextPage' && key !== 'hasPreviousPage' && key !== 'variableValues' && key !== '__typename') {
+        newObj[key] = removeUnhelpfulFields(value);
       }
     }
     return newObj;
@@ -49,7 +49,7 @@ export default function Discounts() {
       console.log('Discount added:', checkout.discountApplications)
       let { id, discountApplications, lineItems } = checkout
       lineItems = lineItems.map((node) => ({ variantId: node.variant.id, variantPrice: { price: node.variant.price, compareAtPrice: node.variant.compareAtPrice, unitPrice: node.variant.unitPrice }, discountAllocations: node.discountAllocations,  }))
-      return removeTypeFields({ id, discountApplications, lineItems })
+      return removeUnhelpfulFields({ id, discountApplications, lineItems })
     })
   }
 
@@ -59,7 +59,7 @@ export default function Discounts() {
       const { data: { cartDiscountCodesUpdate: { cart } } } = res
       let { id, discountAllocations, discountCodes, lines } = cart
       lines = lines.edges.map(({ node }) => ({ variantId: node.merchandise.id, variantPrice: { price: node.merchandise.price, compareAtPrice: node.merchandise.compareAtPrice, unitPrice: node.merchandise.unitPrice }, discountAllocations: node.discountAllocations,lineCost: node.cost  }))
-      return ({ id, discountCodes, discountAllocations, lines })
+      return removeUnhelpfulFields({ id, discountCodes, discountAllocations, lines })
     })
   }
 
