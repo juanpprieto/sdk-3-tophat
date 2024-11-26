@@ -48,3 +48,27 @@ generates:
       maybeValue: T | null | undefined
       inputMaybeValue: undefined | null | T
       nonOptionalTypename: true
+  src/types/SDK-checkout-2024-04.d.ts:
+    schema: graphql/SDK-checkout-2024-04.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+    config:
+      enumsAsTypes: false
+      namingConvention:
+        typeNames: keep
+        enumValues: keep
+      scalars:
+        Money: string
+        URL: string
+        DateTime: string
+        UnsignedInt64: string
+        Decimal: number
+        JSON: any
+      typesPrefix: ''
+      skipTypename: true
+      dedupeFragments: true
+      avoidOptionals: false
+      maybeValue: T | null | undefined
+      inputMaybeValue: undefined | null | T
+      nonOptionalTypename: true

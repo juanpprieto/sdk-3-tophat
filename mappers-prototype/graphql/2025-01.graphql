@@ -1,10 +1,6 @@
-# This file is auto-generated from the current state of the GraphQL API. Instead of editing this file,
-# please edit the ruby definition files and run `bin/rails graphql:schema:dump` to regenerate the schema.
-#
-# If you're just looking to browse, you may find it friendlier to use the graphiql browser which is
-# available in services-internal at https://app.shopify.com/services/internal/shops/14168/graphql.
-# Check out the "Docs" tab in the top right.
-
+# This file is auto-generated from the current state of the GraphQL API.
+# Instead of editing this file, please edit the ruby definition files and
+# run `bundle exec rake graphql:schema:dump` to regenerate the schema.
 schema {
   query: QueryRoot
   mutation: Mutation
@@ -19,6 +15,28 @@ directive @accessRestricted(
   """
   reason: String = null
 ) on FIELD_DEFINITION | OBJECT
+
+"""
+Informs the server to delay the execution of the current fragment, potentially
+resulting in multiple responses from the server. Non-deferred data is delivered
+in the initial response and data deferred is delivered in subsequent responses.
+Only available on development stores with the Defer Directive developer preview enabled.
+"""
+directive @defer(
+  """
+  When `true`, fragment should be deferred. When `false`, fragment will not be
+  deferred and data will be included in the initial response. Defaults to `true`
+  when omitted.
+  """
+  if: Boolean = true
+
+  """
+  May be used to identify the data from responses and associate it with the
+  corresponding defer directive. `label` must be unique label across all `@defer` and
+  `@stream` directives in a document. `label` must not be provided as a variable.
+  """
+  label: String
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
 
 """
 Contextualizes data based on the additional information provided by the
@@ -197,22 +215,22 @@ type Article implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   """
   comments(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -227,7 +245,7 @@ type Article implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   """
   content(
     """
-    Truncates a string after the given length.
+    Truncates string after the given length.
     """
     truncateAt: Int
   ): String!
@@ -242,7 +260,7 @@ type Article implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   """
   excerpt(
     """
-    Truncates a string after the given length.
+    Truncates string after the given length.
     """
     truncateAt: Int
   ): String
@@ -288,6 +306,8 @@ type Article implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -319,8 +339,11 @@ type Article implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   title: String!
 
   """
-  A URL parameters to be added to a page URL when it is linked from a GraphQL
-  result. This allows for tracking the origin of the traffic.
+  URL parameters to be added to a page URL to track the origin of on-site search
+  traffic for [analytics reporting](https://help.shopify.com/manual/reports-and-analytics/shopify-reports/report-types/default-reports/behaviour-reports).
+  Returns a result when accessed through the
+  [search](https://shopify.dev/docs/api/storefront/current/queries/search) or [predictiveSearch](https://shopify.dev/docs/api/storefront/current/queries/predictiveSearch)
+  queries, otherwise returns null.
   """
   trackingParameters: String
 }
@@ -360,20 +383,17 @@ An auto-generated type for paginating through multiple Articles.
 """
 type ArticleConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [ArticleEdge!]!
 
   """
-  A list of nodes that are contained in ArticleEdge. You can fetch data about an
-  individual node, or you can follow the edges to fetch data about a collection
-  of related nodes. At each node, you specify the fields that you want to retrieve.
+  A list of the nodes contained in ArticleEdge.
   """
   nodes: [Article!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -383,7 +403,7 @@ An auto-generated type which holds one Article and a cursor during pagination.
 """
 type ArticleEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -557,21 +577,17 @@ An auto-generated type for paginating through multiple BaseCartLines.
 """
 type BaseCartLineConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [BaseCartLineEdge!]!
 
   """
-  A list of nodes that are contained in BaseCartLineEdge. You can fetch data
-  about an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in BaseCartLineEdge.
   """
   nodes: [BaseCartLine!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -581,7 +597,7 @@ An auto-generated type which holds one BaseCartLine and a cursor during paginati
 """
 type BaseCartLineEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -610,39 +626,38 @@ type Blog implements HasMetafields & Node & OnlineStorePublishable {
   """
   articles(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
     """
-    A filter made up of terms, connectives, modifiers, and comparators.
-    | name | type | description | acceptable_values | default_value | example_use |
-    | ---- | ---- | ---- | ---- | ---- | ---- |
-    | default | string | Filter by a case-insensitive search of all the fields in a document. |
-    | author | string |
-    | blog_title | string |
-    | created_at | time |
-    | id | id | Filter by `id` range. | | | - `id:1234`<br/> - `id:>=1234`<br/> - `id:<=1234` |
-    | tag | string | Filter objects by the `tag` field. | | | - `tag:my_tag` |
-    | tag_not | string | Filter by objects that don’t have the specified tag. | | | - `tag_not:my_tag` |
-    | updated_at | time |
-    You can apply one or more filters to a query. Learn more about [Shopify API
-    search syntax](https://shopify.dev/api/usage/search-syntax).
+    Apply one or multiple filters to the query.
+    | name | description | acceptable_values | default_value | example_use |
+    | ---- | ---- | ---- | ---- | ---- |
+    | author |
+    | blog_title |
+    | created_at |
+    | tag |
+    | tag_not |
+    | updated_at |
+    Refer to the detailed [search
+    syntax](https://shopify.dev/api/usage/search-syntax) for more information
+    about using filters.
     """
     query: String
 
@@ -652,8 +667,7 @@ type Blog implements HasMetafields & Node & OnlineStorePublishable {
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: ArticleSortKeys = ID
   ): ArticleConnection!
@@ -694,6 +708,8 @@ type Blog implements HasMetafields & Node & OnlineStorePublishable {
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -720,20 +736,17 @@ An auto-generated type for paginating through multiple Blogs.
 """
 type BlogConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [BlogEdge!]!
 
   """
-  A list of nodes that are contained in BlogEdge. You can fetch data about an
-  individual node, or you can follow the edges to fetch data about a collection
-  of related nodes. At each node, you specify the fields that you want to retrieve.
+  A list of the nodes contained in BlogEdge.
   """
   nodes: [Blog!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -743,7 +756,7 @@ An auto-generated type which holds one Blog and a cursor during pagination.
 """
 type BlogEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -949,22 +962,22 @@ type Cart implements HasMetafields & Node {
   """
   deliveryGroups(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -972,6 +985,18 @@ type Cart implements HasMetafields & Node {
     Reverse the order of the underlying list.
     """
     reverse: Boolean = false
+
+    """
+    Whether to include [carrier-calculated delivery rates](https://help.shopify.com/en/manual/shipping/setting-up-and-managing-your-shipping/enabling-shipping-carriers)
+    in the response.
+
+    By default, only static shipping rates are returned. This argument requires
+    mandatory usage of the [`@defer`
+    directive](https://shopify.dev/docs/api/storefront#directives).
+
+    For more information, refer to [fetching carrier-calculated rates for the cart using `@defer`](https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/defer#fetching-carrier-calculated-rates-for-the-cart-using-defer).
+    """
+    withCarrierRates: Boolean = false
   ): CartDeliveryGroupConnection!
 
   """
@@ -985,10 +1010,9 @@ type Cart implements HasMetafields & Node {
   discountCodes: [CartDiscountCode!]!
 
   """
-  The estimated costs that the buyer will pay at checkout.
-  The estimated costs are subject to change and changes will be reflected at checkout.
-  The `estimatedCost` field uses the `buyerIdentity` field to determine
-  [international pricing](https://shopify.dev/custom-storefronts/internationalization/international-pricing).
+  The estimated costs that the buyer will pay at checkout. The estimated costs
+  are subject to change and changes will be reflected at checkout. The
+  `estimatedCost` field uses the `buyerIdentity` field to determine [international pricing](https://shopify.dev/custom-storefronts/internationalization/international-pricing).
   """
   estimatedCost: CartEstimatedCost! @deprecated(reason: "Use `cost` instead.")
 
@@ -1002,22 +1026,22 @@ type Cart implements HasMetafields & Node {
   """
   lines(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -1048,6 +1072,8 @@ type Cart implements HasMetafields & Node {
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -1175,10 +1201,16 @@ type CartBuyerIdentity {
   phone: String
 
   """
-  A set of preferences for the buyer that is interacting with the cart.
-  Preferences can be used to populate relevant fields in the checkout flow.
+  A set of preferences tied to the buyer interacting with the cart. Preferences
+  are used to prefill fields in at checkout to streamline information collection. 
+  Preferences are not synced back to the cart if they are overwritten.
   """
   preferences: CartPreferences
+
+  """
+  The purchasing company associated with the cart.
+  """
+  purchasingCompany: PurchasingCompany
 }
 
 """
@@ -1207,6 +1239,8 @@ input CartBuyerIdentityInput {
   An ordered set of delivery addresses tied to the buyer that is interacting with the cart.
   The rank of the preferences is determined by the order of the addresses in the array. Preferences
   can be used to populate relevant fields in the checkout flow.
+
+  The input must not contain more than `250` values.
   """
   deliveryAddressPreferences: [DeliveryAddressInput!]
 
@@ -1221,8 +1255,9 @@ input CartBuyerIdentityInput {
   phone: String
 
   """
-  A set of preferences for the buyer that is interacting with the cart.
-  Preferences can be used to populate relevant fields in the checkout flow.
+  A set of preferences tied to the buyer interacting with the cart. Preferences
+  are used to prefill fields in at checkout to streamline information collection. 
+  Preferences are not synced back to the cart if they are overwritten.
   """
   preferences: CartPreferencesInput
 }
@@ -1484,8 +1519,7 @@ type CartCustomDiscountAllocation implements CartDiscountAllocation {
 }
 
 """
-Coordinates are a pin on the map to find pickup points around a specific
-location such as the buyer’s origin or a corresponding [location.address](https://shopify.dev/docs/api/storefront/latest/objects/Location).
+Preferred location used to find the closest pick up point based on coordinates.
 """
 type CartDeliveryCoordinatesPreference {
   """
@@ -1507,7 +1541,7 @@ type CartDeliveryCoordinatesPreference {
 }
 
 """
-The input fields represent preferences for delivery coordinates in a cart.
+Preferred location used to find the closest pick up point based on coordinates.
 """
 input CartDeliveryCoordinatesPreferenceInput {
   """
@@ -1518,12 +1552,12 @@ input CartDeliveryCoordinatesPreferenceInput {
   countryCode: CountryCode!
 
   """
-  The latitude coordinate of the preferred location.
+  The geographic latitude for a given location. Coordinates are required in order to set pickUpHandle for pickup points.
   """
   latitude: Float!
 
   """
-  The longitude coordinate of the preferred location.
+  The geographic longitude for a given location. Coordinates are required in order to set pickUpHandle for pickup points.
   """
   longitude: Float!
 }
@@ -1537,22 +1571,22 @@ type CartDeliveryGroup {
   """
   cartLines(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -1593,21 +1627,17 @@ An auto-generated type for paginating through multiple CartDeliveryGroups.
 """
 type CartDeliveryGroupConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [CartDeliveryGroupEdge!]!
 
   """
-  A list of nodes that are contained in CartDeliveryGroupEdge. You can fetch
-  data about an individual node, or you can follow the edges to fetch data about
-  a collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in CartDeliveryGroupEdge.
   """
   nodes: [CartDeliveryGroup!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -1617,7 +1647,7 @@ An auto-generated type which holds one CartDeliveryGroup and a cursor during pag
 """
 type CartDeliveryGroupEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -1679,18 +1709,18 @@ type CartDeliveryOption {
 }
 
 """
-Delivery preferences can be used to prefill the delivery section in the checkout flow.
+A set of preferences tied to the buyer interacting with the cart. Preferences
+are used to prefill fields in at checkout to streamline information collection. 
+Preferences are not synced back to the cart if they are overwritten.
 """
 type CartDeliveryPreference {
   """
-  Coordinates are a pin on the map to find pickup points around a specific
-  location such as the buyer’s origin or a corresponding [location.address](https://shopify.dev/docs/api/storefront/latest/objects/Location).
+  Preferred location used to find the closest pick up point based on coordinates.
   """
   coordinates: CartDeliveryCoordinatesPreference
 
   """
-  Selects whether items in the cart should have prefilled delivery methods such
-  as shipping, local pickup or through pickup points.
+  The preferred delivery methods such as shipping, local pickup or through pickup points.
   """
   deliveryMethod: [PreferenceDeliveryMethodType!]!
 
@@ -1702,7 +1732,7 @@ type CartDeliveryPreference {
 }
 
 """
-The input fields represent preferences for delivery options in a cart.
+Delivery preferences can be used to prefill the delivery section at checkout.
 """
 input CartDeliveryPreferenceInput {
   """
@@ -1711,12 +1741,17 @@ input CartDeliveryPreferenceInput {
   coordinates: CartDeliveryCoordinatesPreferenceInput
 
   """
-  Preferences for delivery methods in order of preference.
+  The preferred delivery methods such as shipping, local pickup or through pickup points.
+
+  The input must not contain more than `250` values.
   """
   deliveryMethod: [PreferenceDeliveryMethodType!]
 
   """
-  The ID of a pickup locations in order of preference.
+  The pickup handle prefills checkout fields with the location for either local pickup or pickup points delivery methods.
+  It accepts both location ID for local pickup and external IDs for pickup points.
+
+  The input must not contain more than `250` values.
   """
   pickupHandle: [String!]
 }
@@ -1957,11 +1992,8 @@ enum CartErrorCode {
 }
 
 """
-The estimated costs that the buyer will pay at checkout.
-The estimated cost uses
-[`CartBuyerIdentity`](https://shopify.dev/api/storefront/reference/cart/cartbuyeridentity)
-to determine
-[international pricing](https://shopify.dev/custom-storefronts/internationalization/international-pricing).
+The estimated costs that the buyer will pay at checkout. The estimated cost uses [`CartBuyerIdentity`](https://shopify.dev/api/storefront/reference/cart/cartbuyeridentity)
+to determine [international pricing](https://shopify.dev/custom-storefronts/internationalization/international-pricing).
 """
 type CartEstimatedCost {
   """
@@ -2004,6 +2036,26 @@ input CartFreePaymentMethodInput {
 }
 
 """
+Return type for `cartGiftCardCodesRemove` mutation.
+"""
+type CartGiftCardCodesRemovePayload {
+  """
+  The updated cart.
+  """
+  cart: Cart
+
+  """
+  The list of errors that occurred from executing the mutation.
+  """
+  userErrors: [CartUserError!]!
+
+  """
+  A list of warnings that occurred during the mutation.
+  """
+  warnings: [CartWarning!]!
+}
+
+"""
 Return type for `cartGiftCardCodesUpdate` mutation.
 """
 type CartGiftCardCodesUpdatePayload {
@@ -2029,6 +2081,8 @@ The input fields to create a cart.
 input CartInput {
   """
   An array of key-value pairs that contains additional information about the cart.
+
+  The input must not contain more than `250` values.
   """
   attributes: [AttributeInput!]
 
@@ -2041,21 +2095,29 @@ input CartInput {
 
   """
   The case-insensitive discount codes that the customer added at checkout.
+
+  The input must not contain more than `250` values.
   """
   discountCodes: [String!]
 
   """
   The case-insensitive gift card codes.
+
+  The input must not contain more than `250` values.
   """
   giftCardCodes: [String!]
 
   """
   A list of merchandise lines to add to the cart.
+
+  The input must not contain more than `250` values.
   """
   lines: [CartLineInput!]
 
   """
   The metafields to associate with this cart.
+
+  The input must not contain more than `250` values.
   """
   metafields: [CartInputMetafieldInput!]
 
@@ -2200,6 +2262,8 @@ The input fields to create a merchandise line on a cart.
 input CartLineInput {
   """
   An array of key-value pairs that contains additional information about the merchandise line.
+
+  The input must not contain more than `250` values.
   """
   attributes: [AttributeInput!]
 
@@ -2225,6 +2289,8 @@ The input fields to update a line item on a cart.
 input CartLineUpdateInput {
   """
   An array of key-value pairs that contains additional information about the merchandise line.
+
+  The input must not contain more than `250` values.
   """
   attributes: [AttributeInput!]
 
@@ -2455,12 +2521,12 @@ type CartPaymentUpdatePayload {
 
 """
 A set of preferences tied to the buyer interacting with the cart. Preferences
-are used to prefill fields in the checkout flow to streamline information collection.
+are used to prefill fields in at checkout to streamline information collection. 
 Preferences are not synced back to the cart if they are overwritten.
 """
 type CartPreferences {
   """
-  Delivery preferences can be used to prefill the delivery section in the checkout flow.
+  Delivery preferences can be used to prefill the delivery section in at checkout.
   """
   delivery: CartDeliveryPreference
 
@@ -2468,7 +2534,7 @@ type CartPreferences {
   Wallet preferences are used to populate relevant payment fields in the checkout flow.
   Accepted value: `["shop_pay"]`.
   """
-  wallet: [String!]!
+  wallet: [String!]
 }
 
 """
@@ -2476,14 +2542,15 @@ The input fields represent preferences for the buyer that is interacting with th
 """
 input CartPreferencesInput {
   """
-  Preferences for cart delivery.
+  Delivery preferences can be used to prefill the delivery section in at checkout.
   """
   delivery: CartDeliveryPreferenceInput
 
   """
-  A set of wallet preferences tied to the buyer that is interacting with the cart.
-  Preferences can be used to populate relevant payment fields in the checkout flow.
-    Accepted value: `["shop_pay"]`.
+  Wallet preferences are used to populate relevant payment fields in the checkout flow.
+  Accepted value: `["shop_pay"]`.
+
+  The input must not contain more than `250` values.
   """
   wallet: [String!]
 }
@@ -2628,7 +2695,7 @@ type Collection implements HasMetafields & Node & OnlineStorePublishable & Track
   """
   description(
     """
-    Truncates a string after the given length.
+    Truncates string after the given length.
     """
     truncateAt: Int
   ): String!
@@ -2675,6 +2742,8 @@ type Collection implements HasMetafields & Node & OnlineStorePublishable & Track
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -2690,27 +2759,29 @@ type Collection implements HasMetafields & Node & OnlineStorePublishable & Track
   """
   products(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
     Returns a subset of products matching all product filters.
+
+    The input must not contain more than `250` values.
     """
     filters: [ProductFilter!]
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -2720,8 +2791,7 @@ type Collection implements HasMetafields & Node & OnlineStorePublishable & Track
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: ProductCollectionSortKeys = COLLECTION_DEFAULT
   ): ProductConnection!
@@ -2737,8 +2807,11 @@ type Collection implements HasMetafields & Node & OnlineStorePublishable & Track
   title: String!
 
   """
-  A URL parameters to be added to a page URL when it is linked from a GraphQL
-  result. This allows for tracking the origin of the traffic.
+  URL parameters to be added to a page URL to track the origin of on-site search
+  traffic for [analytics reporting](https://help.shopify.com/manual/reports-and-analytics/shopify-reports/report-types/default-reports/behaviour-reports).
+  Returns a result when accessed through the
+  [search](https://shopify.dev/docs/api/storefront/current/queries/search) or [predictiveSearch](https://shopify.dev/docs/api/storefront/current/queries/predictiveSearch)
+  queries, otherwise returns null.
   """
   trackingParameters: String
 
@@ -2753,21 +2826,17 @@ An auto-generated type for paginating through multiple Collections.
 """
 type CollectionConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [CollectionEdge!]!
 
   """
-  A list of nodes that are contained in CollectionEdge. You can fetch data about
-  an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in CollectionEdge.
   """
   nodes: [Collection!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 
@@ -2782,7 +2851,7 @@ An auto-generated type which holds one Collection and a cursor during pagination
 """
 type CollectionEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -2839,7 +2908,7 @@ type Comment implements Node {
   """
   content(
     """
-    Truncates a string after the given length.
+    Truncates string after the given length.
     """
     truncateAt: Int
   ): String!
@@ -2875,20 +2944,17 @@ An auto-generated type for paginating through multiple Comments.
 """
 type CommentConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [CommentEdge!]!
 
   """
-  A list of nodes that are contained in CommentEdge. You can fetch data about an
-  individual node, or you can follow the edges to fetch data about a collection
-  of related nodes. At each node, you specify the fields that you want to retrieve.
+  A list of the nodes contained in CommentEdge.
   """
   nodes: [Comment!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -2898,7 +2964,7 @@ An auto-generated type which holds one Comment and a cursor during pagination.
 """
 type CommentEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -2906,6 +2972,159 @@ type CommentEdge {
   The item at the end of CommentEdge.
   """
   node: Comment!
+}
+
+"""
+Represents information about a company which is also a customer of the shop.
+"""
+type Company implements HasMetafields & Node {
+  """
+  The date and time ([ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601)) at which the company was created in Shopify.
+  """
+  createdAt: DateTime!
+
+  """
+  A unique externally-supplied ID for the company.
+  """
+  externalId: String
+
+  """
+  A globally-unique ID.
+  """
+  id: ID!
+
+  """
+  Returns a metafield found by namespace and key.
+  """
+  metafield(
+    """
+    The identifier for the metafield.
+    """
+    key: String!
+
+    """
+    The container the metafield belongs to. If omitted, the app-reserved namespace will be used.
+    """
+    namespace: String
+  ): Metafield
+
+  """
+  The metafields associated with the resource matching the supplied list of namespaces and keys.
+  """
+  metafields(
+    """
+    The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
+    """
+    identifiers: [HasMetafieldsIdentifier!]!
+  ): [Metafield]!
+
+  """
+  The name of the company.
+  """
+  name: String!
+
+  """
+  The date and time ([ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601)) at which the company was last modified.
+  """
+  updatedAt: DateTime!
+}
+
+"""
+A company's main point of contact.
+"""
+type CompanyContact implements Node {
+  """
+  The date and time ([ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601))
+  at which the company contact was created in Shopify.
+  """
+  createdAt: DateTime!
+
+  """
+  A globally-unique ID.
+  """
+  id: ID!
+
+  """
+  The company contact's locale (language).
+  """
+  locale: String
+
+  """
+  The company contact's job title.
+  """
+  title: String
+
+  """
+  The date and time ([ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601))
+  at which the company contact was last modified.
+  """
+  updatedAt: DateTime!
+}
+
+"""
+A company's location.
+"""
+type CompanyLocation implements HasMetafields & Node {
+  """
+  The date and time ([ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601))
+  at which the company location was created in Shopify.
+  """
+  createdAt: DateTime!
+
+  """
+  A unique externally-supplied ID for the company.
+  """
+  externalId: String
+
+  """
+  A globally-unique ID.
+  """
+  id: ID!
+
+  """
+  The preferred locale of the company location.
+  """
+  locale: String
+
+  """
+  Returns a metafield found by namespace and key.
+  """
+  metafield(
+    """
+    The identifier for the metafield.
+    """
+    key: String!
+
+    """
+    The container the metafield belongs to. If omitted, the app-reserved namespace will be used.
+    """
+    namespace: String
+  ): Metafield
+
+  """
+  The metafields associated with the resource matching the supplied list of namespaces and keys.
+  """
+  metafields(
+    """
+    The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
+    """
+    identifiers: [HasMetafieldsIdentifier!]!
+  ): [Metafield]!
+
+  """
+  The name of the company location.
+  """
+  name: String!
+
+  """
+  The date and time ([ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601))
+  at which the company location was last modified.
+  """
+  updatedAt: DateTime!
 }
 
 """
@@ -3013,6 +3232,36 @@ type ComponentizableCartLine implements BaseCartLine & Node {
   selling plan has on variants when they're purchased.
   """
   sellingPlanAllocation: SellingPlanAllocation
+}
+
+"""
+Details for count of elements.
+"""
+type Count {
+  """
+  Count of elements.
+  """
+  count: Int!
+
+  """
+  Precision of count, how exact is the value.
+  """
+  precision: CountPrecision!
+}
+
+"""
+The precision of the value returned by a count field.
+"""
+enum CountPrecision {
+  """
+  The count is at least the value. A limit was reached.
+  """
+  AT_LEAST
+
+  """
+  The count is exactly the value.
+  """
+  EXACT
 }
 
 """
@@ -5161,22 +5410,22 @@ type Customer implements HasMetafields {
   """
   addresses(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -5242,6 +5491,8 @@ type Customer implements HasMetafields {
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -5256,34 +5507,33 @@ type Customer implements HasMetafields {
   """
   orders(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
     """
-    A filter made up of terms, connectives, modifiers, and comparators.
-    | name | type | description | acceptable_values | default_value | example_use |
-    | ---- | ---- | ---- | ---- | ---- | ---- |
-    | default | string | Filter by a case-insensitive search of all the fields in a document. |
-    | id | id | Filter by `id` range. | | | - `id:1234`<br/> - `id:>=1234`<br/> - `id:<=1234` |
-    | processed_at | time |
-    You can apply one or more filters to a query. Learn more about [Shopify API
-    search syntax](https://shopify.dev/api/usage/search-syntax).
+    Apply one or multiple filters to the query.
+    | name | description | acceptable_values | default_value | example_use |
+    | ---- | ---- | ---- | ---- | ---- |
+    | processed_at |
+    Refer to the detailed [search
+    syntax](https://shopify.dev/api/usage/search-syntax) for more information
+    about using filters.
     """
     query: String
 
@@ -5293,8 +5543,7 @@ type Customer implements HasMetafields {
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: OrderSortKeys = ID
   ): OrderConnection!
@@ -5895,8 +6144,8 @@ input DeliveryAddressInput {
   deliveryAddressValidationStrategy: DeliveryAddressValidationStrategy = COUNTRY_CODE_ONLY
 
   """
-  Whether the given delivery address is considered to be a one-time use address.
-  One-time use addresses do not get persisted to the buyer's personal addresses when checking out.
+  Whether the given delivery address is considered to be a one-time use address. One-time use addresses do not
+  get persisted to the buyer's personal addresses when checking out.
   """
   oneTimeUse: Boolean = false
 }
@@ -6043,21 +6292,17 @@ An auto-generated type for paginating through multiple DiscountApplications.
 """
 type DiscountApplicationConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [DiscountApplicationEdge!]!
 
   """
-  A list of nodes that are contained in DiscountApplicationEdge. You can fetch
-  data about an individual node, or you can follow the edges to fetch data about
-  a collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in DiscountApplicationEdge.
   """
   nodes: [DiscountApplication!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -6067,7 +6312,7 @@ An auto-generated type which holds one DiscountApplication and a cursor during p
 """
 type DiscountApplicationEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -6251,6 +6496,12 @@ type Filter {
   label: String!
 
   """
+  Describes how to present the filter values.
+  Returns a value only for filters of type `LIST`. Returns null for other types.
+  """
+  presentation: FilterPresentation
+
+  """
   An enumeration that denotes the type of data this filter represents.
   """
   type: FilterType!
@@ -6259,6 +6510,26 @@ type Filter {
   The list of values for this filter.
   """
   values: [FilterValue!]!
+}
+
+"""
+Defines how to present the filter values, specifies the presentation of the filter.
+"""
+enum FilterPresentation {
+  """
+  Image presentation, filter values display an image.
+  """
+  IMAGE
+
+  """
+  Swatch presentation, filter values display color or image patterns.
+  """
+  SWATCH
+
+  """
+  Text presentation, no additional visual display for filter values.
+  """
+  TEXT
 }
 
 """
@@ -6299,6 +6570,11 @@ type FilterValue {
   id: String!
 
   """
+  The visual representation when the filter's presentation is `IMAGE`.
+  """
+  image: MediaImage
+
+  """
   An input object that can be used to filter by this value on the parent field.
 
   The value is provided as a helper for building dynamic filtering UI. For
@@ -6311,6 +6587,11 @@ type FilterValue {
   A human-friendly string for this filter value.
   """
   label: String!
+
+  """
+  The visual representation when the filter's presentation is `SWATCH`.
+  """
+  swatch: Swatch
 }
 
 """
@@ -6322,22 +6603,22 @@ type Fulfillment {
   """
   fulfillmentLineItems(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -6384,21 +6665,17 @@ An auto-generated type for paginating through multiple FulfillmentLineItems.
 """
 type FulfillmentLineItemConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [FulfillmentLineItemEdge!]!
 
   """
-  A list of nodes that are contained in FulfillmentLineItemEdge. You can fetch
-  data about an individual node, or you can follow the edges to fetch data about
-  a collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in FulfillmentLineItemEdge.
   """
   nodes: [FulfillmentLineItem!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -6408,7 +6685,7 @@ An auto-generated type which holds one FulfillmentLineItem and a cursor during p
 """
 type FulfillmentLineItemEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -6518,6 +6795,8 @@ interface HasMetafields {
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -6549,7 +6828,7 @@ scalar ID
 """
 An ISO 8601-encoded datetime
 """
-scalar ISO8601DateTime @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc3339")
+scalar ISO8601DateTime @specifiedBy(url: "https://tools.ietf.org/html/rfc3339")
 
 """
 Represents an image resource.
@@ -6644,20 +6923,17 @@ An auto-generated type for paginating through multiple Images.
 """
 type ImageConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [ImageEdge!]!
 
   """
-  A list of nodes that are contained in ImageEdge. You can fetch data about an
-  individual node, or you can follow the edges to fetch data about a collection
-  of related nodes. At each node, you specify the fields that you want to retrieve.
+  A list of the nodes contained in ImageEdge.
   """
   nodes: [Image!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -6687,7 +6963,7 @@ An auto-generated type which holds one Image and a cursor during pagination.
 """
 type ImageEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -7110,6 +7386,11 @@ enum LanguageCode {
   KY
 
   """
+  Latin.
+  """
+  LA
+
+  """
   Luxembourgish.
   """
   LB
@@ -7168,6 +7449,11 @@ enum LanguageCode {
   Mongolian.
   """
   MN
+
+  """
+  Moldavian.
+  """
+  MO
 
   """
   Marathi.
@@ -7318,6 +7604,11 @@ enum LanguageCode {
   Sango.
   """
   SG
+
+  """
+  Serbo-Croatian.
+  """
+  SH
 
   """
   Sinhala.
@@ -7550,6 +7841,8 @@ type Location implements HasMetafields & Node {
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -7595,12 +7888,12 @@ type LocationAddress {
   formatted: [String!]!
 
   """
-  The approximate latitude coordinates of the location.
+  The latitude coordinates of the location.
   """
   latitude: Float
 
   """
-  The approximate longitude coordinates of the location.
+  The longitude coordinates of the location.
   """
   longitude: Float
 
@@ -7630,21 +7923,17 @@ An auto-generated type for paginating through multiple Locations.
 """
 type LocationConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [LocationEdge!]!
 
   """
-  A list of nodes that are contained in LocationEdge. You can fetch data about
-  an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in LocationEdge.
   """
   nodes: [Location!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -7654,7 +7943,7 @@ An auto-generated type which holds one Location and a cursor during pagination.
 """
 type LocationEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -7812,21 +8101,17 @@ An auto-generated type for paginating through multiple MailingAddresses.
 """
 type MailingAddressConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [MailingAddressEdge!]!
 
   """
-  A list of nodes that are contained in MailingAddressEdge. You can fetch data
-  about an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in MailingAddressEdge.
   """
   nodes: [MailingAddress!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -7836,7 +8121,7 @@ An auto-generated type which holds one MailingAddress and a cursor during pagina
 """
 type MailingAddressEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -7975,6 +8260,8 @@ type Market implements HasMetafields & Node {
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -8015,20 +8302,17 @@ An auto-generated type for paginating through multiple Media.
 """
 type MediaConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [MediaEdge!]!
 
   """
-  A list of nodes that are contained in MediaEdge. You can fetch data about an
-  individual node, or you can follow the edges to fetch data about a collection
-  of related nodes. At each node, you specify the fields that you want to retrieve.
+  A list of the nodes contained in MediaEdge.
   """
   nodes: [Media!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -8063,7 +8347,7 @@ An auto-generated type which holds one Media and a cursor during pagination.
 """
 type MediaEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -8237,7 +8521,7 @@ type MenuItem implements Node {
 """
 The list of possible resources a `MenuItem` can reference.
 """
-union MenuItemResource = Article | Blog | Collection | Page | Product | ShopPolicy
+union MenuItemResource = Article | Blog | Collection | Metaobject | Page | Product | ShopPolicy
 
 """
 A menu item type.
@@ -8269,6 +8553,11 @@ enum MenuItemType {
   COLLECTIONS
 
   """
+  A customer account page link.
+  """
+  CUSTOMER_ACCOUNT_PAGE
+
+  """
   A frontpage link.
   """
   FRONTPAGE
@@ -8277,6 +8566,11 @@ enum MenuItemType {
   An http link.
   """
   HTTP
+
+  """
+  A metaobject page link.
+  """
+  METAOBJECT
 
   """
   A page link.
@@ -8349,22 +8643,22 @@ type Metafield implements Node {
   """
   references(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
   ): MetafieldReferenceConnection
@@ -8450,7 +8744,7 @@ input MetafieldFilter {
 """
 A resource that the metafield belongs to.
 """
-union MetafieldParentResource = Article | Blog | Cart | Collection | Customer | Location | Market | Order | Page | Product | ProductVariant | Shop
+union MetafieldParentResource = Article | Blog | Cart | Collection | Company | CompanyLocation | Customer | Location | Market | Order | Page | Product | ProductVariant | SellingPlan | Shop
 
 """
 Returns the resource which is being referred to by a metafield.
@@ -8462,21 +8756,17 @@ An auto-generated type for paginating through multiple MetafieldReferences.
 """
 type MetafieldReferenceConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [MetafieldReferenceEdge!]!
 
   """
-  A list of nodes that are contained in MetafieldReferenceEdge. You can fetch
-  data about an individual node, or you can follow the edges to fetch data about
-  a collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in MetafieldReferenceEdge.
   """
   nodes: [MetafieldReference!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -8486,7 +8776,7 @@ An auto-generated type which holds one MetafieldReference and a cursor during pa
 """
 type MetafieldReferenceEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -8629,21 +8919,17 @@ An auto-generated type for paginating through multiple Metaobjects.
 """
 type MetaobjectConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [MetaobjectEdge!]!
 
   """
-  A list of nodes that are contained in MetaobjectEdge. You can fetch data about
-  an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in MetaobjectEdge.
   """
   nodes: [Metaobject!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -8653,7 +8939,7 @@ An auto-generated type which holds one Metaobject and a cursor during pagination
 """
 type MetaobjectEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -8682,22 +8968,22 @@ type MetaobjectField {
   """
   references(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
   ): MetafieldReferenceConnection
@@ -8844,6 +9130,8 @@ type Mutation {
   cartAttributesUpdate(
     """
     An array of key-value pairs that contains additional information about the cart.
+
+    The input must not contain more than `250` values.
     """
     attributes: [AttributeInput!]!
 
@@ -8909,9 +9197,28 @@ type Mutation {
 
     """
     The case-insensitive discount codes that the customer added at checkout.
+
+    The input must not contain more than `250` values.
     """
     discountCodes: [String!]
   ): CartDiscountCodesUpdatePayload
+
+  """
+  Removes the gift card codes applied to the cart.
+  """
+  cartGiftCardCodesRemove(
+    """
+    The gift cards to remove.
+
+    The input must not contain more than `250` values.
+    """
+    appliedGiftCardIds: [ID!]!
+
+    """
+    The ID of the cart.
+    """
+    cartId: ID!
+  ): CartGiftCardCodesRemovePayload
 
   """
   Updates the gift card codes applied to the cart.
@@ -8924,6 +9231,8 @@ type Mutation {
 
     """
     The case-insensitive gift card codes.
+
+    The input must not contain more than `250` values.
     """
     giftCardCodes: [String!]!
   ): CartGiftCardCodesUpdatePayload
@@ -8939,6 +9248,8 @@ type Mutation {
 
     """
     A list of merchandise lines to add to the cart.
+
+    The input must not contain more than `250` values.
     """
     lines: [CartLineInput!]!
   ): CartLinesAddPayload
@@ -8954,6 +9265,8 @@ type Mutation {
 
     """
     The merchandise line IDs to remove.
+
+    The input must not contain more than `250` values.
     """
     lineIds: [ID!]!
   ): CartLinesRemovePayload
@@ -8969,6 +9282,8 @@ type Mutation {
 
     """
     The merchandise lines to update.
+
+    The input must not contain more than `250` values.
     """
     lines: [CartLineUpdateInput!]!
   ): CartLinesUpdatePayload
@@ -8991,6 +9306,8 @@ type Mutation {
   cartMetafieldsSet(
     """
     The list of Cart metafield values to set. Maximum of 25.
+
+    The input must not contain more than `250` values.
     """
     metafields: [CartMetafieldsSetInput!]!
   ): CartMetafieldsSetPayload
@@ -9036,6 +9353,8 @@ type Mutation {
 
     """
     The selected delivery options.
+
+    The input must not contain more than `250` values.
     """
     selectedDeliveryOptions: [CartSelectedDeliveryOptionInput!]!
   ): CartSelectedDeliveryOptionsUpdatePayload
@@ -9278,7 +9597,7 @@ type Mutation {
   ): CustomerUpdatePayload
 
   """
-  Creates a new Shop Pay payment request session.
+  Create a new Shop Pay payment request session.
   """
   shopPayPaymentRequestSessionCreate(
     """
@@ -9387,13 +9706,18 @@ type Order implements HasMetafields & Node {
   currentTotalPrice: MoneyV2!
 
   """
+  The total cost of shipping, excluding shipping lines that have been refunded
+  or removed. Taxes aren't included unless the order is a taxes-included order.
+  """
+  currentTotalShippingPrice: MoneyV2!
+
+  """
   The total of all taxes applied to the order, excluding taxes for returned line items.
   """
   currentTotalTax: MoneyV2!
 
   """
-  A list of additional merchant-facing details that have been added to the
-  order. For example, whether an order is a customer's first.
+  A list of the custom attributes added to the order. For example, whether an order is a customer's first.
   """
   customAttributes: [Attribute!]!
 
@@ -9412,22 +9736,22 @@ type Order implements HasMetafields & Node {
   """
   discountApplications(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -9467,22 +9791,22 @@ type Order implements HasMetafields & Node {
   """
   lineItems(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -9513,6 +9837,8 @@ type Order implements HasMetafields & Node {
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -9666,20 +9992,17 @@ An auto-generated type for paginating through multiple Orders.
 """
 type OrderConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [OrderEdge!]!
 
   """
-  A list of nodes that are contained in OrderEdge. You can fetch data about an
-  individual node, or you can follow the edges to fetch data about a collection
-  of related nodes. At each node, you specify the fields that you want to retrieve.
+  A list of the nodes contained in OrderEdge.
   """
   nodes: [Order!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 
@@ -9694,7 +10017,7 @@ An auto-generated type which holds one Order and a cursor during pagination.
 """
 type OrderEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -9848,21 +10171,17 @@ An auto-generated type for paginating through multiple OrderLineItems.
 """
 type OrderLineItemConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [OrderLineItemEdge!]!
 
   """
-  A list of nodes that are contained in OrderLineItemEdge. You can fetch data
-  about an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in OrderLineItemEdge.
   """
   nodes: [OrderLineItem!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -9872,7 +10191,7 @@ An auto-generated type which holds one OrderLineItem and a cursor during paginat
 """
 type OrderLineItemEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -9959,6 +10278,8 @@ type Page implements HasMetafields & Node & OnlineStorePublishable & Trackable {
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -9980,8 +10301,11 @@ type Page implements HasMetafields & Node & OnlineStorePublishable & Trackable {
   title: String!
 
   """
-  A URL parameters to be added to a page URL when it is linked from a GraphQL
-  result. This allows for tracking the origin of the traffic.
+  URL parameters to be added to a page URL to track the origin of on-site search
+  traffic for [analytics reporting](https://help.shopify.com/manual/reports-and-analytics/shopify-reports/report-types/default-reports/behaviour-reports).
+  Returns a result when accessed through the
+  [search](https://shopify.dev/docs/api/storefront/current/queries/search) or [predictiveSearch](https://shopify.dev/docs/api/storefront/current/queries/predictiveSearch)
+  queries, otherwise returns null.
   """
   trackingParameters: String
 
@@ -9996,20 +10320,17 @@ An auto-generated type for paginating through multiple Pages.
 """
 type PageConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [PageEdge!]!
 
   """
-  A list of nodes that are contained in PageEdge. You can fetch data about an
-  individual node, or you can follow the edges to fetch data about a collection
-  of related nodes. At each node, you specify the fields that you want to retrieve.
+  A list of the nodes contained in PageEdge.
   """
   nodes: [Page!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -10019,7 +10340,7 @@ An auto-generated type which holds one Page and a cursor during pagination.
 """
 type PageEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -10083,11 +10404,27 @@ enum PageSortKeys {
 }
 
 """
+Type for paginating through multiple sitemap's resources.
+"""
+type PaginatedSitemapResources {
+  """
+  Whether there are more pages to fetch following the current page.
+  """
+  hasNextPage: Boolean!
+
+  """
+  List of sitemap resources for the current page.
+  Note: The number of items varies between 0 and 250 per page.
+  """
+  items: [SitemapResourceInterface!]!
+}
+
+"""
 Settings related to payments.
 """
 type PaymentSettings {
   """
-  List of the card brands which the shop accepts.
+  List of the card brands which the business entity accepts.
   """
   acceptedCardBrands: [CardBrand!]!
 
@@ -10097,7 +10434,9 @@ type PaymentSettings {
   cardVaultUrl: URL!
 
   """
-  The country where the shop is located.
+  The country where the shop is located. When multiple business entities operate
+  within the shop, then this will represent the country of the business entity
+  that's serving the specified buyer context.
   """
   countryCode: CountryCode!
 
@@ -10118,7 +10457,7 @@ type PaymentSettings {
   shopifyPaymentsAccountId: String
 
   """
-  List of the digital wallets which the shop supports.
+  List of the digital wallets which the business entity supports.
   """
   supportedDigitalWallets: [DigitalWallet!]!
 }
@@ -10200,8 +10539,7 @@ enum PredictiveSearchType {
 }
 
 """
-Selects whether items in the cart should have prefilled delivery methods such as
-shipping, local pickup or through pickup points.
+The preferred delivery methods such as shipping, local pickup or through pickup points.
 """
 enum PreferenceDeliveryMethodType {
   """
@@ -10258,31 +10596,66 @@ customization of another product or an extended warranty).
 """
 type Product implements HasMetafields & Node & OnlineStorePublishable & Trackable {
   """
+  A list of variants whose selected options differ with the provided selected options by one, ordered by variant id.
+  If selected options are not provided, adjacent variants to the first available variant is returned.
+
+  Note that this field returns an array of variants. In most cases, the number of variants in this array will be low.
+  However, with a low number of options and a high number of values per option, the number of variants returned
+  here can be high. In such cases, it recommended to avoid using this field.
+
+  This list of variants can be used in combination with the `options` field to build a rich variant picker that
+  includes variant availability or other variant information.
+  """
+  adjacentVariants(
+    """
+    Whether to perform case insensitive match on option names and values.
+    """
+    caseInsensitiveMatch: Boolean = false
+
+    """
+    Whether to ignore product options that are not present on the requested product.
+    """
+    ignoreUnknownOptions: Boolean = true
+
+    """
+    The input fields used for a selected option.
+
+    The input must not contain more than `250` values.
+    """
+    selectedOptions: [SelectedOptionInput!]
+  ): [ProductVariant!]!
+
+  """
   Indicates if at least one product variant is available for sale.
   """
   availableForSale: Boolean!
+
+  """
+  The taxonomy category for the product.
+  """
+  category: TaxonomyCategory
 
   """
   List of collections a product belongs to.
   """
   collections(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -10307,7 +10680,7 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   """
   description(
     """
-    Truncates a string after the given length.
+    Truncates string after the given length.
     """
     truncateAt: Int
   ): String!
@@ -10316,6 +10689,65 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   The description of the product, complete with HTML formatting.
   """
   descriptionHtml: HTML!
+
+  """
+  An encoded string containing all option value combinations
+  with a corresponding variant that is currently available for sale.
+
+  Integers represent option and values:
+  [0,1] represents option_value at array index 0 for the option at array index 0
+
+  `:`, `,`, ` ` and `-` are control characters.
+  `:` indicates a new option. ex: 0:1 indicates value 0 for the option in position 1, value 1 for the option in position 2.
+  `,` indicates the end of a repeated prefix, mulitple consecutive commas indicate the end of multiple repeated prefixes.
+  ` ` indicates a gap in the sequence of option values. ex: 0 4 indicates option values in position 0 and 4 are present.
+  `-` indicates a continuous range of option values. ex: 0 1-3 4
+
+  Decoding process:
+
+  Example options: [Size, Color, Material]
+  Example values: [[Small, Medium, Large], [Red, Blue], [Cotton, Wool]]
+  Example encoded string: "0:0:0,1:0-1,,1:0:0-1,1:1,,2:0:1,1:0,,"
+
+  Step 1: Expand ranges into the numbers they represent: "0:0:0,1:0 1,,1:0:0 1,1:1,,2:0:1,1:0,,"
+  Step 2: Expand repeated prefixes: "0:0:0,0:1:0 1,1:0:0 1,1:1:1,2:0:1,2:1:0,"
+  Step 3: Expand shared prefixes so data is encoded as a string: "0:0:0,0:1:0,0:1:1,1:0:0,1:0:1,1:1:1,2:0:1,2:1:0,"
+  Step 4: Map to options + option values to determine existing variants:
+
+  [Small, Red, Cotton] (0:0:0), [Small, Blue, Cotton] (0:1:0), [Small, Blue, Wool] (0:1:1),
+  [Medium, Red, Cotton] (1:0:0), [Medium, Red, Wool] (1:0:1), [Medium, Blue, Wool] (1:1:1),
+  [Large, Red, Wool] (2:0:1), [Large, Blue, Cotton] (2:1:0).
+  """
+  encodedVariantAvailability: String
+
+  """
+  An encoded string containing all option value combinations with a corresponding variant.
+
+  Integers represent option and values:
+  [0,1] represents option_value at array index 0 for the option at array index 0
+
+  `:`, `,`, ` ` and `-` are control characters.
+  `:` indicates a new option. ex: 0:1 indicates value 0 for the option in position 1, value 1 for the option in position 2.
+  `,` indicates the end of a repeated prefix, mulitple consecutive commas indicate the end of multiple repeated prefixes.
+  ` ` indicates a gap in the sequence of option values. ex: 0 4 indicates option values in position 0 and 4 are present.
+  `-` indicates a continuous range of option values. ex: 0 1-3 4
+
+  Decoding process:
+
+  Example options: [Size, Color, Material]
+  Example values: [[Small, Medium, Large], [Red, Blue], [Cotton, Wool]]
+  Example encoded string: "0:0:0,1:0-1,,1:0:0-1,1:1,,2:0:1,1:0,,"
+
+  Step 1: Expand ranges into the numbers they represent: "0:0:0,1:0 1,,1:0:0 1,1:1,,2:0:1,1:0,,"
+  Step 2: Expand repeated prefixes: "0:0:0,0:1:0 1,1:0:0 1,1:1:1,2:0:1,2:1:0,"
+  Step 3: Expand shared prefixes so data is encoded as a string: "0:0:0,0:1:0,0:1:1,1:0:0,1:0:1,1:1:1,2:0:1,2:1:0,"
+  Step 4: Map to options + option values to determine existing variants:
+
+  [Small, Red, Cotton] (0:0:0), [Small, Blue, Cotton] (0:1:0), [Small, Blue, Wool] (0:1:1),
+  [Medium, Red, Cotton] (1:0:0), [Medium, Red, Wool] (1:0:1), [Medium, Blue, Wool] (1:1:1),
+  [Large, Red, Wool] (2:0:1), [Large, Blue, Cotton] (2:1:0).
+  """
+  encodedVariantExistence: String
 
   """
   The featured image for the product.
@@ -10340,22 +10772,22 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   """
   images(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -10365,8 +10797,7 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: ProductImageSortKeys = POSITION
   ): ImageConnection!
@@ -10381,22 +10812,22 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   """
   media(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -10406,8 +10837,7 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: ProductMediaSortKeys = POSITION
   ): MediaConnection!
@@ -10433,6 +10863,8 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -10474,6 +10906,31 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   requiresSellingPlan: Boolean!
 
   """
+  Find an active product variant based on selected options, availability or the first variant.
+
+  All arguments are optional. If no selected options are provided, the first available variant is returned.
+  If no variants are available, the first variant is returned.
+  """
+  selectedOrFirstAvailableVariant(
+    """
+    Whether to perform case insensitive match on option names and values.
+    """
+    caseInsensitiveMatch: Boolean = false
+
+    """
+    Whether to ignore unknown product options.
+    """
+    ignoreUnknownOptions: Boolean = true
+
+    """
+    The input fields used for a selected option.
+
+    The input must not contain more than `250` values.
+    """
+    selectedOptions: [SelectedOptionInput!]
+  ): ProductVariant
+
+  """
   A list of a product's available selling plan groups. A selling plan group
   represents a selling method. For example, 'Subscribe and save' is a selling
   method where customers pay for goods or services per delivery. A selling plan
@@ -10481,22 +10938,22 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   """
   sellingPlanGroups(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -10528,8 +10985,11 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   totalInventory: Int
 
   """
-  A URL parameters to be added to a page URL when it is linked from a GraphQL
-  result. This allows for tracking the origin of the traffic.
+  URL parameters to be added to a page URL to track the origin of on-site search
+  traffic for [analytics reporting](https://help.shopify.com/manual/reports-and-analytics/shopify-reports/report-types/default-reports/behaviour-reports).
+  Returns a result when accessed through the
+  [search](https://shopify.dev/docs/api/storefront/current/queries/search) or [predictiveSearch](https://shopify.dev/docs/api/storefront/current/queries/predictiveSearch)
+  queries, otherwise returns null.
   """
   trackingParameters: String
 
@@ -10548,7 +11008,19 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   """
   variantBySelectedOptions(
     """
+    Whether to perform case insensitive match on option names and values.
+    """
+    caseInsensitiveMatch: Boolean = false
+
+    """
+    Whether to ignore unknown product options.
+    """
+    ignoreUnknownOptions: Boolean = false
+
+    """
     The input fields used for a selected option.
+
+    The input must not contain more than `250` values.
     """
     selectedOptions: [SelectedOptionInput!]!
   ): ProductVariant
@@ -10558,22 +11030,22 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
   """
   variants(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -10583,11 +11055,15 @@ type Product implements HasMetafields & Node & OnlineStorePublishable & Trackabl
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: ProductVariantSortKeys = POSITION
   ): ProductVariantConnection!
+
+  """
+  The total count of variants for this product.
+  """
+  variantsCount: Count
 
   """
   The product’s vendor name.
@@ -10646,7 +11122,7 @@ An auto-generated type for paginating through multiple Products.
 """
 type ProductConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [ProductEdge!]!
 
@@ -10656,15 +11132,12 @@ type ProductConnection {
   filters: [Filter!]!
 
   """
-  A list of nodes that are contained in ProductEdge. You can fetch data about an
-  individual node, or you can follow the edges to fetch data about a collection
-  of related nodes. At each node, you specify the fields that you want to retrieve.
+  A list of the nodes contained in ProductEdge.
   """
   nodes: [Product!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -10674,7 +11147,7 @@ An auto-generated type which holds one Product and a cursor during pagination.
 """
 type ProductEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -10795,9 +11268,57 @@ type ProductOption implements Node {
   name: String!
 
   """
+  The corresponding option value to the product option.
+  """
+  optionValues: [ProductOptionValue!]!
+
+  """
   The corresponding value to the product option name.
   """
-  values: [String!]!
+  values: [String!]! @deprecated(reason: "Use `optionValues` instead.")
+}
+
+"""
+The product option value names. For example, "Red", "Blue", and "Green" for a "Color" option.
+"""
+type ProductOptionValue implements Node {
+  """
+  The product variant that combines this option value with the
+  lowest-position option values for all other options.
+
+  This field will always return a variant, provided a variant including this option value exists.
+  """
+  firstSelectableVariant: ProductVariant
+
+  """
+  A globally-unique ID.
+  """
+  id: ID!
+
+  """
+  The name of the product option value.
+  """
+  name: String!
+
+  """
+  The swatch of the product option value.
+  """
+  swatch: ProductOptionValueSwatch
+}
+
+"""
+The product option value swatch.
+"""
+type ProductOptionValueSwatch {
+  """
+  The swatch color.
+  """
+  color: Color
+
+  """
+  The swatch image.
+  """
+  image: Media
 }
 
 """
@@ -10913,9 +11434,59 @@ type ProductVariant implements HasMetafields & Node {
   compareAtPriceV2: MoneyV2 @deprecated(reason: "Use `compareAtPrice` instead.")
 
   """
+  List of bundles components included in the variant considering only fixed bundles.
+  """
+  components(
+    """
+    Returns the elements that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns up to the first `n` elements from the list.
+    """
+    first: Int
+
+    """
+    Returns up to the last `n` elements from the list.
+    """
+    last: Int
+  ): ProductVariantComponentConnection!
+
+  """
   Whether a product is out of stock but still available for purchase (used for backorders).
   """
   currentlyNotInStock: Boolean!
+
+  """
+  List of bundles that include this variant considering only fixed bundles.
+  """
+  groupedBy(
+    """
+    Returns the elements that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns up to the first `n` elements from the list.
+    """
+    first: Int
+
+    """
+    Returns up to the last `n` elements from the list.
+    """
+    last: Int
+  ): ProductVariantConnection!
 
   """
   A globally-unique ID.
@@ -10948,6 +11519,8 @@ type ProductVariant implements HasMetafields & Node {
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -10973,6 +11546,42 @@ type ProductVariant implements HasMetafields & Node {
   quantityAvailable: Int
 
   """
+  A list of quantity breaks for the product variant.
+  """
+  quantityPriceBreaks(
+    """
+    Returns the elements that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns up to the first `n` elements from the list.
+    """
+    first: Int
+
+    """
+    Returns up to the last `n` elements from the list.
+    """
+    last: Int
+  ): QuantityPriceBreakConnection!
+
+  """
+  The quantity rule for the product variant in a given context.
+  """
+  quantityRule: QuantityRule!
+
+  """
+  Whether a product variant requires components. The default value is `false`.
+  If `true`, then the product variant can only be purchased as a parent bundle with components.
+  """
+  requiresComponents: Boolean!
+
+  """
   Whether a customer needs to provide a shipping address when placing an order for the product variant.
   """
   requiresShipping: Boolean!
@@ -10989,22 +11598,22 @@ type ProductVariant implements HasMetafields & Node {
   """
   sellingPlanAllocations(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -11013,6 +11622,11 @@ type ProductVariant implements HasMetafields & Node {
     """
     reverse: Boolean = false
   ): SellingPlanAllocationConnection!
+
+  """
+  The Shop Pay Installments pricing information for the product variant.
+  """
+  shopPayInstallmentsPricing: ShopPayInstallmentsProductVariantPricing
 
   """
   The SKU (stock keeping unit) associated with the variant.
@@ -11024,22 +11638,22 @@ type ProductVariant implements HasMetafields & Node {
   """
   storeAvailability(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -11053,6 +11667,11 @@ type ProductVariant implements HasMetafields & Node {
     """
     reverse: Boolean = false
   ): StoreAvailabilityConnection!
+
+  """
+  Whether tax is charged when the product variant is sold.
+  """
+  taxable: Boolean!
 
   """
   The product variant’s title.
@@ -11081,25 +11700,71 @@ type ProductVariant implements HasMetafields & Node {
 }
 
 """
+Represents a component of a bundle variant.
+"""
+type ProductVariantComponent {
+  """
+  The product variant object that the component belongs to.
+  """
+  productVariant: ProductVariant!
+
+  """
+  The quantity of component present in the bundle.
+  """
+  quantity: Int!
+}
+
+"""
+An auto-generated type for paginating through multiple ProductVariantComponents.
+"""
+type ProductVariantComponentConnection {
+  """
+  A list of edges.
+  """
+  edges: [ProductVariantComponentEdge!]!
+
+  """
+  A list of the nodes contained in ProductVariantComponentEdge.
+  """
+  nodes: [ProductVariantComponent!]!
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An auto-generated type which holds one ProductVariantComponent and a cursor during pagination.
+"""
+type ProductVariantComponentEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of ProductVariantComponentEdge.
+  """
+  node: ProductVariantComponent!
+}
+
+"""
 An auto-generated type for paginating through multiple ProductVariants.
 """
 type ProductVariantConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [ProductVariantEdge!]!
 
   """
-  A list of nodes that are contained in ProductVariantEdge. You can fetch data
-  about an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in ProductVariantEdge.
   """
   nodes: [ProductVariant!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -11109,7 +11774,7 @@ An auto-generated type which holds one ProductVariant and a cursor during pagina
 """
 type ProductVariantEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -11151,6 +11816,103 @@ enum ProductVariantSortKeys {
 }
 
 """
+Represents information about the buyer that is interacting with the cart.
+"""
+type PurchasingCompany {
+  """
+  The company associated to the order or draft order.
+  """
+  company: Company!
+
+  """
+  The company contact associated to the order or draft order.
+  """
+  contact: CompanyContact
+
+  """
+  The company location associated to the order or draft order.
+  """
+  location: CompanyLocation!
+}
+
+"""
+Quantity price breaks lets you offer different rates that are based on the
+amount of a specific variant being ordered.
+"""
+type QuantityPriceBreak {
+  """
+  Minimum quantity required to reach new quantity break price.
+  """
+  minimumQuantity: Int!
+
+  """
+  The price of variant after reaching the minimum quanity.
+  """
+  price: MoneyV2!
+}
+
+"""
+An auto-generated type for paginating through multiple QuantityPriceBreaks.
+"""
+type QuantityPriceBreakConnection {
+  """
+  A list of edges.
+  """
+  edges: [QuantityPriceBreakEdge!]!
+
+  """
+  A list of the nodes contained in QuantityPriceBreakEdge.
+  """
+  nodes: [QuantityPriceBreak!]!
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An auto-generated type which holds one QuantityPriceBreak and a cursor during pagination.
+"""
+type QuantityPriceBreakEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of QuantityPriceBreakEdge.
+  """
+  node: QuantityPriceBreak!
+}
+
+"""
+The quantity rule for the product variant in a given context.
+"""
+type QuantityRule {
+  """
+  The value that specifies the quantity increment between minimum and maximum of the rule.
+  Only quantities divisible by this value will be considered valid.
+
+  The increment must be lower than or equal to the minimum and the maximum, and both minimum and maximum
+  must be divisible by this value.
+  """
+  increment: Int!
+
+  """
+  An optional value that defines the highest allowed quantity purchased by the customer.
+  If defined, maximum must be lower than or equal to the minimum and must be a multiple of the increment.
+  """
+  maximum: Int
+
+  """
+  The value that defines the lowest allowed quantity purchased by the customer.
+  The minimum must be a multiple of the quantity rule's increment.
+  """
+  minimum: Int!
+}
+
+"""
 The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start.
 """
 type QueryRoot {
@@ -11169,39 +11931,38 @@ type QueryRoot {
   """
   articles(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
     """
-    A filter made up of terms, connectives, modifiers, and comparators.
-    | name | type | description | acceptable_values | default_value | example_use |
-    | ---- | ---- | ---- | ---- | ---- | ---- |
-    | default | string | Filter by a case-insensitive search of all the fields in a document. |
-    | author | string |
-    | blog_title | string |
-    | created_at | time |
-    | id | id | Filter by `id` range. | | | - `id:1234`<br/> - `id:>=1234`<br/> - `id:<=1234` |
-    | tag | string | Filter objects by the `tag` field. | | | - `tag:my_tag` |
-    | tag_not | string | Filter by objects that don’t have the specified tag. | | | - `tag_not:my_tag` |
-    | updated_at | time |
-    You can apply one or more filters to a query. Learn more about [Shopify API
-    search syntax](https://shopify.dev/api/usage/search-syntax).
+    Apply one or multiple filters to the query.
+    | name | description | acceptable_values | default_value | example_use |
+    | ---- | ---- | ---- | ---- | ---- |
+    | author |
+    | blog_title |
+    | created_at |
+    | tag |
+    | tag_not |
+    | updated_at |
+    Refer to the detailed [search
+    syntax](https://shopify.dev/api/usage/search-syntax) for more information
+    about using filters.
     """
     query: String
 
@@ -11211,8 +11972,7 @@ type QueryRoot {
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: ArticleSortKeys = ID
   ): ArticleConnection!
@@ -11247,37 +12007,36 @@ type QueryRoot {
   """
   blogs(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
     """
-    A filter made up of terms, connectives, modifiers, and comparators.
-    | name | type | description | acceptable_values | default_value | example_use |
-    | ---- | ---- | ---- | ---- | ---- | ---- |
-    | default | string | Filter by a case-insensitive search of all the fields in a document. |
-    | created_at | time |
-    | handle | string |
-    | id | id | Filter by `id` range. | | | - `id:1234`<br/> - `id:>=1234`<br/> - `id:<=1234` |
-    | title | string |
-    | updated_at | time |
-    You can apply one or more filters to a query. Learn more about [Shopify API
-    search syntax](https://shopify.dev/api/usage/search-syntax).
+    Apply one or multiple filters to the query.
+    | name | description | acceptable_values | default_value | example_use |
+    | ---- | ---- | ---- | ---- | ---- |
+    | created_at |
+    | handle |
+    | title |
+    | updated_at |
+    Refer to the detailed [search
+    syntax](https://shopify.dev/api/usage/search-syntax) for more information
+    about using filters.
     """
     query: String
 
@@ -11287,8 +12046,7 @@ type QueryRoot {
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: BlogSortKeys = ID
   ): BlogConnection!
@@ -11344,36 +12102,35 @@ type QueryRoot {
   """
   collections(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
     """
-    A filter made up of terms, connectives, modifiers, and comparators.
-    | name | type | description | acceptable_values | default_value | example_use |
-    | ---- | ---- | ---- | ---- | ---- | ---- |
-    | default | string | Filter by a case-insensitive search of all the fields in a document. |
-    | collection_type | string |
-    | id | id | Filter by `id` range. | | | - `id:1234`<br/> - `id:>=1234`<br/> - `id:<=1234` |
-    | title | string |
-    | updated_at | time |
-    You can apply one or more filters to a query. Learn more about [Shopify API
-    search syntax](https://shopify.dev/api/usage/search-syntax).
+    Apply one or multiple filters to the query.
+    | name | description | acceptable_values | default_value | example_use |
+    | ---- | ---- | ---- | ---- | ---- |
+    | collection_type |
+    | title |
+    | updated_at |
+    Refer to the detailed [search
+    syntax](https://shopify.dev/api/usage/search-syntax) for more information
+    about using filters.
     """
     query: String
 
@@ -11383,8 +12140,7 @@ type QueryRoot {
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: CollectionSortKeys = ID
   ): CollectionConnection!
@@ -11412,22 +12168,22 @@ type QueryRoot {
   """
   locations(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -11442,8 +12198,7 @@ type QueryRoot {
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: LocationSortKeys = ID
   ): LocationConnection!
@@ -11478,22 +12233,22 @@ type QueryRoot {
   """
   metaobjects(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -11529,6 +12284,8 @@ type QueryRoot {
   nodes(
     """
     The IDs of the Nodes to return.
+
+    The input must not contain more than `250` values.
     """
     ids: [ID!]!
   ): [Node]!
@@ -11563,37 +12320,36 @@ type QueryRoot {
   """
   pages(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
     """
-    A filter made up of terms, connectives, modifiers, and comparators.
-    | name | type | description | acceptable_values | default_value | example_use |
-    | ---- | ---- | ---- | ---- | ---- | ---- |
-    | default | string | Filter by a case-insensitive search of all the fields in a document. |
-    | created_at | time |
-    | handle | string |
-    | id | id | Filter by `id` range. | | | - `id:1234`<br/> - `id:>=1234`<br/> - `id:<=1234` |
-    | title | string |
-    | updated_at | time |
-    You can apply one or more filters to a query. Learn more about [Shopify API
-    search syntax](https://shopify.dev/api/usage/search-syntax).
+    Apply one or multiple filters to the query.
+    | name | description | acceptable_values | default_value | example_use |
+    | ---- | ---- | ---- | ---- | ---- |
+    | created_at |
+    | handle |
+    | title |
+    | updated_at |
+    Refer to the detailed [search
+    syntax](https://shopify.dev/api/usage/search-syntax) for more information
+    about using filters.
     """
     query: String
 
@@ -11603,11 +12359,15 @@ type QueryRoot {
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: PageSortKeys = ID
   ): PageConnection!
+
+  """
+  Settings related to payments.
+  """
+  paymentSettings: PaymentSettings!
 
   """
   List of the predictive search results.
@@ -11632,11 +12392,15 @@ type QueryRoot {
     Specifies the list of resource fields to use for search. The default fields
     searched on are TITLE, PRODUCT_TYPE, VARIANT_TITLE, and VENDOR. For the best
     search experience, you should search on the default field set.
+
+    The input must not contain more than `250` values.
     """
     searchableFields: [SearchableField!]
 
     """
     The types of resources to search for.
+
+    The input must not contain more than `250` values.
     """
     types: [PredictiveSearchType!]
 
@@ -11693,9 +12457,14 @@ type QueryRoot {
     intent: ProductRecommendationIntent = RELATED
 
     """
+    The handle of the product.
+    """
+    productHandle: String
+
+    """
     The id of the product.
     """
-    productId: ID!
+    productId: ID
   ): [Product!]
 
   """
@@ -11704,7 +12473,7 @@ type QueryRoot {
   """
   productTags(
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int!
   ): StringConnection!
@@ -11714,53 +12483,61 @@ type QueryRoot {
   """
   productTypes(
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int!
   ): StringConnection!
 
   """
-  List of the shop’s products. For storefront search, use [`search`
-  query](https://shopify.dev/docs/api/storefront/latest/queries/search).
+  Returns a list of the shop's products. For storefront search, use the
+  [`search`](https://shopify.dev/docs/api/storefront/latest/queries/search) query.
   """
   products(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
     """
-    A filter made up of terms, connectives, modifiers, and comparators.
-    | name | type | description | acceptable_values | default_value | example_use |
-    | ---- | ---- | ---- | ---- | ---- | ---- |
-    | default | string | Filter by a case-insensitive search of all the fields in a document. |
-    | available_for_sale | boolean |
-    | created_at | time |
-    | id | id | Filter by `id` range. | | | - `id:1234`<br/> - `id:>=1234`<br/> - `id:<=1234` |
-    | product_type | string |
-    | tag | string | Filter objects by the `tag` field. | | | - `tag:my_tag` |
-    | tag_not | string | Filter by objects that don’t have the specified tag. | | | - `tag_not:my_tag` |
-    | title | string |
-    | updated_at | time |
-    | variants.price | float |
-    | vendor | string |
-    You can apply one or more filters to a query. Learn more about [Shopify API
-    search syntax](https://shopify.dev/api/usage/search-syntax).
+    You can apply one or multiple filters to a query.
+    | name | description | acceptable_values | default_value | example_use |
+    | ---- | ---- | ---- | ---- | ---- |
+    | available_for_sale | Filter by products that have at least one product variant available for sale. |
+    | created_at | Filter by the date and time when the product was created. | |
+    | - `created_at:>'2020-10-21T23:39:20Z'`<br/> - `created_at:<now`<br/> -
+    `created_at:<=2024` |
+    | product_type | Filter by a comma-separated list of [product
+    types](https://help.shopify.com/en/manual/products/details/product-type). |
+    | | `product_type:snowboard` |
+    | tag | Filter products by the product [`tags`](https://shopify.dev/docs/api/storefront/latest/objects/Product#field-tags)
+    field. | | | `tag:my_tag` |
+    | tag_not | Filter by products that don't have the specified product [tags](https://shopify.dev/docs/api/storefront/latest/objects/Product#field-tags).
+    | | | `tag_not:my_tag` |
+    | title | Filter by the product [`title`](https://shopify.dev/docs/api/storefront/latest/objects/Product#field-title)
+    field. | | | `title:The Minimal Snowboard` |
+    | updated_at | Filter by the date and time when the product was last
+    updated. | | | - `updated_at:>'2020-10-21T23:39:20Z'`<br/> -
+    `updated_at:<now`<br/> - `updated_at:<=2024` |
+    | variants.price | Filter by the price of the product's variants. |
+    | vendor | Filter by the product [`vendor`](https://shopify.dev/docs/api/storefront/latest/objects/Product#field-vendor)
+    field. | | | - `vendor:Snowdevil`<br/> - `vendor:Snowdevil OR
+    vendor:Icedevil` |
+    Learn more about [Shopify API search syntax](https://shopify.dev/api/usage/search-syntax).
     """
     query: String
 
@@ -11770,8 +12547,7 @@ type QueryRoot {
     reverse: Boolean = false
 
     """
-    Sort the underlying list using a key. If your query is slow or returns an
-    error, then [try specifying a sort key that matches the field used in the search](https://shopify.dev/api/usage/pagination-graphql#search-performance-considerations).
+    Sort the underlying list by the given key.
     """
     sortKey: ProductSortKeys = ID
   ): ProductConnection!
@@ -11786,22 +12562,22 @@ type QueryRoot {
   """
   search(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -11812,6 +12588,8 @@ type QueryRoot {
 
     """
     Returns a subset of products matching all product filters.
+
+    The input must not contain more than `250` values.
     """
     productFilters: [ProductFilter!]
 
@@ -11832,11 +12610,13 @@ type QueryRoot {
 
     """
     The types of resources to search for.
+
+    The input must not contain more than `250` values.
     """
     types: [SearchType!]
 
     """
-    Specifies how unavailable products are displayed in the search results.
+    Specifies how unavailable products or variants are displayed in the search results.
     """
     unavailableProducts: SearchUnavailableProductsType
   ): SearchResultItemConnection!
@@ -11847,40 +12627,49 @@ type QueryRoot {
   shop: Shop!
 
   """
+  Contains all fields required to generate sitemaps.
+  """
+  sitemap(
+    """
+    The type of the resource for the sitemap.
+    """
+    type: SitemapType!
+  ): Sitemap!
+
+  """
   A list of redirects for a shop.
   """
   urlRedirects(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
     """
-    A filter made up of terms, connectives, modifiers, and comparators.
-    | name | type | description | acceptable_values | default_value | example_use |
-    | ---- | ---- | ---- | ---- | ---- | ---- |
-    | default | string | Filter by a case-insensitive search of all the fields in a document. |
-    | created_at | time |
-    | id | id | Filter by `id` range. | | | - `id:1234`<br/> - `id:>=1234`<br/> - `id:<=1234` |
-    | path | string |
-    | target | string |
-    You can apply one or more filters to a query. Learn more about [Shopify API
-    search syntax](https://shopify.dev/api/usage/search-syntax).
+    Apply one or multiple filters to the query.
+    | name | description | acceptable_values | default_value | example_use |
+    | ---- | ---- | ---- | ---- | ---- |
+    | created_at |
+    | path |
+    | target |
+    Refer to the detailed [search
+    syntax](https://shopify.dev/api/usage/search-syntax) for more information
+    about using filters.
     """
     query: String
 
@@ -11967,8 +12756,11 @@ type SearchQuerySuggestion implements Trackable {
   text: String!
 
   """
-  A URL parameters to be added to a page URL when it is linked from a GraphQL
-  result. This allows for tracking the origin of the traffic.
+  URL parameters to be added to a page URL to track the origin of on-site search
+  traffic for [analytics reporting](https://help.shopify.com/manual/reports-and-analytics/shopify-reports/report-types/default-reports/behaviour-reports).
+  Returns a result when accessed through the
+  [search](https://shopify.dev/docs/api/storefront/current/queries/search) or [predictiveSearch](https://shopify.dev/docs/api/storefront/current/queries/predictiveSearch)
+  queries, otherwise returns null.
   """
   trackingParameters: String
 }
@@ -11983,21 +12775,17 @@ An auto-generated type for paginating through multiple SearchResultItems.
 """
 type SearchResultItemConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [SearchResultItemEdge!]!
 
   """
-  A list of nodes that are contained in SearchResultItemEdge. You can fetch data
-  about an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in SearchResultItemEdge.
   """
   nodes: [SearchResultItem!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 
@@ -12017,7 +12805,7 @@ An auto-generated type which holds one SearchResultItem and a cursor during pagi
 """
 type SearchResultItemEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -12166,11 +12954,21 @@ input SelectedOptionInput {
 """
 Represents how products and variants can be sold and purchased.
 """
-type SellingPlan {
+type SellingPlan implements HasMetafields {
+  """
+  The billing policy for the selling plan.
+  """
+  billingPolicy: SellingPlanBillingPolicy
+
   """
   The initial payment due for the purchase.
   """
   checkoutCharge: SellingPlanCheckoutCharge!
+
+  """
+  The delivery policy for the selling plan.
+  """
+  deliveryPolicy: SellingPlanDeliveryPolicy
 
   """
   The description of the selling plan.
@@ -12181,6 +12979,33 @@ type SellingPlan {
   A globally-unique ID.
   """
   id: ID!
+
+  """
+  Returns a metafield found by namespace and key.
+  """
+  metafield(
+    """
+    The identifier for the metafield.
+    """
+    key: String!
+
+    """
+    The container the metafield belongs to. If omitted, the app-reserved namespace will be used.
+    """
+    namespace: String
+  ): Metafield
+
+  """
+  The metafields associated with the resource matching the supplied list of namespaces and keys.
+  """
+  metafields(
+    """
+    The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
+    """
+    identifiers: [HasMetafieldsIdentifier!]!
+  ): [Metafield]!
 
   """
   The name of the selling plan. For example, '6 weeks of prepaid granola, delivered weekly'.
@@ -12249,21 +13074,17 @@ An auto-generated type for paginating through multiple SellingPlanAllocations.
 """
 type SellingPlanAllocationConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [SellingPlanAllocationEdge!]!
 
   """
-  A list of nodes that are contained in SellingPlanAllocationEdge. You can fetch
-  data about an individual node, or you can follow the edges to fetch data about
-  a collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in SellingPlanAllocationEdge.
   """
   nodes: [SellingPlanAllocation!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -12273,7 +13094,7 @@ An auto-generated type which holds one SellingPlanAllocation and a cursor during
 """
 type SellingPlanAllocationEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -12314,6 +13135,11 @@ type SellingPlanAllocationPriceAdjustment {
   """
   unitPrice: MoneyV2
 }
+
+"""
+The selling plan billing policy.
+"""
+union SellingPlanBillingPolicy = SellingPlanRecurringBillingPolicy
 
 """
 The initial payment due for the purchase.
@@ -12365,31 +13191,32 @@ An auto-generated type for paginating through multiple SellingPlans.
 """
 type SellingPlanConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [SellingPlanEdge!]!
 
   """
-  A list of nodes that are contained in SellingPlanEdge. You can fetch data
-  about an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in SellingPlanEdge.
   """
   nodes: [SellingPlan!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
+
+"""
+The selling plan delivery policy.
+"""
+union SellingPlanDeliveryPolicy = SellingPlanRecurringDeliveryPolicy
 
 """
 An auto-generated type which holds one SellingPlan and a cursor during pagination.
 """
 type SellingPlanEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -12450,22 +13277,22 @@ type SellingPlanGroup {
   """
   sellingPlans(
     """
-    The elements that come after the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come after the specified cursor.
     """
     after: String
 
     """
-    The elements that come before the specified [cursor](https://shopify.dev/api/usage/pagination-graphql).
+    Returns the elements that come before the specified cursor.
     """
     before: String
 
     """
-    The first `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the first `n` elements from the list.
     """
     first: Int
 
     """
-    The last `n` elements from the [paginated list](https://shopify.dev/api/usage/pagination-graphql).
+    Returns up to the last `n` elements from the list.
     """
     last: Int
 
@@ -12481,21 +13308,17 @@ An auto-generated type for paginating through multiple SellingPlanGroups.
 """
 type SellingPlanGroupConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [SellingPlanGroupEdge!]!
 
   """
-  A list of nodes that are contained in SellingPlanGroupEdge. You can fetch data
-  about an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in SellingPlanGroupEdge.
   """
   nodes: [SellingPlanGroup!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -12505,7 +13328,7 @@ An auto-generated type which holds one SellingPlanGroup and a cursor during pagi
 """
 type SellingPlanGroupEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -12538,6 +13361,31 @@ type SellingPlanGroupOption {
 }
 
 """
+Represents a valid selling plan interval.
+"""
+enum SellingPlanInterval {
+  """
+  Day interval.
+  """
+  DAY
+
+  """
+  Month interval.
+  """
+  MONTH
+
+  """
+  Week interval.
+  """
+  WEEK
+
+  """
+  Year interval.
+  """
+  YEAR
+}
+
+"""
 An option provided by a Selling Plan.
 """
 type SellingPlanOption {
@@ -12559,7 +13407,7 @@ type SellingPlanPercentagePriceAdjustment {
   """
   The percentage value of the price adjustment.
   """
-  adjustmentPercentage: Int!
+  adjustmentPercentage: Float!
 }
 
 """
@@ -12589,6 +13437,36 @@ Represents by how much the price of a variant associated with a selling plan is
 adjusted. Each variant can have up to two price adjustments.
 """
 union SellingPlanPriceAdjustmentValue = SellingPlanFixedAmountPriceAdjustment | SellingPlanFixedPriceAdjustment | SellingPlanPercentagePriceAdjustment
+
+"""
+The recurring billing policy for the selling plan.
+"""
+type SellingPlanRecurringBillingPolicy {
+  """
+  The billing frequency, it can be either: day, week, month or year.
+  """
+  interval: SellingPlanInterval!
+
+  """
+  The number of intervals between billings.
+  """
+  intervalCount: Int!
+}
+
+"""
+The recurring delivery policy for the selling plan.
+"""
+type SellingPlanRecurringDeliveryPolicy {
+  """
+  The delivery frequency, it can be either: day, week, month or year.
+  """
+  interval: SellingPlanInterval!
+
+  """
+  The number of intervals between deliveries.
+  """
+  intervalCount: Int!
+}
 
 """
 Shop represents a collection of the general settings and information about the shop.
@@ -12630,6 +13508,8 @@ type Shop implements HasMetafields & Node {
   metafields(
     """
     The list of metafields to retrieve by namespace and key.
+
+    The input must not contain more than `250` values.
     """
     identifiers: [HasMetafieldsIdentifier!]!
   ): [Metafield]!
@@ -12675,6 +13555,11 @@ type Shop implements HasMetafields & Node {
   shipsToCountries: [CountryCode!]!
 
   """
+  The Shop Pay Installments pricing information for the shop.
+  """
+  shopPayInstallmentsPricing: ShopPayInstallmentsPricing
+
+  """
   The shop’s subscription policy.
   """
   subscriptionPolicy: ShopPolicyWithDefault
@@ -12683,6 +13568,151 @@ type Shop implements HasMetafields & Node {
   The shop’s terms of service.
   """
   termsOfService: ShopPolicy
+}
+
+"""
+The financing plan in Shop Pay Installments.
+"""
+type ShopPayInstallmentsFinancingPlan implements Node {
+  """
+  A globally-unique ID.
+  """
+  id: ID!
+
+  """
+  The maximum price to qualify for the financing plan.
+  """
+  maxPrice: MoneyV2!
+
+  """
+  The minimum price to qualify for the financing plan.
+  """
+  minPrice: MoneyV2!
+
+  """
+  The terms of the financing plan.
+  """
+  terms: [ShopPayInstallmentsFinancingPlanTerm!]!
+}
+
+"""
+The payment frequency for a Shop Pay Installments Financing Plan.
+"""
+enum ShopPayInstallmentsFinancingPlanFrequency {
+  """
+  Monthly payment frequency.
+  """
+  MONTHLY
+
+  """
+  Weekly payment frequency.
+  """
+  WEEKLY
+}
+
+"""
+The terms of the financing plan in Shop Pay Installments.
+"""
+type ShopPayInstallmentsFinancingPlanTerm implements Node {
+  """
+  The annual percentage rate (APR) of the financing plan.
+  """
+  apr: Int!
+
+  """
+  The payment frequency for the financing plan.
+  """
+  frequency: ShopPayInstallmentsFinancingPlanFrequency!
+
+  """
+  A globally-unique ID.
+  """
+  id: ID!
+
+  """
+  The number of installments for the financing plan.
+  """
+  installmentsCount: Count
+
+  """
+  The type of loan for the financing plan.
+  """
+  loanType: ShopPayInstallmentsLoan!
+}
+
+"""
+The loan type for a Shop Pay Installments Financing Plan Term.
+"""
+enum ShopPayInstallmentsLoan {
+  """
+  An interest-bearing loan type.
+  """
+  INTEREST
+
+  """
+  A split-pay loan type.
+  """
+  SPLIT_PAY
+
+  """
+  A zero-percent loan type.
+  """
+  ZERO_PERCENT
+}
+
+"""
+The result for a Shop Pay Installments pricing request.
+"""
+type ShopPayInstallmentsPricing {
+  """
+  The financing plans available for the given price range.
+  """
+  financingPlans: [ShopPayInstallmentsFinancingPlan!]!
+
+  """
+  The maximum price to qualify for financing.
+  """
+  maxPrice: MoneyV2!
+
+  """
+  The minimum price to qualify for financing.
+  """
+  minPrice: MoneyV2!
+}
+
+"""
+The shop pay installments pricing information for a product variant.
+"""
+type ShopPayInstallmentsProductVariantPricing implements Node {
+  """
+  Whether the product variant is available.
+  """
+  available: Boolean!
+
+  """
+  Whether the product variant is eligible for Shop Pay Installments.
+  """
+  eligible: Boolean!
+
+  """
+  The full price of the product variant.
+  """
+  fullPrice: MoneyV2!
+
+  """
+  The ID of the product variant.
+  """
+  id: ID!
+
+  """
+  The number of payment terms available for the product variant.
+  """
+  installmentsCount: Count
+
+  """
+  The price per term for the product variant.
+  """
+  pricePerTerm: MoneyV2!
 }
 
 """
@@ -12795,7 +13825,7 @@ type ShopPayPaymentRequestContactField {
   firstName: String!
 
   """
-  The last name of the contact field.
+  The first name of the contact field.
   """
   lastName: String!
 
@@ -12976,21 +14006,29 @@ The input fields represent a Shop Pay payment request.
 input ShopPayPaymentRequestInput {
   """
   The delivery methods for the payment request.
+
+  The input must not contain more than `250` values.
   """
   deliveryMethods: [ShopPayPaymentRequestDeliveryMethodInput!]
 
   """
   The discount codes for the payment request.
+
+  The input must not contain more than `250` values.
   """
   discountCodes: [String!]
 
   """
   The discounts for the payment request order.
+
+  The input must not contain more than `250` values.
   """
   discounts: [ShopPayPaymentRequestDiscountInput!]
 
   """
   The line items for the payment request.
+
+  The input must not contain more than `250` values.
   """
   lineItems: [ShopPayPaymentRequestLineItemInput!]
 
@@ -13016,6 +14054,8 @@ input ShopPayPaymentRequestInput {
 
   """
   The shipping lines for the payment request.
+
+  The input must not contain more than `250` values.
   """
   shippingLines: [ShopPayPaymentRequestShippingLineInput!]
 
@@ -13121,6 +14161,8 @@ input ShopPayPaymentRequestLineItemInput {
 
   """
   The item discounts for the line item.
+
+  The input must not contain more than `250` values.
   """
   itemDiscounts: [ShopPayPaymentRequestDiscountInput!]
 
@@ -13131,6 +14173,8 @@ input ShopPayPaymentRequestLineItemInput {
 
   """
   The line discounts for the line item.
+
+  The input must not contain more than `250` values.
   """
   lineDiscounts: [ShopPayPaymentRequestDiscountInput!]
 
@@ -13175,7 +14219,7 @@ type ShopPayPaymentRequestReceipt {
   processingStatusType: String!
 
   """
-  The token of of the receipt.
+  The token of the receipt.
   """
   token: String!
 }
@@ -13215,7 +14259,7 @@ type ShopPayPaymentRequestSessionCreatePayload {
   shopPayPaymentRequestSession: ShopPayPaymentRequestSession
 
   """
-  The list of errors that occurred from executing the mutation.
+  Error codes for failed Shop Pay payment request session mutations.
   """
   userErrors: [UserErrorsShopPayPaymentRequestSessionUserErrors!]!
 }
@@ -13225,12 +14269,12 @@ Return type for `shopPayPaymentRequestSessionSubmit` mutation.
 """
 type ShopPayPaymentRequestSessionSubmitPayload {
   """
-  The payment request receipt object.
+  The checkout on which the payment was applied.
   """
   paymentRequestReceipt: ShopPayPaymentRequestReceipt
 
   """
-  The list of errors that occurred from executing the mutation.
+  Error codes for failed Shop Pay payment request session mutations.
   """
   userErrors: [UserErrorsShopPayPaymentRequestSessionUserErrors!]!
 }
@@ -13285,12 +14329,12 @@ type ShopPayPaymentRequestTotalShippingPrice {
   discounts: [ShopPayPaymentRequestDiscount!]!
 
   """
-  The final total for the shipping line.
+  The final total for the shipping total.
   """
   finalTotal: MoneyV2!
 
   """
-  The original total for the shipping line.
+  The original total for the shipping total.
   """
   originalTotal: MoneyV2
 }
@@ -13301,6 +14345,8 @@ The input fields to create a shipping total for a Shop Pay payment request.
 input ShopPayPaymentRequestTotalShippingPriceInput {
   """
   The discounts for the shipping total.
+
+  The input must not contain more than `250` values.
   """
   discounts: [ShopPayPaymentRequestDiscountInput!]
 
@@ -13393,6 +14439,154 @@ type ShopPolicyWithDefault {
 }
 
 """
+Contains all fields required to generate sitemaps.
+"""
+type Sitemap {
+  """
+  The number of sitemap's pages for a given type.
+  """
+  pagesCount: Count
+
+  """
+  A list of sitemap's resources for a given type.
+
+  Important Notes:
+    - The number of items per page varies from 0 to 250.
+    - Empty pages (0 items) may occur and do not necessarily indicate the end of results.
+    - Always check `hasNextPage` to determine if more pages are available.
+  """
+  resources(
+    """
+    The page number to fetch.
+    """
+    page: Int!
+  ): PaginatedSitemapResources
+}
+
+"""
+Represents a sitemap's image.
+"""
+type SitemapImage {
+  """
+  Image's alt text.
+  """
+  alt: String
+
+  """
+  Path to the image.
+  """
+  filepath: String
+
+  """
+  The date and time when the image was updated.
+  """
+  updatedAt: DateTime!
+}
+
+"""
+Represents a sitemap resource that is not a metaobject.
+"""
+type SitemapResource implements SitemapResourceInterface {
+  """
+  Resource's handle.
+  """
+  handle: String!
+
+  """
+  Resource's image.
+  """
+  image: SitemapImage
+
+  """
+  Resource's title.
+  """
+  title: String
+
+  """
+  The date and time when the resource was updated.
+  """
+  updatedAt: DateTime!
+}
+
+"""
+Represents the common fields for all sitemap resource types.
+"""
+interface SitemapResourceInterface {
+  """
+  Resource's handle.
+  """
+  handle: String!
+
+  """
+  The date and time when the resource was updated.
+  """
+  updatedAt: DateTime!
+}
+
+"""
+A SitemapResourceMetaobject represents a metaobject with
+[the `renderable` capability](https://shopify.dev/docs/apps/build/custom-data/metaobjects/use-metaobject-capabilities#render-metaobjects-as-web-pages).
+"""
+type SitemapResourceMetaobject implements SitemapResourceInterface {
+  """
+  Resource's handle.
+  """
+  handle: String!
+
+  """
+  The URL handle for accessing pages of this metaobject type in the Online Store.
+  """
+  onlineStoreUrlHandle: String
+
+  """
+  The type of the metaobject. Defines the namespace of its associated metafields.
+  """
+  type: String!
+
+  """
+  The date and time when the resource was updated.
+  """
+  updatedAt: DateTime!
+}
+
+"""
+The types of resources potentially present in a sitemap.
+"""
+enum SitemapType {
+  """
+  Articles present in the sitemap.
+  """
+  ARTICLE
+
+  """
+  Blogs present in the sitemap.
+  """
+  BLOG
+
+  """
+  Collections present in the sitemap.
+  """
+  COLLECTION
+
+  """
+  Metaobjects present in the sitemap. Only metaobject types with the
+  [`renderable` capability](https://shopify.dev/docs/apps/build/custom-data/metaobjects/use-metaobject-capabilities#render-metaobjects-as-web-pages)
+  are included in sitemap.
+  """
+  METAOBJECT
+
+  """
+  Pages present in the sitemap.
+  """
+  PAGE
+
+  """
+  Products present in the sitemap.
+  """
+  PRODUCT
+}
+
+"""
 The availability of a product variant at a particular location.
 Local pick-up must be enabled in the  store's shipping settings, otherwise this will return an empty result.
 """
@@ -13423,21 +14617,17 @@ An auto-generated type for paginating through multiple StoreAvailabilities.
 """
 type StoreAvailabilityConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [StoreAvailabilityEdge!]!
 
   """
-  A list of nodes that are contained in StoreAvailabilityEdge. You can fetch
-  data about an individual node, or you can follow the edges to fetch data about
-  a collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in StoreAvailabilityEdge.
   """
   nodes: [StoreAvailability!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -13447,7 +14637,7 @@ An auto-generated type which holds one StoreAvailability and a cursor during pag
 """
 type StoreAvailabilityEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -13462,20 +14652,17 @@ An auto-generated type for paginating through multiple Strings.
 """
 type StringConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [StringEdge!]!
 
   """
-  A list of nodes that are contained in StringEdge. You can fetch data about an
-  individual node, or you can follow the edges to fetch data about a collection
-  of related nodes. At each node, you specify the fields that you want to retrieve.
+  A list of the nodes contained in StringEdge.
   """
   nodes: [String!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -13485,7 +14672,7 @@ An auto-generated type which holds one String and a cursor during pagination.
 """
 type StringEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -13517,8 +14704,6 @@ enum SubmissionErrorCode {
   BUYER_IDENTITY_EMAIL_IS_INVALID
   BUYER_IDENTITY_EMAIL_REQUIRED
   BUYER_IDENTITY_PHONE_IS_INVALID
-  CAPTCHA_COMPLETION_REQUIRED
-  CUSTOMER_ACCOUNT_REQUIRED
   DELIVERY_ADDRESS1_INVALID
   DELIVERY_ADDRESS1_REQUIRED
   DELIVERY_ADDRESS1_TOO_LONG
@@ -13533,7 +14718,6 @@ enum SubmissionErrorCode {
   DELIVERY_COMPANY_REQUIRED
   DELIVERY_COMPANY_TOO_LONG
   DELIVERY_COUNTRY_REQUIRED
-  DELIVERY_DETAIL_CHANGED
   DELIVERY_FIRST_NAME_INVALID
   DELIVERY_FIRST_NAME_REQUIRED
   DELIVERY_FIRST_NAME_TOO_LONG
@@ -13552,7 +14736,6 @@ enum SubmissionErrorCode {
   DELIVERY_POSTAL_CODE_REQUIRED
   DELIVERY_ZONE_NOT_FOUND
   DELIVERY_ZONE_REQUIRED_FOR_COUNTRY
-  DISCOUNT_NOT_APPLICABLE
   ERROR
   MERCHANDISE_LINE_LIMIT_REACHED
   MERCHANDISE_NOT_APPLICABLE
@@ -13608,7 +14791,6 @@ enum SubmissionErrorCode {
   PAYMENTS_SHOPIFY_PAYMENTS_REQUIRED
   PAYMENTS_UNACCEPTABLE_PAYMENT_AMOUNT
   PAYMENTS_WALLET_CONTENT_MISSING
-  PENDING_PROCESS
   TAXES_DELIVERY_GROUP_ID_NOT_FOUND
   TAXES_LINE_ID_NOT_FOUND
   TAXES_MUST_BE_DEFINED
@@ -13662,12 +14844,50 @@ type SubmitThrottled {
 }
 
 """
+Color and image for visual representation.
+"""
+type Swatch {
+  """
+  The swatch color.
+  """
+  color: Color
+
+  """
+  The swatch image.
+  """
+  image: MediaImage
+}
+
+"""
+The taxonomy category for the product.
+"""
+type TaxonomyCategory implements Node {
+  """
+  All parent nodes of the current taxonomy category.
+  """
+  ancestors: [TaxonomyCategory!]!
+
+  """
+  A static identifier for the taxonomy category.
+  """
+  id: ID!
+
+  """
+  The localized name of the taxonomy category.
+  """
+  name: String!
+}
+
+"""
 Represents a resource that you can track the origin of the search traffic.
 """
 interface Trackable {
   """
-  A URL parameters to be added to a page URL when it is linked from a GraphQL
-  result. This allows for tracking the origin of the traffic.
+  URL parameters to be added to a page URL to track the origin of on-site search
+  traffic for [analytics reporting](https://help.shopify.com/manual/reports-and-analytics/shopify-reports/report-types/default-reports/behaviour-reports).
+  Returns a result when accessed through the
+  [search](https://shopify.dev/docs/api/storefront/current/queries/search) or [predictiveSearch](https://shopify.dev/docs/api/storefront/current/queries/predictiveSearch)
+  queries, otherwise returns null.
   """
   trackingParameters: String
 }
@@ -13843,21 +15063,17 @@ An auto-generated type for paginating through multiple UrlRedirects.
 """
 type UrlRedirectConnection {
   """
-  The connection between the node and its parent. Each edge contains a minimum of the edge's cursor and the node.
+  A list of edges.
   """
   edges: [UrlRedirectEdge!]!
 
   """
-  A list of nodes that are contained in UrlRedirectEdge. You can fetch data
-  about an individual node, or you can follow the edges to fetch data about a
-  collection of related nodes. At each node, you specify the fields that you
-  want to retrieve.
+  A list of the nodes contained in UrlRedirectEdge.
   """
   nodes: [UrlRedirect!]!
 
   """
-  An object that’s used to retrieve [cursor
-  information](https://shopify.dev/api/usage/pagination-graphql) about the current page.
+  Information to aid in pagination.
   """
   pageInfo: PageInfo!
 }
@@ -13867,7 +15083,7 @@ An auto-generated type which holds one UrlRedirect and a cursor during paginatio
 """
 type UrlRedirectEdge {
   """
-  The position of each node in an array, used in [pagination](https://shopify.dev/api/usage/pagination-graphql).
+  A cursor for use in pagination.
   """
   cursor: String!
 
@@ -13913,7 +15129,7 @@ type UserErrorsShopPayPaymentRequestSessionUserErrors implements DisplayableErro
 }
 
 """
-Possible error codes that can be returned by `UserErrorsShopPayPaymentRequestSessionUserErrors`.
+Possible error codes that can be returned by `ShopPayPaymentRequestSessionUserErrors`.
 """
 enum UserErrorsShopPayPaymentRequestSessionUserErrorsCode {
   """
