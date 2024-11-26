@@ -27,6 +27,18 @@ fragment CartLineFragment on CartLine {
         handle
         title
       }
+      price {
+        amount
+        currencyCode
+      }
+      compareAtPrice {
+        amount
+        currencyCode
+      }
+      unitPrice {
+        amount
+        currencyCode
+      }
       weight
       available: availableForSale
       sku

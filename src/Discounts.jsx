@@ -7,11 +7,28 @@ export default function Discounts() {
   const [cart, setCart] = useState(null)
   const [comparison, setComparison] = useState(null)
 
+
+  const removeTypeFields = (obj)=> {
+    if (!obj || typeof obj !== 'object') return obj;
+    
+    if (Array.isArray(obj)) {
+      return obj.map(item => removeTypeFields(item));
+    }
+    
+    const newObj = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (key !== 'type') {
+        newObj[key] = removeTypeFields(value);
+      }
+    }
+    return newObj;
+  }
+
   function createCheckout({ lineItems } = { lineItems: [] }) {
     return new Promise((resolve) => client.checkout.create({ lineItems }).then((checkout) => {
       console.log('Checkout created:', checkout)
       let { id, discountApplications, lineItems } = checkout
-      lineItems = lineItems.map((node) => ({ discountAllocations: node.discountAllocations, variantId: node.variant.id }))
+      lineItems = lineItems.map((node) => ({ variantId: node.variant.id, discountAllocations: node.discountAllocations, variantPrice: { price: node.variant.price, compareAtPrice: node.variant.compareAtPrice, unitPrice: node.variant.unitPrice } }))
       resolve({ id, discountApplications, lineItems })
     }))
   }
@@ -22,7 +39,7 @@ export default function Discounts() {
       const { data: { cartCreate: { cart } } } = res
       console.log('Cart created', cart)
       let { id, discountAllocations, discountCodes, lines } = cart
-      lines = lines.edges.map(({ node }) => ({ discountAllocations: node.discountAllocations, variantId: node.merchandise.id }))
+      lines = lines.edges.map(({ node }) => ({ lineCost: node.cost, discountAllocations: node.discountAllocations, variantId: node.merchandise.id, variantPrice: { price: node.merchandise.price, compareAtPrice: node.merchandise.compareAtPrice, unitPrice: node.merchandise.unitPrice } }))
       resolve({ id, discountCodes, discountAllocations, lines })
     }))
   }
@@ -31,8 +48,8 @@ export default function Discounts() {
     return client.checkout.addDiscount(checkoutId, discountCode).then((checkout) => {
       console.log('Discount added:', checkout.discountApplications)
       let { id, discountApplications, lineItems } = checkout
-      lineItems = lineItems.map((node) => ({ discountAllocations: node.discountAllocations, variantId: node.variant.id }))
-      return ({ id, discountApplications, lineItems })
+      lineItems = lineItems.map((node) => ({ variantId: node.variant.id, variantPrice: { price: node.variant.price, compareAtPrice: node.variant.compareAtPrice, unitPrice: node.variant.unitPrice }, discountAllocations: node.discountAllocations,  }))
+      return removeTypeFields({ id, discountApplications, lineItems })
     })
   }
 
@@ -41,7 +58,7 @@ export default function Discounts() {
       console.log('Discount added:', res)
       const { data: { cartDiscountCodesUpdate: { cart } } } = res
       let { id, discountAllocations, discountCodes, lines } = cart
-      lines = lines.edges.map(({ node }) => ({ discountAllocations: node.discountAllocations, variantId: node.merchandise.id }))
+      lines = lines.edges.map(({ node }) => ({ variantId: node.merchandise.id, variantPrice: { price: node.merchandise.price, compareAtPrice: node.merchandise.compareAtPrice, unitPrice: node.merchandise.unitPrice }, discountAllocations: node.discountAllocations,lineCost: node.cost  }))
       return ({ id, discountCodes, discountAllocations, lines })
     })
   }
