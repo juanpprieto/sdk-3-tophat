@@ -28,7 +28,7 @@ export default function Discounts() {
     return new Promise((resolve) => client.checkout.create({ lineItems }).then((checkout) => {
       console.log('Checkout created:', checkout)
       let { id, discountApplications, lineItems } = checkout
-      lineItems = lineItems.map((node) => ({ variantId: node.variant.id, discountAllocations: node.discountAllocations, variantPrice: { price: node.variant.price, compareAtPrice: node.variant.compareAtPrice, unitPrice: node.variant.unitPrice } }))
+      lineItems = lineItems.map((node) => ({ variantId: node.variant.id, quantity: node.quantity, discountAllocations: node.discountAllocations, variantPrice: { price: node.variant.price, compareAtPrice: node.variant.compareAtPrice, unitPrice: node.variant.unitPrice } }))
       resolve({ id, discountApplications, lineItems })
     }))
   }
@@ -39,7 +39,7 @@ export default function Discounts() {
       const { data: { cartCreate: { cart } } } = res
       console.log('Cart created', cart)
       let { id, discountAllocations, discountCodes, lines } = cart
-      lines = lines.edges.map(({ node }) => ({ lineCost: node.cost, discountAllocations: node.discountAllocations, variantId: node.merchandise.id, variantPrice: { price: node.merchandise.price, compareAtPrice: node.merchandise.compareAtPrice, unitPrice: node.merchandise.unitPrice } }))
+      lines = lines.edges.map(({ node }) => ({ lineCost: node.cost, discountAllocations: node.discountAllocations, quantity: node.quantity, variantId: node.merchandise.id, variantPrice: { price: node.merchandise.price, compareAtPrice: node.merchandise.compareAtPrice, unitPrice: node.merchandise.unitPrice } }))
       resolve({ id, discountCodes, discountAllocations, lines })
     }))
   }
@@ -48,7 +48,7 @@ export default function Discounts() {
     return client.checkout.addDiscount(checkoutId, discountCode).then((checkout) => {
       console.log('Discount added:', checkout.discountApplications)
       let { id, discountApplications, lineItems } = checkout
-      lineItems = lineItems.map((node) => ({ variantId: node.variant.id, variantPrice: { price: node.variant.price, compareAtPrice: node.variant.compareAtPrice, unitPrice: node.variant.unitPrice }, discountAllocations: node.discountAllocations,  }))
+      lineItems = lineItems.map((node) => ({ variantId: node.variant.id, quantity: node.quantity, variantPrice: { price: node.variant.price, compareAtPrice: node.variant.compareAtPrice, unitPrice: node.variant.unitPrice }, discountAllocations: node.discountAllocations,  }))
       return removeUnhelpfulFields({ id, discountApplications, lineItems })
     })
   }
@@ -58,7 +58,7 @@ export default function Discounts() {
       console.log('Discount added:', res)
       const { data: { cartDiscountCodesUpdate: { cart } } } = res
       let { id, discountAllocations, discountCodes, lines } = cart
-      lines = lines.edges.map(({ node }) => ({ variantId: node.merchandise.id, variantPrice: { price: node.merchandise.price, compareAtPrice: node.merchandise.compareAtPrice, unitPrice: node.merchandise.unitPrice }, discountAllocations: node.discountAllocations,lineCost: node.cost  }))
+      lines = lines.edges.map(({ node }) => ({ variantId: node.merchandise.id, quantity: node.quantity, variantPrice: { price: node.merchandise.price, compareAtPrice: node.merchandise.compareAtPrice, unitPrice: node.merchandise.unitPrice }, discountAllocations: node.discountAllocations,lineCost: node.cost  }))
       return removeUnhelpfulFields({ id, discountCodes, discountAllocations, lines })
     })
   }
@@ -92,7 +92,7 @@ export default function Discounts() {
               lineItems: [
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896522774',
-                  quantity: 1
+                  quantity: 3
                 },
               ]
             }).then((checkout) => {
@@ -104,7 +104,7 @@ export default function Discounts() {
             createCart({
               lines: [
                 {
-                  quantity: 1,
+                  quantity: 3,
                   merchandiseId: 'gid://shopify/ProductVariant/48535896522774',
                 }
               ]
@@ -123,7 +123,7 @@ export default function Discounts() {
               lineItems: [
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896522774',
-                  quantity: 1
+                  quantity: 3
                 },
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896555542',
@@ -139,7 +139,7 @@ export default function Discounts() {
             createCart({
               lines: [
                 {
-                  quantity: 1,
+                  quantity: 3,
                   merchandiseId: 'gid://shopify/ProductVariant/48535896522774'
                 },
                 {
@@ -182,7 +182,7 @@ export default function Discounts() {
               lineItems: [
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896522774',
-                  quantity: 1
+                  quantity: 3
                 },
               ]
             }).then((checkout) => {
@@ -194,7 +194,7 @@ export default function Discounts() {
             createCart({
               lines: [
                 {
-                  quantity: 1,
+                  quantity: 3,
                   merchandiseId: 'gid://shopify/ProductVariant/48535896522774',
                 }
               ]
@@ -213,7 +213,7 @@ export default function Discounts() {
               lineItems: [
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896522774',
-                  quantity: 1
+                  quantity: 3
                 },
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896555542',
@@ -229,7 +229,7 @@ export default function Discounts() {
             createCart({
               lines: [
                 {
-                  quantity: 1,
+                  quantity: 3,
                   merchandiseId: 'gid://shopify/ProductVariant/48535896522774'
                 },
                 {
@@ -273,7 +273,7 @@ export default function Discounts() {
               lineItems: [
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896522774',
-                  quantity: 1
+                  quantity: 3
                 },
               ]
             }).then((checkout) => {
@@ -285,7 +285,7 @@ export default function Discounts() {
             createCart({
               lines: [
                 {
-                  quantity: 1,
+                  quantity: 3,
                   merchandiseId: 'gid://shopify/ProductVariant/48535896522774',
                 }
               ]
@@ -304,7 +304,7 @@ export default function Discounts() {
               lineItems: [
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896522774',
-                  quantity: 1
+                  quantity: 3
                 },
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896555542',
@@ -320,7 +320,7 @@ export default function Discounts() {
             createCart({
               lines: [
                 {
-                  quantity: 1,
+                  quantity: 3,
                   merchandiseId: 'gid://shopify/ProductVariant/48535896522774'
                 },
                 {
@@ -364,7 +364,7 @@ export default function Discounts() {
               lineItems: [
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896522774',
-                  quantity: 1
+                  quantity: 3
                 },
               ]
             }).then((checkout) => {
@@ -376,7 +376,7 @@ export default function Discounts() {
             createCart({
               lines: [
                 {
-                  quantity: 1,
+                  quantity: 3,
                   merchandiseId: 'gid://shopify/ProductVariant/48535896522774',
                 }
               ]
@@ -395,7 +395,7 @@ export default function Discounts() {
               lineItems: [
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896522774',
-                  quantity: 1
+                  quantity: 3
                 },
                 {
                   variantId: 'gid://shopify/ProductVariant/48535896555542',
@@ -411,7 +411,7 @@ export default function Discounts() {
             createCart({
               lines: [
                 {
-                  quantity: 1,
+                  quantity: 3,
                   merchandiseId: 'gid://shopify/ProductVariant/48535896522774'
                 },
                 {
