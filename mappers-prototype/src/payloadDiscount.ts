@@ -1,9 +1,10 @@
 import {
   Cart,
-  CartLine,
+  CartLine as BaseCartLine,
   CartAutomaticDiscountAllocation,
   CartCodeDiscountAllocation,
   CartCustomDiscountAllocation,
+  CartDiscountAllocation as CDiscountAllocation,
   CartDiscountCode,
 } from "./types/2025-01";
 
@@ -11,12 +12,23 @@ import {
   DiscountApplication as CheckoutDiscountApplication,
   PricingValue,
   MoneyV2,
+  CheckoutLineItem as BaseCheckoutLineItem,
 } from "./types/SDK-checkout-2024-04";
+
+type CartLine = Omit<
+  BaseCartLine,
+  "attributes" | "estimatedCost" | "merchandise"
+>;
+type CheckoutLineItem = Omit<
+  BaseCheckoutLineItem,
+  "customAttributes" | "title" | "variant"
+>;
 
 type CartDiscountAllocation =
   | CartAutomaticDiscountAllocation
   | CartCodeDiscountAllocation
-  | CartCustomDiscountAllocation;
+  | CartCustomDiscountAllocation
+  | CDiscountAllocation;
 
 interface DiscountAllocationForLineItem {
   id: string; // ID of line item
@@ -33,6 +45,55 @@ interface Params {
   cartDiscountAllocations: CartDiscountAllocation[];
   cartDiscountCodes: CartDiscountCode[];
 }
+
+interface ReturnForTests {
+  checkoutDiscountApplications: CheckoutDiscountApplication[];
+  checkoutLines: CheckoutLineItem[];
+}
+
+// Sanity check = this should never happen, so we want to know if it's happening by mistake
+
+export const discountAndLineMapperForTests = ({
+  cartLineItems,
+  cartDiscountAllocations,
+  cartDiscountCodes,
+}: Params): ReturnForTests => {
+  const { checkoutDiscountApplications, cartLinesWithAllDiscountAllocations } =
+    discountMapper({
+      cartLineItems,
+      cartDiscountAllocations,
+      cartDiscountCodes,
+    });
+
+  // In the JS Buy SDK, this whole function won't exist since this step will happen as part of the line items mapper
+  // But for now to easily make sure the code works, I've simulated the relevant behaviour here
+  const checkoutLines = cartLinesWithAllDiscountAllocations.map((line) => {
+    return {
+      ...line,
+      discountAllocations: line.discountAllocations.map(
+        (discountAllocation) => {
+          const discountApplication = checkoutDiscountApplications.find(
+            (application) =>
+              getDiscountAllocationId(discountAllocation) ===
+              getDiscountApplicationId(application)
+          );
+
+          if (!discountApplication) {
+            throw new Error(`No discount application for discount allocation.
+              Discount allocation: ${JSON.stringify(discountAllocation)}.
+              Discount applications: ${JSON.stringify(checkoutDiscountApplications)}`)
+          }
+          return {
+            allocatedAmount: discountAllocation.discountedAmount,
+            discountApplication,
+          };
+        }
+      ),
+    };
+  });
+
+  return { checkoutDiscountApplications, checkoutLines };
+};
 
 const discountMapper = ({
   cartLineItems,
@@ -67,10 +128,14 @@ const discountMapper = ({
     cartLinesWithAllDiscountAllocations
   );
 
+  // Sanity check
   cartDiscountCodes.forEach(({ code }) => {
     if (!discountIdToDiscountApplicationMap.has(code)) {
       throw new Error(
-        `Discount code ${code} not found in discount applications`
+        `Discount code ${code} not found in discount application map. 
+        Discount application map: ${JSON.stringify(
+          discountIdToDiscountApplicationMap
+        )}`
       );
     }
   });
@@ -97,33 +162,94 @@ const mapCartOrderLevelDiscountAllocationsToLineDiscountAllocations = (
     return [];
   }
 
-  // TODO code needs to be able to support multiple order-level discounts. Currently does not.
-  // Could probably handle this by having a different sorted discount allocation array for each discount
-  if (cartLineItems.length !== cartDiscountAllocations.length) {
+  // Sanity check
+  if (cartDiscountAllocations.length % cartLineItems.length !== 0) {
     throw new Error(
-      "cartLineItems and cartDiscountAllocations must have the same length"
+      `Invalid number of order-level discount allocations. For each order-level discount, there must be 1 order-level discount allocation for each line item. 
+      Number of line items: ${cartLineItems.length}. Number of discount allocations: ${cartDiscountAllocations.length}`
     );
   }
 
-  // Sort cart discount allocations so that the lowest allocated amount appears first
-  const sortedCartDiscountAllocations = cartDiscountAllocations.sort((a, b) => {
-    return a.discountedAmount.amount - b.discountedAmount.amount;
+  // May have multiple order-level discount allocations for a given line item
+  const discountIdToDiscountAllocationsMap =
+    groupOrderLevelDiscountAllocationsByDiscountId(cartDiscountAllocations);
+
+  // Sort each array within the Map by discountedAmount so that the lowest discounted amount appears first
+  discountIdToDiscountAllocationsMap.forEach((allocations) => {
+    allocations.sort(
+      (a, b) => a.discountedAmount.amount - b.discountedAmount.amount
+    );
   });
 
   // Sort cart line items so that the item with the lowest cost (after line-level discounts) appears first
+  // Total amount / quantity = cost per item after line-level discounts
   const sortedCartLineItems = cartLineItems.sort((a, b) => {
-    return a.cost.totalAmount.amount - b.cost.totalAmount.amount;
+    return (
+      a.cost.totalAmount.amount / a.quantity -
+      b.cost.totalAmount.amount / b.quantity
+    );
   });
 
-  // Combine the two arrays into a new array where the ith element of each array is a pair
-  // This is because the lowest order-level discount allocation should be applied to the item with the lowest cost (after line-level discounts)
-  return sortedCartLineItems.map((lineItem, index) => {
-    return {
-      id: lineItem.id,
-      discountAllocation: sortedCartDiscountAllocations[index],
-    };
-  });
+  // For each discount, the discount allocation with the smallest amount should be applied
+  // to the item with the lowest cost (after line-level discounts)
+  return Array.from(discountIdToDiscountAllocationsMap.values()).flatMap(
+    (allocations) => {
+      return sortedCartLineItems.map((lineItem, index) => {
+        return {
+          id: lineItem.id,
+          discountAllocation: allocations[index],
+        };
+      });
+    }
+  );
 };
+
+const groupOrderLevelDiscountAllocationsByDiscountId = (
+  cartDiscountAllocations: CartDiscountAllocation[]
+): Map<string, CartDiscountAllocation[]> => {
+  return cartDiscountAllocations.reduce((acc, discountAllocation) => {
+    const id = getDiscountAllocationId(discountAllocation);
+    acc.set(id, [...(acc.get(id) || []), discountAllocation]);
+    return acc;
+  }, new Map());
+};
+
+const getDiscountAllocationId = (
+  discountAllocation: CartDiscountAllocation
+): string => {
+  // discountId = discountAllocaton's id or title property
+  // @ts-expect-error must have either ID or title
+  const discountId = discountAllocation.id || discountAllocation.title;
+
+  // Sanity check
+  if (!discountId) {
+    throw new Error(
+      `Discount allocation must have either ID or title: ${JSON.stringify(
+        discountAllocation
+      )}`
+    );
+  }
+  return discountId;
+};
+
+const getDiscountApplicationId = (
+  discountApplication: CheckoutDiscountApplication
+): string => {
+  // discountId = discountAllocaton's id or title property
+  // @ts-expect-error must have either ID or title
+  const discountId = discountApplication.id || discountApplication.title;
+
+  // Sanity check
+  if (!discountId) {
+    throw new Error(
+      `Discount application must have either ID or title: ${JSON.stringify(
+        discountApplication
+      )}`
+    );
+  }
+  return discountId;
+};
+
 const mergeOrderLevelDiscountAllocationsToLineDiscountAllocations = (
   lineItems: CartLine[],
   orderLevelDiscountAllocationsForLines: DiscountAllocationForLineItem[]
@@ -145,6 +271,7 @@ const mergeOrderLevelDiscountAllocationsToLineDiscountAllocations = (
     };
   });
 };
+
 const generateDiscountApplications = (
   cartLinesWithAllDiscountAllocations: CartLine[]
 ): Map<string, CheckoutDiscountApplication> => {
@@ -155,12 +282,10 @@ const generateDiscountApplications = (
 
   cartLinesWithAllDiscountAllocations.map(({ discountAllocations }) => {
     discountAllocations.map((discountAllocation) => {
-      // discountId = discountAllocaton's id or title property
-      // @ts-expect-error must have either ID or title
-      const discountId = discountAllocation.id || discountAllocation.title;
+      const discountId = getDiscountAllocationId(discountAllocation);
       if (!discountId) {
         throw new Error(
-          `Discount allocation must have either ID or title: ${JSON.stringify(
+          `Discount allocation must have either code or title: ${JSON.stringify(
             discountAllocation
           )}`
         );
