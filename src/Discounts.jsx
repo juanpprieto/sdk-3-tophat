@@ -28,7 +28,7 @@ export default function Discounts() {
     return new Promise((resolve) => client.checkout.create({ lineItems }).then((checkout) => {
       console.log('Checkout created:', checkout)
       let { id, discountApplications, lineItems } = checkout
-      lineItems = lineItems.map((node) => ({ variantId: node.variant.id, quantity: node.quantity, discountAllocations: node.discountAllocations, variantPrice: { price: node.variant.price, compareAtPrice: node.variant.compareAtPrice, unitPrice: node.variant.unitPrice } }))
+      lineItems = lineItems.map((node) => ({ id: node.id, variantId: node.variant.id, quantity: node.quantity, discountAllocations: node.discountAllocations }))
       resolve({ id, discountApplications, lineItems })
     }))
   }
@@ -38,9 +38,9 @@ export default function Discounts() {
       console.log('Response:', res)
       const { data: { cartCreate: { cart } } } = res
       console.log('Cart created', cart)
-      let { id, discountAllocations, discountCodes, lines } = cart
-      lines = lines.edges.map(({ node }) => ({ lineCost: node.cost, discountAllocations: node.discountAllocations, quantity: node.quantity, variantId: node.merchandise.id, variantPrice: { price: node.merchandise.price, compareAtPrice: node.merchandise.compareAtPrice, unitPrice: node.merchandise.unitPrice } }))
-      resolve({ id, discountCodes, discountAllocations, lines })
+      let { id, discountAllocations, discountCodes, lines, cost } = cart
+      lines = lines.edges.map(({ node }) => ({ id: node.id, lineCost: node.cost, discountAllocations: node.discountAllocations, quantity: node.quantity, variantId: node.merchandise.id, cost: { totalAmount: node.cost.totalAmount } }))
+      resolve({ id, discountCodes, discountAllocations, lines, subtotal: cost.subtotalAmount})
     }))
   }
 
@@ -48,7 +48,7 @@ export default function Discounts() {
     return client.checkout.addDiscount(checkoutId, discountCode).then((checkout) => {
       console.log('Discount added:', checkout.discountApplications)
       let { id, discountApplications, lineItems } = checkout
-      lineItems = lineItems.map((node) => ({ variantId: node.variant.id, quantity: node.quantity, variantPrice: { price: node.variant.price, compareAtPrice: node.variant.compareAtPrice, unitPrice: node.variant.unitPrice }, discountAllocations: node.discountAllocations,  }))
+      lineItems = lineItems.map((node) => ({ id: node.id, quantity: node.quantity, discountAllocations: node.discountAllocations }))
       return removeUnhelpfulFields({ id, discountApplications, lineItems })
     })
   }
@@ -57,9 +57,9 @@ export default function Discounts() {
     return sfapi.addDiscount(cartId, discountCode).then((res) => {
       console.log('Discount added:', res)
       const { data: { cartDiscountCodesUpdate: { cart } } } = res
-      let { id, discountAllocations, discountCodes, lines } = cart
-      lines = lines.edges.map(({ node }) => ({ variantId: node.merchandise.id, quantity: node.quantity, variantPrice: { price: node.merchandise.price, compareAtPrice: node.merchandise.compareAtPrice, unitPrice: node.merchandise.unitPrice }, discountAllocations: node.discountAllocations,lineCost: node.cost  }))
-      return removeUnhelpfulFields({ id, discountCodes, discountAllocations, lines })
+      let { id, discountAllocations, discountCodes, lines, cost } = cart
+      lines = lines.edges.map(({ node }) => ({ id: node.id, quantity: node.quantity, discountAllocations: node.discountAllocations, cost: { totalAmount: node.cost.totalAmount } }))
+      return removeUnhelpfulFields({ id, discountCodes, discountAllocations, lines, subtotal: cost.subtotalAmount })
     })
   }
 

@@ -19,11 +19,15 @@
     "@graphql-codegen/cli": "^5.0.3",
     "@graphql-codegen/typescript": "^4.1.1",
     "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.17.13",
     "@types/mocha": "^10.0.0",
     "@types/node": "^22.9.0",
     "js-yaml": "^4.1.0",
     "mocha": "^10.0.0",
     "ts-node": "^10.0.0",
     "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }

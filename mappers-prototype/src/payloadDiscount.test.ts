@@ -2,7 +2,7 @@ import assert from "assert";
 import { discountsPayloadMapper } from "./payloadDiscount";
 import { Cart } from "./types/2025-01";
 
-describe.only("discountPayloadMapper", () => {
+describe("discountPayloadMapper", () => {
   describe("empty checkout", () => {
     it("maps an empty checkout with a fixed discount code", () => {
       const cart = {
@@ -788,7 +788,7 @@ describe.only("discountPayloadMapper", () => {
   })
 });
 
-describe.only('discountPayloadMapper / unsupported', () => {
+describe('discountPayloadMapper / unsupported', () => {
   describe('empty checkout', () => {
     it('maps a default value for an empty checkout with an order-level fixed discount', () => {
       const cart = {
