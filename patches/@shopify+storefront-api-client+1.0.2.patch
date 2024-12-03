@@ -1,5 +1,18 @@
+diff --git a/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.js b/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.js
+index 2cfae8d..d9075e3 100644
+--- a/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.js
++++ b/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.js
+@@ -78,7 +78,7 @@ function generateApiUrlFormatter(storeUrl, defaultApiVersion, baseApiVersionVali
+             });
+         }
+         const urlApiVersion = (apiVersion ?? defaultApiVersion).trim();
+-        return `${storeUrl}/api/${urlApiVersion}/graphql.json`;
++        return `${storeUrl}/api/${urlApiVersion}/graphql.json?fast_storefront_renderer=staging-liquid-2`;
+     };
+ }
+ function generateGetApiUrl(config, apiUrlFormatter) {
 diff --git a/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.mjs b/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.mjs
-index a6f5a69..62bad74 100644
+index a6f5a69..d071a24 100644
 --- a/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.mjs
 +++ b/node_modules/@shopify/storefront-api-client/dist/storefront-api-client.mjs
 @@ -76,7 +76,7 @@ function generateApiUrlFormatter(storeUrl, defaultApiVersion, baseApiVersionVali
@@ -7,7 +20,7 @@ index a6f5a69..62bad74 100644
          }
          const urlApiVersion = (apiVersion ?? defaultApiVersion).trim();
 -        return `${storeUrl}/api/${urlApiVersion}/graphql.json`;
-+        return `${storeUrl}/api/${urlApiVersion}/graphql.json?fast_storefront_renderer=staging-east`;
++        return `${storeUrl}/api/${urlApiVersion}/graphql.json?fast_storefront_renderer=staging-liquid-2`;
      };
  }
  function generateGetApiUrl(config, apiUrlFormatter) {
