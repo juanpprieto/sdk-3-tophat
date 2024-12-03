@@ -28,8 +28,8 @@ export default function Discounts() {
     return new Promise((resolve) => client.checkout.create({ lineItems }).then((checkout) => {
       console.log('Checkout created:', checkout)
       let { id, discountApplications, lineItems } = checkout
-      lineItems = lineItems.map((node) => ({ id: node.id, variantId: node.variant.id, quantity: node.quantity, discountAllocations: node.discountAllocations }))
-      resolve({ id, discountApplications, lineItems })
+      lineItems = lineItems.map((node) => ({ id: node.id, quantity: node.quantity, discountAllocations: node.discountAllocations }))
+      resolve(removeUnhelpfulFields({ id, discountApplications, lineItems }))
     }))
   }
 
@@ -39,14 +39,14 @@ export default function Discounts() {
       const { data: { cartCreate: { cart } } } = res
       console.log('Cart created', cart)
       let { id, discountAllocations, discountCodes, lines, cost } = cart
-      lines = lines.edges.map(({ node }) => ({ id: node.id, lineCost: node.cost, discountAllocations: node.discountAllocations, quantity: node.quantity, variantId: node.merchandise.id, cost: { totalAmount: node.cost.totalAmount } }))
-      resolve({ id, discountCodes, discountAllocations, lines, subtotal: cost.subtotalAmount})
+      lines = lines.edges.map(({ node }) => ({ id: node.id, discountAllocations: node.discountAllocations, quantity: node.quantity, cost: { totalAmount: node.cost.totalAmount } }))
+      resolve(removeUnhelpfulFields({ id, discountCodes, discountAllocations, lines}))
     }))
   }
 
   function checkoutAddDiscount(checkoutId, discountCode) {
     return client.checkout.addDiscount(checkoutId, discountCode).then((checkout) => {
-      console.log('Discount added:', checkout.discountApplications)
+      console.log(`Checkout discount ${discountCode} added:`, checkout.discountApplications)
       let { id, discountApplications, lineItems } = checkout
       lineItems = lineItems.map((node) => ({ id: node.id, quantity: node.quantity, discountAllocations: node.discountAllocations }))
       return removeUnhelpfulFields({ id, discountApplications, lineItems })
@@ -55,7 +55,7 @@ export default function Discounts() {
 
   function cartAddDiscount(cartId, discountCode) {
     return sfapi.addDiscount(cartId, discountCode).then((res) => {
-      console.log('Discount added:', res)
+      console.log(`Cart discount ${discountCode} added:`, res)
       const { data: { cartDiscountCodesUpdate: { cart } } } = res
       let { id, discountAllocations, discountCodes, lines, cost } = cart
       lines = lines.edges.map(({ node }) => ({ id: node.id, quantity: node.quantity, discountAllocations: node.discountAllocations, cost: { totalAmount: node.cost.totalAmount } }))
@@ -67,6 +67,85 @@ export default function Discounts() {
     <div>
       <h1>Discounts Comparison</h1>
       <div>
+        <div>
+          <h3>No discount codes</h3>
+
+          <button onClick={() => {
+            setComparison('No discount code / empty')
+            createCheckout().then((checkout) => {
+                setCheckout(checkout)
+            })
+
+            createCart().then((cart) => {
+              setCart(cart)
+            });
+          }}>
+            No discount code / empty
+          </button>
+
+          <button onClick={() => {
+            setComparison('No discount code / one line')
+            createCheckout({
+              lineItems: [
+                {
+                  variantId: 'gid://shopify/ProductVariant/48535896522774',
+                  quantity: 3
+                },
+              ]
+            }).then((checkout) => {
+              setCheckout(checkout)
+            });
+
+            createCart({
+              lines: [
+                {
+                  quantity: 3,
+                  merchandiseId: 'gid://shopify/ProductVariant/48535896522774',
+                }
+              ]
+            }).then((cart) => {
+              setCart(cart)
+            });
+          }}>
+            No discount code / one line
+          </button>
+
+          <button onClick={() => {
+            setComparison('No discount code / two lines')
+            createCheckout({
+              lineItems: [
+                {
+                  variantId: 'gid://shopify/ProductVariant/48535896522774',
+                  quantity: 3
+                },
+                {
+                  variantId: 'gid://shopify/ProductVariant/48535896555542',
+                  quantity: 1
+                }
+              ]
+            }).then((checkout) => {
+              setCheckout(checkout)
+            });
+
+            createCart({
+              lines: [
+                {
+                  quantity: 3,
+                  merchandiseId: 'gid://shopify/ProductVariant/48535896522774'
+                },
+                {
+                  quantity: 1,
+                  merchandiseId: 'gid://shopify/ProductVariant/48535896555542',
+                }
+              ]
+            }).then((cart) => {
+              setCart(cart)
+            });
+          }}>
+            No discount code / two lines
+          </button>
+        </div>
+
         <div>
           <h3>Fixed amount discount</h3>
           <button onClick={() => {

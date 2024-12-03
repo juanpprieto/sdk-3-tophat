@@ -10,38 +10,65 @@ import {
 } from "./types/2025-01";
 
 import {
-  DiscountApplication as CheckoutDiscountApplication,
+  type DiscountApplication as BaseCheckoutDiscountApplication,
+  type DiscountApplicationAllocationMethod,
+  type DiscountApplicationTargetSelection,
+  type DiscountApplicationTargetType,
+  type DiscountAllocation,
   PricingValue,
   MoneyV2,
   CheckoutLineItem as BaseCheckoutLineItem,
 } from "./types/SDK-checkout-2024-04";
 
-type CartLineCost = Omit<BaseCartLineCost, "amountPerQuantity" | "subtotalAmount">;
+type CartLineCost = Omit<
+  BaseCartLineCost,
+  "amountPerQuantity" | "subtotalAmount"
+>;
 type CartDiscountAllocation =
   | CartAutomaticDiscountAllocation
   | CartCodeDiscountAllocation
-  | CartCustomDiscountAllocation
-type CartLine = Omit<
+  | CartCustomDiscountAllocation;
+export type CartLine = Omit<
   BaseCartLine,
-  "attributes" | "estimatedCost" | "merchandise" | "cost" | "discountAllocations"
+  | "attributes"
+  | "estimatedCost"
+  | "merchandise"
+  | "cost"
+  | "discountAllocations"
 > & {
   cost: CartLineCost;
   discountAllocations: CartDiscountAllocation[];
 };
-type CheckoutLineItem = Omit<
-  BaseCheckoutLineItem,
-  "customAttributes" | "title" | "variant"
->;
 
 type Code = {
   code: string;
-}
+};
 
 type Title = {
   title: string;
-}
+};
 
-type CheckoutDiscountApplicationWithId = CheckoutDiscountApplication & (Code | Title);
+type CheckoutDiscountApplicationWithId = CheckoutDiscountApplication &
+  (Code | Title);
+
+export type CheckoutDiscountApplication = Omit<
+  BaseCheckoutDiscountApplication,
+  "allocationMethod" | "targetSelection" | "targetType"
+> & {
+  allocationMethod: `${DiscountApplicationAllocationMethod}`;
+  targetSelection: `${DiscountApplicationTargetSelection}`;
+  targetType: `${DiscountApplicationTargetType}`;
+  applicable?: boolean;
+} & (Code | Title);
+
+export type CheckoutLineItem = Omit<
+  BaseCheckoutLineItem,
+  "customAttributes" | "title" | "variant" | "discountAllocations"
+> & {
+  discountAllocations: (Omit<DiscountAllocation, "discountApplication"> & {
+    discountApplication: CheckoutDiscountApplication;
+  })[];
+};
 
 interface DiscountAllocationForLineItem {
   id: string; // ID of line item
@@ -80,30 +107,34 @@ export const discountAndLineMapperForTests = ({
 
   // In the JS Buy SDK, this whole function won't exist since this step will happen as part of the line items mapper
   // But for now to easily make sure the code works, I've simulated the relevant behaviour here
-  const checkoutLines = cartLinesWithAllDiscountAllocations.map(({cost, ...line}) => {
-    return {
-      ...line,
-      discountAllocations: line.discountAllocations.map(
-        (discountAllocation) => {
-          const discountApplication = checkoutDiscountApplications.find(
-            (application) =>
-              getDiscountAllocationId(discountAllocation) ===
-              getDiscountApplicationId(application)
-          );
+  const checkoutLines = cartLinesWithAllDiscountAllocations.map(
+    ({ cost, ...line }) => {
+      return {
+        ...line,
+        discountAllocations: line.discountAllocations.map(
+          (discountAllocation) => {
+            const discountApplication = checkoutDiscountApplications.find(
+              (application) =>
+                getDiscountAllocationId(discountAllocation) ===
+                getDiscountApplicationId(application)
+            );
 
-          if (!discountApplication) {
-            throw new Error(`No discount application for discount allocation.
+            if (!discountApplication) {
+              throw new Error(`No discount application for discount allocation.
               Discount allocation: ${JSON.stringify(discountAllocation)}.
-              Discount applications: ${JSON.stringify(checkoutDiscountApplications)}`)
+              Discount applications: ${JSON.stringify(
+                checkoutDiscountApplications
+              )}`);
+            }
+            return {
+              allocatedAmount: discountAllocation.discountedAmount,
+              discountApplication,
+            };
           }
-          return {
-            allocatedAmount: discountAllocation.discountedAmount,
-            discountApplication,
-          };
-        }
-      ),
-    };
-  });
+        ),
+      };
+    }
+  );
 
   return { checkoutDiscountApplications, checkoutLines };
 };
@@ -121,7 +152,7 @@ const discountMapper = ({
   ) {
     return {
       checkoutDiscountApplications: [],
-      cartLinesWithAllDiscountAllocations: [],
+      cartLinesWithAllDiscountAllocations: cartLineItems,
     };
   }
 
@@ -197,10 +228,7 @@ const mapCartOrderLevelDiscountAllocationsToLineDiscountAllocations = (
 
   // Sort cart line items so that the item with the lowest cost (after line-level discounts) appears first
   const sortedCartLineItems = cartLineItems.sort((a, b) => {
-    return (
-      a.cost.totalAmount.amount -
-      b.cost.totalAmount.amount
-    );
+    return a.cost.totalAmount.amount - b.cost.totalAmount.amount;
   });
 
   // For each discount, the discount allocation with the smallest amount should be applied
@@ -227,7 +255,7 @@ const groupOrderLevelDiscountAllocationsByDiscountId = (
   }, new Map());
 };
 
-const getDiscountAllocationId = (
+export const getDiscountAllocationId = (
   discountAllocation: CartDiscountAllocation
 ): string => {
   // discountId = discountAllocaton's code or title property
@@ -245,7 +273,7 @@ const getDiscountAllocationId = (
   return discountId;
 };
 
-const getDiscountApplicationId = (
+export const getDiscountApplicationId = (
   discountApplication: CheckoutDiscountApplication
 ): string => {
   // discountId = discountAllocaton's code or title property
@@ -323,15 +351,30 @@ const generateDiscountApplications = (
           value: discountAllocation.value,
         };
 
-        if ('code' in discountAllocation) {
-          const discountCode = discountCodes.find(({ code }) => code === discountId);
+        if ("code" in discountAllocation) {
+          const discountCode = discountCodes.find(
+            ({ code }) => code === discountId
+          );
 
           if (!discountCode) {
-            throw new Error(`Discount code ${discountId} not found in cart discount codes. Discount codes: ${JSON.stringify(discountCodes)}`)
+            throw new Error(
+              `Discount code ${discountId} not found in cart discount codes. Discount codes: ${JSON.stringify(
+                discountCodes
+              )}`
+            );
           }
-          discountApplication = { ...discountApplication, code: discountAllocation.code, applicable: discountCode.applicable } as CheckoutDiscountApplicationWithId;
-        } else { 
-          discountApplication = { ...discountApplication, title: discountAllocation.title } as CheckoutDiscountApplicationWithId;
+          // @ts-expect-error must have either code or title
+          discountApplication = {
+            ...discountApplication,
+            code: discountAllocation.code,
+            applicable: discountCode.applicable,
+          } as CheckoutDiscountApplicationWithId;
+        } else {
+          // @ts-expect-error must have either code or title
+          discountApplication = {
+            ...discountApplication,
+            title: discountAllocation.title,
+          } as CheckoutDiscountApplicationWithId;
         }
 
         // @ts-expect-error must have either code or title
@@ -610,7 +653,7 @@ function mapDiscountApplication(
   const allocationMethod = discountAllocation.allocationMethod;
   const targetType = discountAllocation.targetType;
   const isPercentage =
-  // @ts-ignore in the new API value percentage is a possible field
+    // @ts-ignore in the new API value percentage is a possible field
     typeof discountAllocation.value.percentage !== "undefined";
   // @ts-ignore in the new API value amount is a possible field
   const isFixed = typeof discountAllocation.value.amount !== "undefined";
