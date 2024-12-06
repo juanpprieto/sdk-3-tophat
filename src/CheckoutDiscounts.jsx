@@ -39,6 +39,22 @@ export function CheckoutDiscounts({checkout, setCheckout}) {
       Add X Get Y 50% off discount next product
     </button>
     <button onClick={async () => {
+       client.checkout.addDiscount(checkout?.id, 'XGETY50OFF').then((checkout) => {
+         console.log('Discount added:', checkout.discountApplications)
+         setCheckout(checkout)
+       })
+     }}>
+      Add X Get $50 off on Y discount
+    </button>
+    <button onClick={async () => {
+       client.checkout.addDiscount(checkout?.id, 'XGETYFREEE').then((checkout) => {
+         console.log('Discount added:', checkout.discountApplications)
+         setCheckout(checkout)
+       })
+     }}>
+      Add X Get Y Free discount
+    </button>
+    <button onClick={async () => {
        client.checkout.addDiscount(checkout?.id, 'ORDERFIXED50OFF').then((checkout) => {
          console.log('Discount added:', checkout.discountApplications)
          setCheckout(checkout)
