@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ExampleBuyButton.js</title>
+  </head>
+  <body>
+    <script src="buybutton3.js"></script>
+    <h1>Buy Button JS with SDK3.0</h1>
+    <div id='product-component-1736214674925'></div>
+    <script data-shopify-buy-ui>
+      var client = ShopifyBuy.buildClient({
+        domain: 'hydrogen-preview.myshopify.com',
+        storefrontAccessToken: '79921ccabf3be126fbd83c8fa0e04a3c',
+      });
+      var ui = ShopifyBuy.UI.init(client);
+      ui.createComponent('product', {
+        id: 7604648181816,
+        node: document.getElementById('product-component-1736214674925'),
+        options: {
+          product: {
+            buttonDestination: 'cart'
+          },
+          cart: {
+            startOpen: true
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

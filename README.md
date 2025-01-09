@@ -40,10 +40,18 @@ and link the 3.0 SDK
 
 Run the playground
 
-```yarn dev```
+```yarn playground```
 
 Visit `http://localhost:5000/`
 
 Interact with the playground `checkout` interface methods and operations. These operations were previously made with the Checkout API.
 
+
+### 3. Test SDK 3.0 with BuyButton JS
+
+Serve ./buybutton.html
+
+```yarn buybutton```
+
+Interact with SDK 3.0 powered Buy Button JS product and cart components. 
 
