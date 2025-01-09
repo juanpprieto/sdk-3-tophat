@@ -53,5 +53,6 @@ Serve ./buybutton.html
 
 ```yarn buybutton```
 
-Interact with SDK 3.0 powered Buy Button JS product and cart components. 
+Visit ` http://localhost:3000`
 
+Interact with SDK 3.0 powered Buy Button JS product and cart components. 
