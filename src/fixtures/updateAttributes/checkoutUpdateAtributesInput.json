@@ -1,9 +1,0 @@
-{ 
-  "id": "gid://shopify/Checkout/ead27bc7c92a40900e65ab3028062d60?key=258a8c6d851557170b09288d7c888a3a",
-  "input": {
-    "customAttributes": [
-      { "key": "key1", "value": "value1" },
-      { "key": "key2", "value": "value2" }
-    ]
-  }
-}

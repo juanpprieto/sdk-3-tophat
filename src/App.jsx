@@ -1,37 +1,23 @@
 import './App.css'
-import { CartCreate } from './CartCreate'
 import { CheckoutCreate } from './CheckoutCreate'
 import { useState } from 'react'
 import { client } from './sdk'
-import { sfapi } from './sfapi'
 import { CheckoutDiscounts } from './CheckoutDiscounts'
 import { CheckoutGiftCards } from './CheckoutGiftCards'
-import { CartDiscounts } from './CartDiscounts'
-import { CartGiftCards } from './CartGiftCards'
-import Discounts from './Discounts'
 
 function App() {
   const [checkout, setCheckout] = useState(null)
-  const [cart, setCart] = useState(null)
   const showCreateTests = true
   return (
     <div style={{ textAlign: 'left' }}>
-      <h1>Checkout vs Cart</h1>
-      <Discounts />
+      <h1>SDK 3.0 Checkout Tophat</h1>
 
       <hr />
-
-      <CheckoutUpdate checkout={checkout} setCheckout={setCheckout} />
       <CheckoutCreate checkout={checkout} setCheckout={setCheckout} verbose={showCreateTests} />
+      <CheckoutUpdate checkout={checkout} setCheckout={setCheckout} />
       <CheckoutDiscounts checkout={checkout} setCheckout={setCheckout} />
       <CheckoutGiftCards checkout={checkout} setCheckout={setCheckout} />
       <CheckoutShippingAddress checkout={checkout} setCheckout={setCheckout} />
-
-      <CartUpdate cart={cart} setCart={setCart} />
-      <CartCreate cart={cart} setCart={setCart} verbose={showCreateTests} />
-      <CartDiscounts cart={cart} setCart={setCart} />
-      <CartGiftCards cart={cart} setCart={setCart} />
-      <CartShippingAddress cart={cart} setCart={setCart} />
     </div>
   )
 }
@@ -57,36 +43,6 @@ function CheckoutShippingAddress({ checkout, setCheckout }) {
         }).then((checkout) => {
           console.log('Shipping address updated:', checkout)
           setCheckout(checkout)
-        })
-      }}>
-        Update Shipping Address
-      </button>
-    </div>
-  )
-}
-
-function CartShippingAddress({ cart, setCart }) {
-  return (
-    <div>
-      <br />
-      <br />
-      <h1>Cart Shipping Address</h1>
-      <button onClick={async () => {
-        sfapi.updateShippingAddress(cart?.id, {
-          address1: '24 Westwind Street',
-          address2: 'Apt C',
-          city: 'Marina Del Rey',
-          company: 'Fake Company',
-          country: 'United States',
-          firstName: 'Juan',
-          lastName: 'Prieto',
-          phone: '424-537-8776',
-          province: 'CA',
-          zip: '90292'
-        }).then((res) => {
-          console.log('Shipping address updated:', res)
-          const { data: { cartBuyerIdentityUpdate: { cart } } } = res
-          setCart(cart)
         })
       }}>
         Update Shipping Address
@@ -265,182 +221,6 @@ function CheckoutUpdate({ checkout, setCheckout }) {
         Update Line Item Quantity + attributes
       </button>
     </div>
-  )
-}
-
-function CartUpdate({ cart, setCart }) {
-  if (!cart) return null
-  return (
-    <div>
-      <br />
-      <br />
-      <h1>Cart Update</h1>
-      <a href={cart.checkoutUrl} target="_blank">Open Cart</a>
-      <button onClick={async () => {
-        sfapi.addLineItems(cart?.id, [{
-          merchandiseId: 'gid://shopify/ProductVariant/48535896555542',
-          quantity: 1
-        }
-        ]).then((res) => {
-          console.log('Response:', res)
-          const { data: { cartLinesAdd: { cart } } } = res
-          console.log('Item added:', cart)
-          setCart(cart)
-        })
-      }}>
-        Add another item to cart
-      </button>
-      <button onClick={async () => {
-        sfapi.updateAttributes(cart?.id, {
-          attributes: [{
-            key: 'key1',
-            value: 'value1'
-          },
-          {
-            key: 'key2',
-            value: 'value2'
-          }]
-        }).then((res) => {
-          console.log('Response:', res)
-          const { data: { cartAttributesUpdate: { cart } } } = res
-          console.log('Item added:', cart)
-          setCart(cart)
-        })
-      }}>
-        Update attributes
-      </button>
-      <button onClick={async () => {
-        sfapi.updateAttributes(cart?.id, {
-          note: 'This is a note'
-        }).then((res) => {
-          console.log('Response:', res)
-          const { data: { cartNoteUpdate: { cart } } } = res
-          console.log('Item added:', cart)
-          setCart(cart)
-        })
-      }}>
-        Update attributes (note)
-      </button>
-      <button onClick={async () => {
-        sfapi.updateAttributes(cart?.id, {
-          attributes: [{
-            key: 'key1',
-            value: 'value1'
-          },
-          {
-            key: 'key2',
-            value: 'value2'
-          }],
-          note: 'This is a note'
-        }).then((res) => {
-          console.log('Response:', res)
-          const { data } = res
-          const cart = data?.cartAttributesUpdate?.cart || data?.cartNoteUpdate?.cart
-          console.log('Item added:', cart)
-          setCart(cart)
-        })
-      }}>
-        Update attributes & note
-      </button>
-      <button onClick={async () => {
-        sfapi.updateEmail(cart?.id, 'john.doe@shopify.com').then((res) => {
-          console.log('Response:', res)
-          const { data: { cartBuyerIdentityUpdate: { cart } } } = res
-          console.log('Item added:', cart)
-          setCart(cart)
-        })
-      }}>
-        Update Email
-      </button>
-      
-      <button onClick={async () => {
-        sfapi.addGiftCards(cart?.id, ['100offgiftcard']).then((res) => {
-          console.log('Response:', res)
-          const { data: { cartGiftCardCodesUpdate: { cart } } } = res
-          console.log('Item added:', cart)
-          setCart(cart)
-        })
-      }}>
-        Add Gift Card
-    </button>
-
-      <button onClick={async () => {
-        sfapi.addGiftCards(cart?.id, ['100offgiftcard', '50offgiftcard']).then((res) => {
-          console.log('Response:', res)
-          const { data: { cartGiftCardCodesUpdate: { cart } } } = res
-          console.log('Item added:', cart)
-          setCart(cart)
-        })
-      }}>
-        Add Gift Cards (2)
-    </button>
-    <button onClick={async () => {
-      sfapi.replaceLineItems(cart?.id, [{
-        merchandiseId: 'gid://shopify/ProductVariant/48535896490006',
-        quantity: 1
-      }
-      ]).then((res) => {
-        console.log('Response:', res)
-        const { data: { cartLinesAdd: { cart } } } = res
-        console.log('Item added:', cart)
-        setCart(cart)
-      })
-    }}>
-      Replace Line Items
-    </button>
-    <button onClick={async () => {
-      sfapi.removeLineItems(cart?.id, [cart.lines.edges[0].node.id]).then((res) => {
-        console.log('Response:', res)
-        const { data: { cartLinesRemove: { cart } } } = res
-        console.log('Item removed:', cart)
-        setCart(cart)
-      })
-    }}>
-      Remove Line Item
-    </button>
-    <button onClick={async () => {
-      sfapi.removeLineItems(cart?.id, cart.lines.edges.map(({node: line}) => line.id)).then((res) => {
-        console.log('Response:', res)
-        const { data: { cartLinesRemove: { cart } } } = res
-        console.log('All items removed:', cart)
-        setCart(cart)
-      })
-    }}>
-      Remove All Line Items
-    </button>
-    <button onClick={async () => {
-      sfapi.updateLineItems(cart?.id, [{
-        id: cart.lines.edges[0].node.id,
-        quantity: 2,
-      }]).then((res) => {
-        console.log('Response:', res)
-        const { data: { cartLinesUpdate: { cart } } } = res
-        console.log('Item updated:', cart)
-        setCart(cart)
-      })
-    }}>
-      Update Line Item Quantity
-    </button>
-    <button onClick={async () => {
-      sfapi.updateLineItems(cart?.id, [{
-        id: cart.lines.edges[0].node.id,
-        quantity: 2,
-        attributes: [{
-          key: 'key1',
-          value: 'value1'
-        }],
-        merchandiseId: 'gid://shopify/ProductVariant/48535896457238'
-      }
-      ]).then((res) => {
-        console.log('Response:', res)
-        const { data: { cartLinesUpdate: { cart } } } = res
-        console.log('Item updated:', cart)
-        setCart(cart)
-      })
-    }}>
-      Update Line Item Quantity + attributes
-    </button>
-  </div>
   )
 }
 
