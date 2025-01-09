@@ -36,7 +36,7 @@ Install dependencies
 
 and link the 3.0 SDK
 
-```yarn link "shopify-buy```
+```yarn link "shopify-buy"```
 
 Run the playground
 
@@ -45,6 +45,5 @@ Run the playground
 Visit `http://localhost:5000/`
 
 Interact with the playground `checkout` interface methods and operations. These operations were previously made with the Checkout API.
-
 
 
