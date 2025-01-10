@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "playground": "vite",
-    "buybutton": "serve buybutton.html",
+    "buybutton": "serve",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
